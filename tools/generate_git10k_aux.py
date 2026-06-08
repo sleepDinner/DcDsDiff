@@ -35,6 +35,8 @@ def prefix_from_stem(stem: str) -> str:
 
 
 def collect_images(root: Path) -> dict[str, Path]:
+    if not root.is_dir():
+        raise SystemExit(f"Input folder does not exist: {root}")
     files: dict[str, Path] = {}
     for path in root.iterdir():
         if path.is_file() and path.suffix.lower() in IMAGE_EXTENSIONS:

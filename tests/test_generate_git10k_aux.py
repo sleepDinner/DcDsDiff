@@ -9,6 +9,7 @@ from PIL import Image
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from tools.generate_git10k_aux import (
+    collect_images,
     make_detail_map,
     make_high_frequency_view,
     mix_output_dirs,
@@ -62,6 +63,15 @@ class GenerateGit10KAuxTests(unittest.TestCase):
         self.assertEqual(dirs["m"], Path("/data/Diff_dataset/Test/Diff/Mix/m"))
         self.assertEqual(dirs["d"], Path("/data/Diff_dataset/Test/Diff/Mix/d"))
         self.assertEqual(dirs["t"], Path("/data/Diff_dataset/Test/Diff/Mix/t"))
+
+    def test_collect_images_reports_missing_folder(self):
+        missing = Path("/definitely/missing/GIT10K/Image")
+
+        with self.assertRaises(SystemExit) as ctx:
+            collect_images(missing)
+
+        self.assertIn("Input folder does not exist", str(ctx.exception))
+        self.assertIn(str(missing), str(ctx.exception))
 
 
 if __name__ == "__main__":
