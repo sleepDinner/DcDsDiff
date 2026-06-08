@@ -1,6 +1,7 @@
 from pathlib import Path
 import unittest
 
+from omegaconf import OmegaConf
 import yaml
 
 
@@ -44,6 +45,16 @@ class ReproductionSetupTests(unittest.TestCase):
         ref = ROOT / "pretrained_weights" / "models--Anonymity--pvt_pretrained" / "refs" / "main"
         self.assertTrue(ref.exists())
         self.assertEqual(ref.read_text().strip(), "a11fd1f27a892002dde9a2050e423ce6c3491bb4")
+
+    def test_tracker_config_converts_omegaconf_to_plain_container(self):
+        from utils.trainer import tracker_config_from_cfg
+
+        cfg = OmegaConf.create({"num_workers": 1, "train": {"batch_size": 6}})
+        tracker_config = tracker_config_from_cfg(cfg)
+
+        self.assertEqual(tracker_config, {"num_workers": 1, "train": {"batch_size": 6}})
+        self.assertIsInstance(tracker_config, dict)
+        self.assertIsInstance(tracker_config["train"], dict)
 
 
 if __name__ == "__main__":

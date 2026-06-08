@@ -9,6 +9,7 @@ import torch
 from tqdm import tqdm
 import wandb
 from accelerate import Accelerator
+from omegaconf import OmegaConf
 from utils.logger_utils import create_url_shortcut_of_wandb, create_logger_of_wandb
 from utils.train_utils import SmoothedValue, set_random_seed
 from utils.import_utils import fill_args_from_dict
@@ -44,6 +45,14 @@ def cal_mae(gt, res, thresholding, save_to=None, n=None):
     if save_to is not None:
         plt.imsave(os.path.join(save_to, n), res, cmap='gray')
     return np.sum(np.abs(res - gt)) * 1.0 / (gt.shape[0] * gt.shape[1])
+
+
+def tracker_config_from_cfg(cfg):
+    if cfg is None:
+        return None
+    if OmegaConf.is_config(cfg):
+        return OmegaConf.to_container(cfg, resolve=True)
+    return cfg
 
 
 def run_on_seed(func):
@@ -89,7 +98,7 @@ class Trainer(object):
             kwargs_handlers=[ddp_kwargs]
         )
         project_name = getattr(cfg, "project_name", 'ResidualDiffsuion-v7')
-        self.accelerator.init_trackers(project_name, config=cfg)
+        self.accelerator.init_trackers(project_name, config=tracker_config_from_cfg(cfg))
         create_url_shortcut_of_wandb(accelerator=self.accelerator)
         self.logger = create_logger_of_wandb(accelerator=self.accelerator, rank=not self.accelerator.is_main_process)
         self.accelerator.native_amp = amp
