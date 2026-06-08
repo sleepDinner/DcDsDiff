@@ -1,0 +1,21 @@
+__pycache__/
+*.py[cod]
+
+# Local datasets and generated data
+GIT10K.rar
+*.rar
+tmp/
+Diff_dataset/
+
+# Model weights and training outputs
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+wandb/
+results/
+outputs/
+
+# Local environment files
+.env
+.env.*

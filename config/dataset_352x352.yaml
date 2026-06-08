@@ -1,0 +1,26 @@
+train_dataset:
+  name: dataset.data_val.PolypObjDataset
+  params:
+    image_root: '/data0/hl/Diff_dataset/train/Diff/f/'
+    gt_root: '/data0/hl/Diff_dataset/train/Diff/m/'
+    de_root: '/data0/hl/Diff_dataset/train/Diff/d/'
+    trace_root: '/data0/hl/Diff_dataset/train/Diff/t/'
+    trainsize: 352
+
+test_dataset:
+  Mix:
+    name: dataset.data_val.test_dataset
+    params:
+      image_root: '/data0/hl/Diff_dataset/Test/Diff/Mix/f/'
+      gt_root: '/data0/hl/Diff_dataset/Test/Diff/Mix/m/'
+      de_root: '/data0/hl/Diff_dataset/Test/Diff/Mix/d/'
+      trace_root: '/data0/hl/Diff_dataset/Test/Diff/Mix/t/'
+      testsize: 352
+  IA:
+    name: dataset.data_val.test_dataset
+    params:
+      image_root: '/data0/hl/Diff_dataset/Test/Diff/IA/f/'
+      gt_root: '/data0/hl/Diff_dataset/Test/Diff/IA/m/'
+      de_root: '/data0/hl/Diff_dataset/Test/Diff/IA/d/'
+      trace_root: '/data0/hl/Diff_dataset/Test/Diff/IA/t/'
+      testsize: 352
