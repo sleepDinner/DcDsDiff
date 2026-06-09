@@ -8,6 +8,7 @@ import random
 import re
 import shutil
 from collections import defaultdict
+from concurrent.futures import ProcessPoolExecutor
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -25,6 +26,18 @@ class ImageMaskPair:
     image_path: Path
     mask_path: Path
     prefix: str
+
+
+@dataclass(frozen=True)
+class GenerationJob:
+    pair: ImageMaskPair
+    dirs: dict[str, Path]
+    detail_radius: float
+    edge_kernel: int
+    cutoff_ratio: float
+    boost: float
+    overwrite: bool
+    copy_inputs: bool
 
 
 def natural_key(value: str) -> list[object]:
@@ -230,6 +243,65 @@ def process_pair(
         save_rgb_png(trace_path, trace)
 
 
+def process_generation_job(job: GenerationJob) -> str:
+    process_pair(
+        job.pair,
+        job.dirs,
+        detail_radius=job.detail_radius,
+        edge_kernel=job.edge_kernel,
+        cutoff_ratio=job.cutoff_ratio,
+        boost=job.boost,
+        overwrite=job.overwrite,
+        copy_inputs=job.copy_inputs,
+    )
+    return job.pair.stem
+
+
+def build_generation_jobs(
+    pairs: list[ImageMaskPair],
+    *,
+    out_root: Path,
+    layout: str,
+    assignment: dict[str, str],
+    detail_radius: float,
+    edge_kernel: int,
+    cutoff_ratio: float,
+    boost: float,
+    overwrite: bool,
+    copy_inputs: bool,
+    with_test_mix: bool,
+    mix_name: str,
+) -> list[GenerationJob]:
+    jobs = []
+    for pair in pairs:
+        jobs.append(
+            GenerationJob(
+                pair=pair,
+                dirs=output_dirs(pair, out_root, layout, assignment),
+                detail_radius=detail_radius,
+                edge_kernel=edge_kernel,
+                cutoff_ratio=cutoff_ratio,
+                boost=boost,
+                overwrite=overwrite,
+                copy_inputs=copy_inputs,
+            )
+        )
+        if layout == "project" and with_test_mix and assignment[pair.stem] == "test":
+            jobs.append(
+                GenerationJob(
+                    pair=pair,
+                    dirs=mix_output_dirs(out_root, mix_name),
+                    detail_radius=detail_radius,
+                    edge_kernel=edge_kernel,
+                    cutoff_ratio=cutoff_ratio,
+                    boost=boost,
+                    overwrite=overwrite,
+                    copy_inputs=copy_inputs,
+                )
+            )
+    return jobs
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--image-root", type=Path, required=True, help="Folder containing GIT10K Image files.")
@@ -262,6 +334,7 @@ def parse_args() -> argparse.Namespace:
         help="prefix keeps GIT10K-style per-prefix splitting; global makes one overall train/test split.",
     )
     parser.add_argument("--seed", type=int, default=2026, help="Random seed used by --split-mode global.")
+    parser.add_argument("--num-workers", type=int, default=1, help="Number of CPU worker processes for image generation.")
     return parser.parse_args()
 
 
@@ -282,31 +355,32 @@ def main() -> None:
         write_split_manifest(args.out_root / "split_manifest.csv", pairs, assignment)
     copy_inputs = not args.skip_input_copy
 
-    for index, pair in enumerate(pairs, 1):
-        dirs = output_dirs(pair, args.out_root, args.layout, assignment)
-        process_pair(
-            pair,
-            dirs,
-            detail_radius=args.detail_radius,
-            edge_kernel=args.edge_kernel,
-            cutoff_ratio=args.cutoff_ratio,
-            boost=args.boost,
-            overwrite=args.overwrite,
-            copy_inputs=copy_inputs,
-        )
-        if args.layout == "project" and args.with_test_mix and assignment[pair.stem] == "test":
-            process_pair(
-                pair,
-                mix_output_dirs(args.out_root, args.mix_name),
-                detail_radius=args.detail_radius,
-                edge_kernel=args.edge_kernel,
-                cutoff_ratio=args.cutoff_ratio,
-                boost=args.boost,
-                overwrite=args.overwrite,
-                copy_inputs=copy_inputs,
-            )
-        if index == 1 or index % 500 == 0 or index == len(pairs):
-            print(f"[{index}/{len(pairs)}] processed {pair.stem}")
+    jobs = build_generation_jobs(
+        pairs,
+        out_root=args.out_root,
+        layout=args.layout,
+        assignment=assignment,
+        detail_radius=args.detail_radius,
+        edge_kernel=args.edge_kernel,
+        cutoff_ratio=args.cutoff_ratio,
+        boost=args.boost,
+        overwrite=args.overwrite,
+        copy_inputs=copy_inputs,
+        with_test_mix=args.with_test_mix,
+        mix_name=args.mix_name,
+    )
+
+    if args.num_workers <= 1:
+        for index, job in enumerate(jobs, 1):
+            stem = process_generation_job(job)
+            if index == 1 or index % 500 == 0 or index == len(jobs):
+                print(f"[{index}/{len(jobs)}] processed {stem}")
+        return
+
+    with ProcessPoolExecutor(max_workers=args.num_workers) as executor:
+        for index, stem in enumerate(executor.map(process_generation_job, jobs, chunksize=8), 1):
+            if index == 1 or index % 500 == 0 or index == len(jobs):
+                print(f"[{index}/{len(jobs)}] processed {stem}")
 
 
 if __name__ == "__main__":

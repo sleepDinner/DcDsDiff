@@ -10,6 +10,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from tools.generate_git10k_aux import (
     ImageMaskPair,
+    build_generation_jobs,
     collect_images,
     make_detail_map,
     make_high_frequency_view,
@@ -105,6 +106,44 @@ class GenerateGit10KAuxTests(unittest.TestCase):
 
         self.assertEqual(sum(split == "train" for split in assignment.values()), 9)
         self.assertEqual(sum(split == "test" for split in assignment.values()), 1)
+
+    def test_build_generation_jobs_adds_mix_job_for_test_samples(self):
+        pairs = [
+            ImageMaskPair(
+                stem="train_sample",
+                image_path=Path("images/train_sample.png"),
+                mask_path=Path("masks/train_sample.png"),
+                prefix="sample",
+            ),
+            ImageMaskPair(
+                stem="test_sample",
+                image_path=Path("images/test_sample.png"),
+                mask_path=Path("masks/test_sample.png"),
+                prefix="sample",
+            ),
+        ]
+        assignment = {"train_sample": "train", "test_sample": "test"}
+
+        jobs = build_generation_jobs(
+            pairs,
+            out_root=Path("/data/out"),
+            layout="project",
+            assignment=assignment,
+            detail_radius=15.0,
+            edge_kernel=3,
+            cutoff_ratio=0.5,
+            boost=10.0,
+            overwrite=False,
+            copy_inputs=True,
+            with_test_mix=True,
+            mix_name="Mix",
+        )
+
+        self.assertEqual(len(jobs), 3)
+        self.assertEqual(jobs[0].pair.stem, "train_sample")
+        self.assertEqual(jobs[1].pair.stem, "test_sample")
+        self.assertEqual(jobs[2].pair.stem, "test_sample")
+        self.assertEqual(jobs[2].dirs["f"], Path("/data/out/Test/Diff/Mix/f"))
 
     def test_collect_images_reports_missing_folder(self):
         missing = Path("/definitely/missing/GIT10K/Image")
