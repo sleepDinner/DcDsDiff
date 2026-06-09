@@ -4,6 +4,7 @@ import unittest
 from pathlib import Path
 
 import numpy as np
+from omegaconf import OmegaConf
 from PIL import Image
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -14,7 +15,9 @@ from tools.evaluate_checkpoint_f1_iou import (  # noqa: E402
     binary_f1_iou,
     collect_mask_files,
     evaluate_prediction_folder,
+    format_available_datasets,
     format_results_table,
+    validate_dataset_roots,
 )
 
 
@@ -102,6 +105,68 @@ class EvaluateCheckpointF1IoUTests(unittest.TestCase):
         self.assertIn("BN", table)
         self.assertIn("Average", table)
         self.assertIn("0.2500", table)
+
+    def test_validate_dataset_roots_reports_missing_subset_before_inference(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "Diff_dataset" / "Test" / "Diff"
+            for subdir in ("f", "m", "d", "t"):
+                (root / "Mix" / subdir).mkdir(parents=True)
+                (root / "BN" / subdir).mkdir(parents=True)
+            cfg = OmegaConf.create(
+                {
+                    "test_dataset": {
+                        "Mix": {
+                            "name": "dataset.data_val.test_dataset",
+                            "params": {
+                                "image_root": str(root / "Mix" / "f") + "/",
+                                "gt_root": str(root / "Mix" / "m") + "/",
+                                "de_root": str(root / "Mix" / "d") + "/",
+                                "trace_root": str(root / "Mix" / "t") + "/",
+                                "testsize": 352,
+                            },
+                        }
+                    },
+                    "pred_root": None,
+                    "results_folder": str(Path(tmp) / "eval"),
+                }
+            )
+
+            with self.assertRaises(SystemExit) as ctx:
+                validate_dataset_roots(cfg, ["BN", "PE"], skip_inference=False, multi_dataset=True)
+
+        message = str(ctx.exception)
+        self.assertIn("PE.image_root", message)
+        self.assertIn("Available test datasets", message)
+        self.assertIn("BN", message)
+
+    def test_format_available_datasets_counts_subfolders(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "Diff_dataset" / "Test" / "Diff"
+            for subdir in ("f", "m", "d", "t"):
+                (root / "Mix" / subdir).mkdir(parents=True)
+            Image.new("L", (2, 2)).save(root / "Mix" / "f" / "a.png")
+            cfg = OmegaConf.create(
+                {
+                    "test_dataset": {
+                        "Mix": {
+                            "name": "dataset.data_val.test_dataset",
+                            "params": {
+                                "image_root": str(root / "Mix" / "f") + "/",
+                                "gt_root": str(root / "Mix" / "m") + "/",
+                                "de_root": str(root / "Mix" / "d") + "/",
+                                "trace_root": str(root / "Mix" / "t") + "/",
+                                "testsize": 352,
+                            },
+                        }
+                    }
+                }
+            )
+
+            output = format_available_datasets(cfg)
+
+        self.assertIn("Dataset", output)
+        self.assertIn("Mix", output)
+        self.assertIn("1", output)
 
 
 if __name__ == "__main__":

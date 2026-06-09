@@ -30,7 +30,7 @@ def natural_key(value: str) -> list[object]:
 
 
 def prefix_from_stem(stem: str) -> str:
-    match = re.match(r"([A-Za-z0-9]+)", stem)
+    match = re.match(r"([A-Za-z]+)", stem)
     return match.group(1) if match else "Unknown"
 
 

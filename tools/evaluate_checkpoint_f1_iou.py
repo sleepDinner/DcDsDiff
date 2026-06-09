@@ -181,16 +181,98 @@ def path_with_trailing_slash(path):
     return Path(path).as_posix().rstrip("/") + "/"
 
 
+def infer_test_diff_root(cfg):
+    template_key = "Mix" if "Mix" in cfg.test_dataset else next(iter(cfg.test_dataset.keys()))
+    return Path(cfg.test_dataset[template_key].params.image_root).parent.parent
+
+
 def get_dataset_cfg(cfg, dataset_key):
     if dataset_key not in cfg.test_dataset:
         template_key = "Mix" if "Mix" in cfg.test_dataset else next(iter(cfg.test_dataset.keys()))
         dataset_cfg = OmegaConf.create(OmegaConf.to_container(cfg.test_dataset[template_key], resolve=True))
-        template_image_root = Path(dataset_cfg.params.image_root)
-        test_diff_root = template_image_root.parent.parent
+        test_diff_root = infer_test_diff_root(cfg)
         for root_name, subdir in DATASET_SUBDIRS.items():
             dataset_cfg.params[root_name] = path_with_trailing_slash(test_diff_root / dataset_key / subdir)
         return dataset_cfg
     return cfg.test_dataset[dataset_key]
+
+
+def image_count(root):
+    root = Path(root)
+    if not root.is_dir():
+        return 0
+    return sum(1 for path in root.iterdir() if path.is_file() and path.suffix.lower() in IMAGE_EXTENSIONS)
+
+
+def available_dataset_rows(cfg):
+    test_diff_root = infer_test_diff_root(cfg)
+    rows = []
+    if not test_diff_root.is_dir():
+        return test_diff_root, rows
+    for dataset_root in sorted(path for path in test_diff_root.iterdir() if path.is_dir()):
+        rows.append(
+            {
+                "key": dataset_root.name,
+                "f": image_count(dataset_root / "f"),
+                "m": image_count(dataset_root / "m"),
+                "d": image_count(dataset_root / "d"),
+                "t": image_count(dataset_root / "t"),
+            }
+        )
+    return test_diff_root, rows
+
+
+def format_available_datasets(cfg):
+    test_diff_root, rows = available_dataset_rows(cfg)
+    lines = [f"Available test datasets under {test_diff_root}:"]
+    if not rows:
+        lines.append("  none")
+        return "\n".join(lines)
+
+    table_rows = [("Dataset", "f", "m", "d", "t")]
+    for row in rows:
+        table_rows.append((row["key"], str(row["f"]), str(row["m"]), str(row["d"]), str(row["t"])))
+    widths = [max(len(row[index]) for row in table_rows) for index in range(len(table_rows[0]))]
+    for row in table_rows:
+        lines.append("  " + "  ".join(value.rjust(widths[index]) if index > 0 else value.ljust(widths[index])
+                                      for index, value in enumerate(row)))
+    return "\n".join(lines)
+
+
+def validate_dataset_roots(cfg, dataset_keys, *, skip_inference, multi_dataset):
+    missing = []
+    for dataset_key in dataset_keys:
+        dataset_cfg = get_dataset_cfg(cfg, dataset_key)
+        roots_to_check = {
+            "image_root": dataset_cfg.params.image_root,
+            "gt_root": dataset_cfg.params.gt_root,
+            "de_root": dataset_cfg.params.de_root,
+            "trace_root": dataset_cfg.params.trace_root,
+        }
+        if skip_inference:
+            roots_to_check = {"gt_root": dataset_cfg.params.gt_root}
+        for root_name, root_path in roots_to_check.items():
+            if not Path(root_path).is_dir():
+                missing.append((dataset_key, root_name, str(root_path)))
+
+        if skip_inference:
+            pred_root = prediction_root_for_dataset(cfg, dataset_key, multi_dataset)
+            if not pred_root.is_dir():
+                missing.append((dataset_key, "pred_root", str(pred_root)))
+
+    if not missing:
+        return
+
+    lines = ["Missing folders for requested evaluation datasets:"]
+    for dataset_key, root_name, root_path in missing:
+        lines.append(f"  {dataset_key}.{root_name}: {root_path}")
+    lines.append("")
+    lines.append(format_available_datasets(cfg))
+    lines.append("")
+    lines.append("If PE is missing, inspect the source filenames and regenerate the auxiliary dataset:")
+    lines.append("  find /data0/hl/DcDsDiff-and-GIT10K/GIT10K/Image -maxdepth 1 -type f | sed -E 's|.*/([A-Za-z]+).*|\\1|' | sort | uniq -c")
+    lines.append("  python tools/generate_git10k_aux.py --image-root /data0/hl/DcDsDiff-and-GIT10K/GIT10K/Image --mask-root /data0/hl/DcDsDiff-and-GIT10K/GIT10K/Mask --out-root /data0/hl/Diff_dataset --layout project --with-test-mix --train-ratio 0.9 --overwrite")
+    raise SystemExit("\n".join(lines))
 
 
 def build_test_loader(cfg, dataset_key):
@@ -343,6 +425,7 @@ def main():
     parser.add_argument("--time-ensemble", "--time_ensemble", dest="time_ensemble", action="store_true", default=True)
     parser.add_argument("--no-time-ensemble", "--no_time_ensemble", dest="time_ensemble", action="store_false")
     parser.add_argument("--json", dest="print_json", action="store_true", help="Also print machine-readable JSON.")
+    parser.add_argument("--list-datasets", dest="list_datasets", action="store_true", help="List available Test/Diff subsets and exit.")
 
     cfg = add_args(parser)
     set_random_seed(7)
@@ -355,6 +438,11 @@ def main():
 
     dataset_keys = list(cfg.dataset_keys)
     multi_dataset = len(dataset_keys) > 1
+    if cfg.list_datasets:
+        print(format_available_datasets(cfg))
+        return
+
+    validate_dataset_roots(cfg, dataset_keys, skip_inference=cfg.skip_inference, multi_dataset=multi_dataset)
 
     trainer = None
     if not cfg.skip_inference:

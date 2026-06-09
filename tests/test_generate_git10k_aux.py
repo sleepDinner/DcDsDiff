@@ -14,6 +14,7 @@ from tools.generate_git10k_aux import (
     make_high_frequency_view,
     mix_output_dirs,
     pair_image_mask_files,
+    prefix_from_stem,
 )
 
 
@@ -55,6 +56,12 @@ class GenerateGit10KAuxTests(unittest.TestCase):
 
         self.assertEqual(len(pairs), 1)
         self.assertEqual(pairs[0].stem, "A")
+
+    def test_prefix_from_stem_uses_official_letter_category(self):
+        self.assertEqual(prefix_from_stem("PE001"), "PE")
+        self.assertEqual(prefix_from_stem("BN_001"), "BN")
+        self.assertEqual(prefix_from_stem("IA-12"), "IA")
+        self.assertEqual(prefix_from_stem("PP sample"), "PP")
 
     def test_mix_output_dirs_points_to_project_mix_folder(self):
         dirs = mix_output_dirs(Path("/data/Diff_dataset"), "Mix")
