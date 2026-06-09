@@ -75,6 +75,20 @@ class ReproductionSetupTests(unittest.TestCase):
         self.assertIsInstance(tracker_config, dict)
         self.assertIsInstance(tracker_config["train"], dict)
 
+    def test_safe_normalize_gt_mask_keeps_empty_masks_finite(self):
+        import numpy as np
+        from utils.trainer import normalize_gt_mask
+
+        empty = np.zeros((4, 4), dtype=np.float32)
+        normalized_empty = normalize_gt_mask(empty)
+
+        self.assertTrue(np.isfinite(normalized_empty).all())
+        self.assertEqual(float(normalized_empty.max()), 0.0)
+
+        non_empty = np.array([[0, 255]], dtype=np.float32)
+        normalized_non_empty = normalize_gt_mask(non_empty)
+        self.assertEqual(float(normalized_non_empty.max()), 1.0)
+
     def test_rtx_4000_nccl_defaults_are_set_before_accelerate(self):
         init_env = (ROOT / "utils" / "init_env.py").read_text(encoding="utf-8")
         self.assertIn('os.environ.setdefault("NCCL_P2P_DISABLE", "1")', init_env)

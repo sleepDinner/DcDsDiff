@@ -47,6 +47,13 @@ def cal_mae(gt, res, thresholding, save_to=None, n=None):
     return np.sum(np.abs(res - gt)) * 1.0 / (gt.shape[0] * gt.shape[1])
 
 
+def normalize_gt_mask(gt):
+    max_value = gt.max()
+    if max_value <= 0:
+        return np.zeros_like(gt, dtype=np.float32)
+    return gt / max_value
+
+
 def tracker_config_from_cfg(cfg):
     if cfg is None:
         return None
@@ -198,7 +205,7 @@ class Trainer(object):
         for data in tqdm(test_data_loader, disable=not accelerator.is_main_process):
             image, gt,trace, name, image_for_post = data['image'], data['gt'],data['trace'], data['name'], data['image_for_post']
             gt = [np.array(x, np.float32) for x in gt]
-            gt = [x / x.max() + 1e-8 for x in gt]
+            gt = [normalize_gt_mask(x) for x in gt]
             image = image.to(device).squeeze(1)
             trace= trace.to(device).squeeze(1)
             out = self.train_val_forward_fn(model, image=image, trace=trace,verbose=False)
@@ -236,7 +243,7 @@ class Trainer(object):
         for data in tqdm(test_data_loader, disable=not accelerator.is_main_process):
             image, gt,de,trace, name, image_for_post = data['image'], data['gt'], data['de'], data['trace'],data['name'], data['image_for_post']
             gt = [np.array(x, np.float32) for x in gt]
-            gt = [x / x.max() + 1e-8 for x in gt]
+            gt = [normalize_gt_mask(x) for x in gt]
             image = image.to(device).squeeze(1)
             trace = trace.to(device).squeeze(1)
             ensem_out = self.train_val_forward_fn(model, image=image, trace=trace,time_ensemble=True,
@@ -269,7 +276,7 @@ class Trainer(object):
         for data in tqdm(test_data_loader, disable=not accelerator.is_main_process):
             image, gt, name, image_for_post = data['image'], data['gt'], data['name'], data['image_for_post']
             gt = [np.array(x, np.float32) for x in gt]
-            gt = [x / x.max() + 1e-8 for x in gt]
+            gt = [normalize_gt_mask(x) for x in gt]
             image = image.to(device).squeeze(1)
             batch_res = []
             for i in range(5):
