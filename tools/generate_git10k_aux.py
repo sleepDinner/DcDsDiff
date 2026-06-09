@@ -11,6 +11,7 @@ from collections import defaultdict
 from concurrent.futures import ProcessPoolExecutor
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Optional
 
 import cv2
 import numpy as np
@@ -189,6 +190,21 @@ def write_split_manifest(path: Path, pairs: list[ImageMaskPair], assignment: dic
             writer.writerow([pair.stem, assignment[pair.stem], pair.prefix, pair.image_path, pair.mask_path])
 
 
+def filter_pairs_by_index(
+    pairs: list[ImageMaskPair],
+    start_index: Optional[int] = None,
+    end_index: Optional[int] = None,
+) -> list[ImageMaskPair]:
+    total = len(pairs)
+    start = 1 if start_index is None or start_index < 1 else start_index
+    end = total if end_index is None or end_index < 1 else end_index
+    if start > total:
+        return []
+    if end < start:
+        raise SystemExit(f"--end-index ({end}) must be greater than or equal to --start-index ({start}).")
+    return pairs[start - 1:min(end, total)]
+
+
 def output_dirs(pair: ImageMaskPair, out_root: Path, layout: str, assignment: dict[str, str]) -> dict[str, Path]:
     if layout == "aux":
         return {"d": out_root / "d", "t": out_root / "t"}
@@ -335,6 +351,8 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--seed", type=int, default=2026, help="Random seed used by --split-mode global.")
     parser.add_argument("--num-workers", type=int, default=1, help="Number of CPU worker processes for image generation.")
+    parser.add_argument("--start-index", type=int, default=1, help="1-based inclusive input-pair index to start processing.")
+    parser.add_argument("--end-index", type=int, default=0, help="1-based inclusive input-pair index to stop processing; 0 means the end.")
     return parser.parse_args()
 
 
@@ -354,9 +372,20 @@ def main() -> None:
     if args.layout == "project":
         write_split_manifest(args.out_root / "split_manifest.csv", pairs, assignment)
     copy_inputs = not args.skip_input_copy
+    selected_pairs = filter_pairs_by_index(
+        pairs,
+        start_index=args.start_index,
+        end_index=args.end_index if args.end_index > 0 else None,
+    )
+    if not selected_pairs:
+        raise SystemExit("No pairs selected by --start-index/--end-index.")
+    print(
+        f"Selected input-pair range: {args.start_index}-"
+        f"{args.end_index if args.end_index > 0 else len(pairs)} of {len(pairs)}"
+    )
 
     jobs = build_generation_jobs(
-        pairs,
+        selected_pairs,
         out_root=args.out_root,
         layout=args.layout,
         assignment=assignment,

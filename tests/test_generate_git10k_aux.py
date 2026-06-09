@@ -12,6 +12,7 @@ from tools.generate_git10k_aux import (
     ImageMaskPair,
     build_generation_jobs,
     collect_images,
+    filter_pairs_by_index,
     make_detail_map,
     make_high_frequency_view,
     mix_output_dirs,
@@ -144,6 +145,21 @@ class GenerateGit10KAuxTests(unittest.TestCase):
         self.assertEqual(jobs[1].pair.stem, "test_sample")
         self.assertEqual(jobs[2].pair.stem, "test_sample")
         self.assertEqual(jobs[2].dirs["f"], Path("/data/out/Test/Diff/Mix/f"))
+
+    def test_filter_pairs_by_index_uses_one_based_inclusive_range(self):
+        pairs = [
+            ImageMaskPair(
+                stem=f"sample_{index}",
+                image_path=Path(f"images/sample_{index}.png"),
+                mask_path=Path(f"masks/sample_{index}.png"),
+                prefix="sample",
+            )
+            for index in range(1, 7)
+        ]
+
+        selected = filter_pairs_by_index(pairs, start_index=3, end_index=5)
+
+        self.assertEqual([pair.stem for pair in selected], ["sample_3", "sample_4", "sample_5"])
 
     def test_collect_images_reports_missing_folder(self):
         missing = Path("/definitely/missing/GIT10K/Image")
