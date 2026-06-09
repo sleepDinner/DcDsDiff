@@ -56,6 +56,21 @@ class ReproductionSetupTests(unittest.TestCase):
         self.assertIsInstance(tracker_config, dict)
         self.assertIsInstance(tracker_config["train"], dict)
 
+    def test_rtx_4000_nccl_defaults_are_set_before_accelerate(self):
+        init_env = (ROOT / "utils" / "init_env.py").read_text(encoding="utf-8")
+        self.assertIn('os.environ.setdefault("NCCL_P2P_DISABLE", "1")', init_env)
+        self.assertIn('os.environ.setdefault("NCCL_IB_DISABLE", "1")', init_env)
+
+        eval_script = (ROOT / "tools" / "evaluate_checkpoint_f1_iou.py").read_text(encoding="utf-8")
+        self.assertLess(
+            eval_script.index('os.environ.setdefault("NCCL_P2P_DISABLE", "1")'),
+            eval_script.index("import torch"),
+        )
+        self.assertLess(
+            eval_script.index('os.environ.setdefault("NCCL_IB_DISABLE", "1")'),
+            eval_script.index("import torch"),
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

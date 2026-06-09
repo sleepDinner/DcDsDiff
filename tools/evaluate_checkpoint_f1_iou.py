@@ -4,6 +4,9 @@ import os
 import sys
 from pathlib import Path
 
+os.environ.setdefault("NCCL_P2P_DISABLE", "1")
+os.environ.setdefault("NCCL_IB_DISABLE", "1")
+
 import numpy as np
 import torch
 from PIL import Image
