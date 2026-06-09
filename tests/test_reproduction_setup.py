@@ -26,6 +26,17 @@ class ReproductionSetupTests(unittest.TestCase):
             self.assertNotIn("depth_root", params)
             self.assertNotIn("text_root", params)
 
+    def test_dataset_config_includes_all_official_test_subsets(self):
+        config = yaml.safe_load((ROOT / "config" / "dataset_352x352.yaml").read_text(encoding="utf-8"))
+
+        for dataset_key in ("BN", "PE", "IA", "PP"):
+            self.assertIn(dataset_key, config["test_dataset"])
+            params = config["test_dataset"][dataset_key]["params"]
+            self.assertEqual(params["image_root"], f"/data0/hl/Diff_dataset/Test/Diff/{dataset_key}/f/")
+            self.assertEqual(params["gt_root"], f"/data0/hl/Diff_dataset/Test/Diff/{dataset_key}/m/")
+            self.assertEqual(params["de_root"], f"/data0/hl/Diff_dataset/Test/Diff/{dataset_key}/d/")
+            self.assertEqual(params["trace_root"], f"/data0/hl/Diff_dataset/Test/Diff/{dataset_key}/t/")
+
     def test_model_loads_pretrained_weights_into_trace_backbone(self):
         net_py = (ROOT / "model" / "net.py").read_text(encoding="utf-8")
         self.assertIn("self.backbone_t.load_state_dict", net_py)

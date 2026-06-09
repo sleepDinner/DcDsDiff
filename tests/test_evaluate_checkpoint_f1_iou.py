@@ -9,9 +9,12 @@ from PIL import Image
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from tools.evaluate_checkpoint_f1_iou import (  # noqa: E402
+    average_dataset_results,
+    binary_auc,
     binary_f1_iou,
     collect_mask_files,
     evaluate_prediction_folder,
+    format_results_table,
 )
 
 
@@ -33,6 +36,13 @@ class EvaluateCheckpointF1IoUTests(unittest.TestCase):
 
         self.assertAlmostEqual(f1, 0.5)
         self.assertAlmostEqual(iou, 1.0 / 3.0)
+
+    def test_binary_auc_uses_continuous_prediction_scores(self):
+        gt = np.array([[1, 0], [1, 0]], dtype=np.float32)
+
+        self.assertAlmostEqual(binary_auc(np.array([[0.9, 0.2], [0.8, 0.1]], dtype=np.float32), gt), 1.0)
+        self.assertAlmostEqual(binary_auc(np.array([[0.1, 0.8], [0.2, 0.9]], dtype=np.float32), gt), 0.0)
+        self.assertAlmostEqual(binary_auc(np.ones((2, 2), dtype=np.float32) * 0.5, gt), 0.5)
 
     def test_collect_mask_files_pairs_by_stem(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -59,6 +69,39 @@ class EvaluateCheckpointF1IoUTests(unittest.TestCase):
         self.assertEqual(results["num_images"], 1)
         self.assertAlmostEqual(results["F1"], 1.0)
         self.assertAlmostEqual(results["IoU"], 1.0)
+        self.assertAlmostEqual(results["AUC"], 1.0)
+
+    def test_average_dataset_results_uses_existing_subset_values(self):
+        dataset_results = {
+            "BN": {"F1": 0.1, "IoU": 0.2, "AUC": 0.3, "num_images": 1},
+            "PE": {"F1": 0.2, "IoU": 0.3, "AUC": 0.4, "num_images": 1},
+            "IA": {"F1": 0.3, "IoU": 0.4, "AUC": 0.5, "num_images": 1},
+            "PP": {"F1": 0.4, "IoU": 0.5, "AUC": 0.6, "num_images": 1},
+        }
+
+        average = average_dataset_results(dataset_results, ["BN", "PE", "IA", "PP"])
+
+        self.assertEqual(average["num_images"], 4)
+        self.assertAlmostEqual(average["F1"], (0.1 + 0.2 + 0.3 + 0.4) / 4)
+        self.assertAlmostEqual(average["IoU"], (0.2 + 0.3 + 0.4 + 0.5) / 4)
+        self.assertAlmostEqual(average["AUC"], (0.3 + 0.4 + 0.5 + 0.6) / 4)
+
+    def test_format_results_table_is_readable(self):
+        dataset_results = {
+            "BN": {"F1": 0.1, "IoU": 0.2, "AUC": 0.3, "num_images": 1},
+            "PE": {"F1": 0.2, "IoU": 0.3, "AUC": 0.4, "num_images": 1},
+            "IA": {"F1": 0.3, "IoU": 0.4, "AUC": 0.5, "num_images": 1},
+            "PP": {"F1": 0.4, "IoU": 0.5, "AUC": 0.6, "num_images": 1},
+        }
+        average = average_dataset_results(dataset_results, ["BN", "PE", "IA", "PP"])
+
+        table = format_results_table(dataset_results, average, ["BN", "PE", "IA", "PP"], threshold=0.5)
+
+        self.assertIn("Dataset", table)
+        self.assertIn("AUC", table)
+        self.assertIn("BN", table)
+        self.assertIn("Average", table)
+        self.assertIn("0.2500", table)
 
 
 if __name__ == "__main__":

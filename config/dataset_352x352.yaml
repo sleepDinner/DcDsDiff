@@ -16,6 +16,22 @@ test_dataset:
       de_root: '/data0/hl/Diff_dataset/Test/Diff/Mix/d/'
       trace_root: '/data0/hl/Diff_dataset/Test/Diff/Mix/t/'
       testsize: 352
+  BN:
+    name: dataset.data_val.test_dataset
+    params:
+      image_root: '/data0/hl/Diff_dataset/Test/Diff/BN/f/'
+      gt_root: '/data0/hl/Diff_dataset/Test/Diff/BN/m/'
+      de_root: '/data0/hl/Diff_dataset/Test/Diff/BN/d/'
+      trace_root: '/data0/hl/Diff_dataset/Test/Diff/BN/t/'
+      testsize: 352
+  PE:
+    name: dataset.data_val.test_dataset
+    params:
+      image_root: '/data0/hl/Diff_dataset/Test/Diff/PE/f/'
+      gt_root: '/data0/hl/Diff_dataset/Test/Diff/PE/m/'
+      de_root: '/data0/hl/Diff_dataset/Test/Diff/PE/d/'
+      trace_root: '/data0/hl/Diff_dataset/Test/Diff/PE/t/'
+      testsize: 352
   IA:
     name: dataset.data_val.test_dataset
     params:
@@ -23,4 +39,12 @@ test_dataset:
       gt_root: '/data0/hl/Diff_dataset/Test/Diff/IA/m/'
       de_root: '/data0/hl/Diff_dataset/Test/Diff/IA/d/'
       trace_root: '/data0/hl/Diff_dataset/Test/Diff/IA/t/'
+      testsize: 352
+  PP:
+    name: dataset.data_val.test_dataset
+    params:
+      image_root: '/data0/hl/Diff_dataset/Test/Diff/PP/f/'
+      gt_root: '/data0/hl/Diff_dataset/Test/Diff/PP/m/'
+      de_root: '/data0/hl/Diff_dataset/Test/Diff/PP/d/'
+      trace_root: '/data0/hl/Diff_dataset/Test/Diff/PP/t/'
       testsize: 352
