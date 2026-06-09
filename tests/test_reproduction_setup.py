@@ -37,6 +37,14 @@ class ReproductionSetupTests(unittest.TestCase):
             self.assertEqual(params["de_root"], f"/data0/hl/Diff_dataset/Test/Diff/{dataset_key}/d/")
             self.assertEqual(params["trace_root"], f"/data0/hl/Diff_dataset/Test/Diff/{dataset_key}/t/")
 
+    def test_finaltraindata_config_only_changes_dataset_paths(self):
+        config = OmegaConf.load(ROOT / "config" / "FinalTrainData_352x352.yaml")
+        self.assertEqual(config["__base__"], ["config/DcDsDiff_352x352.yaml"])
+        self.assertEqual(config["train_dataset"]["params"]["image_root"], "/data0/hl/FinalTrainData_Diff/train/Diff/f/")
+        self.assertEqual(config["test_dataset"]["Mix"]["params"]["gt_root"], "/data0/hl/FinalTrainData_Diff/Test/Diff/Mix/m/")
+        self.assertNotIn("optimizer", config)
+        self.assertNotIn("model", config)
+
     def test_model_loads_pretrained_weights_into_trace_backbone(self):
         net_py = (ROOT / "model" / "net.py").read_text(encoding="utf-8")
         self.assertIn("self.backbone_t.load_state_dict", net_py)

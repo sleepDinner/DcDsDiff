@@ -9,12 +9,14 @@ from PIL import Image
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from tools.generate_git10k_aux import (
+    ImageMaskPair,
     collect_images,
     make_detail_map,
     make_high_frequency_view,
     mix_output_dirs,
     pair_image_mask_files,
     prefix_from_stem,
+    split_project_pairs,
 )
 
 
@@ -70,6 +72,39 @@ class GenerateGit10KAuxTests(unittest.TestCase):
         self.assertEqual(dirs["m"], Path("/data/Diff_dataset/Test/Diff/Mix/m"))
         self.assertEqual(dirs["d"], Path("/data/Diff_dataset/Test/Diff/Mix/d"))
         self.assertEqual(dirs["t"], Path("/data/Diff_dataset/Test/Diff/Mix/t"))
+
+    def test_global_split_mode_uses_overall_9_to_1_split(self):
+        pairs = [
+            ImageMaskPair(
+                stem=f"sample_{index:02d}",
+                image_path=Path(f"images/sample_{index:02d}.png"),
+                mask_path=Path(f"masks/sample_{index:02d}.png"),
+                prefix=f"sample_{index:02d}",
+            )
+            for index in range(10)
+        ]
+
+        assignment = split_project_pairs(pairs, train_ratio=0.9, split_mode="global", seed=7)
+
+        self.assertEqual(sum(split == "train" for split in assignment.values()), 9)
+        self.assertEqual(sum(split == "test" for split in assignment.values()), 1)
+        self.assertEqual(set(assignment), {pair.stem for pair in pairs})
+
+    def test_prefix_split_mode_keeps_existing_per_prefix_behavior(self):
+        pairs = [
+            ImageMaskPair(
+                stem=f"A_{index}",
+                image_path=Path(f"Image/A_{index}.png"),
+                mask_path=Path(f"Mask/A_{index}.png"),
+                prefix="A",
+            )
+            for index in range(10)
+        ]
+
+        assignment = split_project_pairs(pairs, train_ratio=0.9, split_mode="prefix", seed=7)
+
+        self.assertEqual(sum(split == "train" for split in assignment.values()), 9)
+        self.assertEqual(sum(split == "test" for split in assignment.values()), 1)
 
     def test_collect_images_reports_missing_folder(self):
         missing = Path("/definitely/missing/GIT10K/Image")

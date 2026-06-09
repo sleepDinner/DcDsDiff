@@ -1,0 +1,19 @@
+project_name: DcDsDiff-FinalTrainData
+
+__base__:
+  - config/DcDsDiff_352x352.yaml
+
+train_dataset:
+  params:
+    image_root: '/data0/hl/FinalTrainData_Diff/train/Diff/f/'
+    gt_root: '/data0/hl/FinalTrainData_Diff/train/Diff/m/'
+    de_root: '/data0/hl/FinalTrainData_Diff/train/Diff/d/'
+    trace_root: '/data0/hl/FinalTrainData_Diff/train/Diff/t/'
+
+test_dataset:
+  Mix:
+    params:
+      image_root: '/data0/hl/FinalTrainData_Diff/Test/Diff/Mix/f/'
+      gt_root: '/data0/hl/FinalTrainData_Diff/Test/Diff/Mix/m/'
+      de_root: '/data0/hl/FinalTrainData_Diff/Test/Diff/Mix/d/'
+      trace_root: '/data0/hl/FinalTrainData_Diff/Test/Diff/Mix/t/'

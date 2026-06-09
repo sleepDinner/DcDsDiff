@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import argparse
+import csv
+import random
 import re
 import shutil
 from collections import defaultdict
@@ -127,7 +129,31 @@ def copy_image_as_png(source: Path, destination: Path, mode: str, overwrite: boo
         image.convert(mode).save(destination)
 
 
-def split_project_pairs(pairs: list[ImageMaskPair], train_ratio: float) -> dict[str, str]:
+def split_at_count(size: int, train_ratio: float) -> int:
+    split_at = int(size * train_ratio)
+    if size > 1:
+        split_at = min(max(split_at, 1), size - 1)
+    return split_at
+
+
+def split_project_pairs(
+    pairs: list[ImageMaskPair],
+    train_ratio: float,
+    split_mode: str = "prefix",
+    seed: int = 2026,
+) -> dict[str, str]:
+    if split_mode == "global":
+        split_pairs = sorted(pairs, key=lambda pair: natural_key(pair.stem))
+        random.Random(seed).shuffle(split_pairs)
+        split_at = split_at_count(len(split_pairs), train_ratio)
+        return {
+            pair.stem: "train" if index < split_at else "test"
+            for index, pair in enumerate(split_pairs)
+        }
+
+    if split_mode != "prefix":
+        raise ValueError(f"Unsupported split mode: {split_mode}")
+
     groups: dict[str, list[ImageMaskPair]] = defaultdict(list)
     for pair in pairs:
         groups[pair.prefix].append(pair)
@@ -135,12 +161,19 @@ def split_project_pairs(pairs: list[ImageMaskPair], train_ratio: float) -> dict[
     assignment: dict[str, str] = {}
     for prefix_pairs in groups.values():
         prefix_pairs.sort(key=lambda pair: natural_key(pair.stem))
-        split_at = int(len(prefix_pairs) * train_ratio)
-        if len(prefix_pairs) > 1:
-            split_at = min(max(split_at, 1), len(prefix_pairs) - 1)
+        split_at = split_at_count(len(prefix_pairs), train_ratio)
         for index, pair in enumerate(prefix_pairs):
             assignment[pair.stem] = "train" if index < split_at else "test"
     return assignment
+
+
+def write_split_manifest(path: Path, pairs: list[ImageMaskPair], assignment: dict[str, str]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", newline="", encoding="utf-8") as csv_file:
+        writer = csv.writer(csv_file)
+        writer.writerow(["stem", "split", "prefix", "image_path", "mask_path"])
+        for pair in sorted(pairs, key=lambda item: natural_key(item.stem)):
+            writer.writerow([pair.stem, assignment[pair.stem], pair.prefix, pair.image_path, pair.mask_path])
 
 
 def output_dirs(pair: ImageMaskPair, out_root: Path, layout: str, assignment: dict[str, str]) -> dict[str, Path]:
@@ -222,6 +255,13 @@ def parse_args() -> argparse.Namespace:
         help="With project layout, also write all held-out samples to Test/Diff/<mix-name> for train.py.",
     )
     parser.add_argument("--mix-name", default="Mix", help="Name of the mixed test folder used with --with-test-mix.")
+    parser.add_argument(
+        "--split-mode",
+        choices=("prefix", "global"),
+        default="prefix",
+        help="prefix keeps GIT10K-style per-prefix splitting; global makes one overall train/test split.",
+    )
+    parser.add_argument("--seed", type=int, default=2026, help="Random seed used by --split-mode global.")
     return parser.parse_args()
 
 
@@ -233,7 +273,13 @@ def main() -> None:
     if not pairs:
         raise SystemExit("No matched Image/Mask pairs found.")
 
-    assignment = split_project_pairs(pairs, args.train_ratio) if args.layout == "project" else {}
+    assignment = (
+        split_project_pairs(pairs, args.train_ratio, split_mode=args.split_mode, seed=args.seed)
+        if args.layout == "project"
+        else {}
+    )
+    if args.layout == "project":
+        write_split_manifest(args.out_root / "split_manifest.csv", pairs, assignment)
     copy_inputs = not args.skip_input_copy
 
     for index, pair in enumerate(pairs, 1):
