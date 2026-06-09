@@ -26,6 +26,12 @@ from utils.trainer import Trainer  # noqa: E402
 
 IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".tif", ".tiff", ".bmp"}
 DEFAULT_DATASET_KEYS = ("BN", "PE", "IA", "PP")
+PAPER_DATASET_SOURCE_CANDIDATES = {
+    "BN": ("BN", "RBN"),
+    "PE": ("PE", "EI", "Flux", "e", "t", "z"),
+    "IA": ("IA",),
+    "PP": ("PP",),
+}
 DATASET_SUBDIRS = {
     "image_root": "f",
     "gt_root": "m",
@@ -204,6 +210,11 @@ def image_count(root):
     return sum(1 for path in root.iterdir() if path.is_file() and path.suffix.lower() in IMAGE_EXTENSIONS)
 
 
+def dataset_has_images(cfg, dataset_key):
+    dataset_cfg = get_dataset_cfg(cfg, dataset_key)
+    return image_count(dataset_cfg.params.image_root) > 0
+
+
 def available_dataset_rows(cfg):
     test_diff_root = infer_test_diff_root(cfg)
     rows = []
@@ -239,29 +250,46 @@ def format_available_datasets(cfg):
     return "\n".join(lines)
 
 
+def resolve_dataset_sources(cfg, dataset_key):
+    if dataset_key == "PE" and dataset_has_images(cfg, "PE"):
+        return ["PE"]
+    candidates = PAPER_DATASET_SOURCE_CANDIDATES.get(dataset_key, (dataset_key,))
+    sources = [candidate for candidate in candidates if dataset_has_images(cfg, candidate)]
+    return sources or [dataset_key]
+
+
+def resolve_requested_sources(cfg, dataset_keys):
+    return {dataset_key: resolve_dataset_sources(cfg, dataset_key) for dataset_key in dataset_keys}
+
+
 def validate_dataset_roots(cfg, dataset_keys, *, skip_inference, multi_dataset):
     missing = []
-    for dataset_key in dataset_keys:
-        dataset_cfg = get_dataset_cfg(cfg, dataset_key)
-        roots_to_check = {
-            "image_root": dataset_cfg.params.image_root,
-            "gt_root": dataset_cfg.params.gt_root,
-            "de_root": dataset_cfg.params.de_root,
-            "trace_root": dataset_cfg.params.trace_root,
-        }
-        if skip_inference:
-            roots_to_check = {"gt_root": dataset_cfg.params.gt_root}
-        for root_name, root_path in roots_to_check.items():
-            if not Path(root_path).is_dir():
-                missing.append((dataset_key, root_name, str(root_path)))
+    dataset_sources = resolve_requested_sources(cfg, dataset_keys)
+    for dataset_key, source_keys in dataset_sources.items():
+        if not source_keys:
+            missing.append((dataset_key, "sources", "no matching source folders"))
+            continue
+        for source_key in source_keys:
+            dataset_cfg = get_dataset_cfg(cfg, source_key)
+            roots_to_check = {
+                "image_root": dataset_cfg.params.image_root,
+                "gt_root": dataset_cfg.params.gt_root,
+                "de_root": dataset_cfg.params.de_root,
+                "trace_root": dataset_cfg.params.trace_root,
+            }
+            if skip_inference:
+                roots_to_check = {"gt_root": dataset_cfg.params.gt_root}
+            for root_name, root_path in roots_to_check.items():
+                if not Path(root_path).is_dir():
+                    missing.append((dataset_key, f"{source_key}.{root_name}", str(root_path)))
 
-        if skip_inference:
-            pred_root = prediction_root_for_dataset(cfg, dataset_key, multi_dataset)
-            if not pred_root.is_dir():
-                missing.append((dataset_key, "pred_root", str(pred_root)))
+            if skip_inference:
+                pred_root = prediction_root_for_dataset(cfg, source_key, multi_dataset)
+                if not pred_root.is_dir():
+                    missing.append((dataset_key, f"{source_key}.pred_root", str(pred_root)))
 
     if not missing:
-        return
+        return dataset_sources
 
     lines = ["Missing folders for requested evaluation datasets:"]
     for dataset_key, root_name, root_path in missing:
@@ -269,11 +297,45 @@ def validate_dataset_roots(cfg, dataset_keys, *, skip_inference, multi_dataset):
     lines.append("")
     lines.append(format_available_datasets(cfg))
     lines.append("")
-    lines.append("If PE is missing, inspect the source filenames and regenerate the auxiliary dataset:")
+    lines.append("The paper names are mapped to released folder prefixes as follows when those folders exist:")
+    for logical_key, source_keys in dataset_sources.items():
+        lines.append(f"  {logical_key}: {' + '.join(source_keys)}")
+    lines.append("")
+    lines.append("If a source folder is missing, inspect the source filenames and regenerate the auxiliary dataset:")
     lines.append("  find /data0/hl/DcDsDiff-and-GIT10K/GIT10K/Image -maxdepth 1 -type f | sed -E 's|.*/([A-Za-z]+).*|\\1|' | sort | uniq -c")
     lines.append("  python tools/generate_git10k_aux.py --image-root /data0/hl/DcDsDiff-and-GIT10K/GIT10K/Image --mask-root /data0/hl/DcDsDiff-and-GIT10K/GIT10K/Mask --out-root /data0/hl/Diff_dataset --layout project --with-test-mix --train-ratio 0.9 --overwrite")
     raise SystemExit("\n".join(lines))
 
+
+def weighted_average_results(source_results, source_keys):
+    total_images = int(sum(source_results[key]["num_images"] for key in source_keys))
+    grouped = {
+        "num_images": total_images,
+        "sources": list(source_keys),
+    }
+    for metric in ("F1", "IoU", "AUC", "MAE", "inference_MAE"):
+        weighted_sum = 0.0
+        weight_sum = 0
+        for source_key in source_keys:
+            result = source_results[source_key]
+            if metric not in result:
+                continue
+            weight = result["num_images"]
+            weighted_sum += result[metric] * weight
+            weight_sum += weight
+        if weight_sum:
+            grouped[metric] = float(weighted_sum / weight_sum)
+    grouped["missing_predictions"] = {
+        key: source_results[key]["missing_predictions"]
+        for key in source_keys
+        if source_results[key].get("missing_predictions")
+    }
+    grouped["extra_predictions"] = {
+        key: source_results[key]["extra_predictions"]
+        for key in source_keys
+        if source_results[key].get("extra_predictions")
+    }
+    return grouped
 
 def build_test_loader(cfg, dataset_key):
     test_dataset = instantiate_from_config(get_dataset_cfg(cfg, dataset_key))
@@ -357,23 +419,25 @@ def format_metric(value):
 
 def format_results_table(dataset_results, average_results, dataset_keys, threshold):
     rows = []
-    rows.append(("Dataset", "Images", "F1", "IoU", "AUC"))
-    rows.append(("-" * 7, "-" * 6, "-" * 6, "-" * 6, "-" * 6))
+    rows.append(("Dataset", "Sources", "Images", "F1", "IoU", "AUC"))
+    rows.append(("-" * 7, "-" * 7, "-" * 6, "-" * 6, "-" * 6, "-" * 6))
     for key in dataset_keys:
         result = dataset_results[key]
         rows.append(
             (
                 key,
+                "+".join(result.get("sources", [key])),
                 str(result["num_images"]),
                 format_metric(result["F1"]),
                 format_metric(result["IoU"]),
                 format_metric(result["AUC"]),
             )
         )
-    rows.append(("-" * 7, "-" * 6, "-" * 6, "-" * 6, "-" * 6))
+    rows.append(("-" * 7, "-" * 7, "-" * 6, "-" * 6, "-" * 6, "-" * 6))
     rows.append(
         (
             "Average",
+            "macro",
             str(average_results["num_images"]),
             format_metric(average_results["F1"]),
             format_metric(average_results["IoU"]),
@@ -437,12 +501,19 @@ def main():
         raise SystemExit("Cannot use both --batch-ensemble and --time-ensemble")
 
     dataset_keys = list(cfg.dataset_keys)
-    multi_dataset = len(dataset_keys) > 1
     if cfg.list_datasets:
         print(format_available_datasets(cfg))
         return
 
-    validate_dataset_roots(cfg, dataset_keys, skip_inference=cfg.skip_inference, multi_dataset=multi_dataset)
+    candidate_sources = resolve_requested_sources(cfg, dataset_keys)
+    unique_source_keys = sorted({source_key for source_keys in candidate_sources.values() for source_key in source_keys})
+    source_multi_dataset = len(unique_source_keys) > 1
+    dataset_sources = validate_dataset_roots(
+        cfg,
+        dataset_keys,
+        skip_inference=cfg.skip_inference,
+        multi_dataset=source_multi_dataset,
+    )
 
     trainer = None
     if not cfg.skip_inference:
@@ -450,33 +521,41 @@ def main():
         trainer.load(pretrained_path=cfg.checkpoint)
 
     dataset_results = {}
-    for dataset_key in dataset_keys:
-        dataset_cfg = get_dataset_cfg(cfg, dataset_key)
-        gt_root = Path(dataset_cfg.params.gt_root)
-        pred_root = prediction_root_for_dataset(cfg, dataset_key, multi_dataset)
+    source_results = {}
+    for dataset_key, source_keys in dataset_sources.items():
+        for source_key in source_keys:
+            if source_key in source_results:
+                continue
+            dataset_cfg = get_dataset_cfg(cfg, source_key)
+            gt_root = Path(dataset_cfg.params.gt_root)
+            pred_root = prediction_root_for_dataset(cfg, source_key, source_multi_dataset)
 
-        inference_mae = None
-        if not cfg.skip_inference:
-            inference_mae = run_inference_for_dataset(trainer, cfg, dataset_key, pred_root)
-            if not trainer.accelerator.is_main_process:
-                return
-        elif not pred_root.is_dir():
-            raise SystemExit(f"--skip-inference was set but prediction folder does not exist: {pred_root}")
+            inference_mae = None
+            if not cfg.skip_inference:
+                inference_mae = run_inference_for_dataset(trainer, cfg, source_key, pred_root)
+                if not trainer.accelerator.is_main_process:
+                    return
+            elif not pred_root.is_dir():
+                raise SystemExit(f"--skip-inference was set but prediction folder does not exist: {pred_root}")
 
-        results = evaluate_prediction_folder(
-            gt_root=gt_root,
-            pred_root=pred_root,
-            threshold=cfg.threshold,
-            sweep_thresholds=cfg.sweep_thresholds,
-            threshold_steps=cfg.threshold_steps,
-        )
-        if inference_mae is not None:
-            results["inference_MAE"] = float(inference_mae)
-        results["dataset_key"] = dataset_key
-        results["gt_root"] = str(gt_root)
-        results["pred_root"] = str(pred_root)
-        results["checkpoint"] = str(cfg.checkpoint)
-        dataset_results[dataset_key] = results
+            results = evaluate_prediction_folder(
+                gt_root=gt_root,
+                pred_root=pred_root,
+                threshold=cfg.threshold,
+                sweep_thresholds=cfg.sweep_thresholds,
+                threshold_steps=cfg.threshold_steps,
+            )
+            if inference_mae is not None:
+                results["inference_MAE"] = float(inference_mae)
+            results["dataset_key"] = source_key
+            results["gt_root"] = str(gt_root)
+            results["pred_root"] = str(pred_root)
+            results["checkpoint"] = str(cfg.checkpoint)
+            source_results[source_key] = results
+
+        dataset_results[dataset_key] = weighted_average_results(source_results, source_keys)
+        dataset_results[dataset_key]["dataset_key"] = dataset_key
+        dataset_results[dataset_key]["checkpoint"] = str(cfg.checkpoint)
 
     average_results = average_dataset_results(dataset_results, dataset_keys)
     print(format_results_table(dataset_results, average_results, dataset_keys, threshold=cfg.threshold))
@@ -484,6 +563,7 @@ def main():
     if cfg.print_json:
         payload = {
             "datasets": dataset_results,
+            "sources": source_results,
             "average": average_results,
             "average_note": "Average is computed from dataset rows only.",
         }

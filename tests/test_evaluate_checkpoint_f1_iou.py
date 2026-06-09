@@ -17,7 +17,9 @@ from tools.evaluate_checkpoint_f1_iou import (  # noqa: E402
     evaluate_prediction_folder,
     format_available_datasets,
     format_results_table,
+    resolve_dataset_sources,
     validate_dataset_roots,
+    weighted_average_results,
 )
 
 
@@ -76,10 +78,10 @@ class EvaluateCheckpointF1IoUTests(unittest.TestCase):
 
     def test_average_dataset_results_uses_existing_subset_values(self):
         dataset_results = {
-            "BN": {"F1": 0.1, "IoU": 0.2, "AUC": 0.3, "num_images": 1},
-            "PE": {"F1": 0.2, "IoU": 0.3, "AUC": 0.4, "num_images": 1},
-            "IA": {"F1": 0.3, "IoU": 0.4, "AUC": 0.5, "num_images": 1},
-            "PP": {"F1": 0.4, "IoU": 0.5, "AUC": 0.6, "num_images": 1},
+            "BN": {"F1": 0.1, "IoU": 0.2, "AUC": 0.3, "num_images": 1, "sources": ["BN"]},
+            "PE": {"F1": 0.2, "IoU": 0.3, "AUC": 0.4, "num_images": 1, "sources": ["EI"]},
+            "IA": {"F1": 0.3, "IoU": 0.4, "AUC": 0.5, "num_images": 1, "sources": ["IA"]},
+            "PP": {"F1": 0.4, "IoU": 0.5, "AUC": 0.6, "num_images": 1, "sources": ["PP"]},
         }
 
         average = average_dataset_results(dataset_results, ["BN", "PE", "IA", "PP"])
@@ -91,20 +93,65 @@ class EvaluateCheckpointF1IoUTests(unittest.TestCase):
 
     def test_format_results_table_is_readable(self):
         dataset_results = {
-            "BN": {"F1": 0.1, "IoU": 0.2, "AUC": 0.3, "num_images": 1},
-            "PE": {"F1": 0.2, "IoU": 0.3, "AUC": 0.4, "num_images": 1},
-            "IA": {"F1": 0.3, "IoU": 0.4, "AUC": 0.5, "num_images": 1},
-            "PP": {"F1": 0.4, "IoU": 0.5, "AUC": 0.6, "num_images": 1},
+            "BN": {"F1": 0.1, "IoU": 0.2, "AUC": 0.3, "num_images": 1, "sources": ["BN", "RBN"]},
+            "PE": {"F1": 0.2, "IoU": 0.3, "AUC": 0.4, "num_images": 1, "sources": ["EI"]},
+            "IA": {"F1": 0.3, "IoU": 0.4, "AUC": 0.5, "num_images": 1, "sources": ["IA"]},
+            "PP": {"F1": 0.4, "IoU": 0.5, "AUC": 0.6, "num_images": 1, "sources": ["PP"]},
         }
         average = average_dataset_results(dataset_results, ["BN", "PE", "IA", "PP"])
 
         table = format_results_table(dataset_results, average, ["BN", "PE", "IA", "PP"], threshold=0.5)
 
         self.assertIn("Dataset", table)
+        self.assertIn("Sources", table)
         self.assertIn("AUC", table)
         self.assertIn("BN", table)
+        self.assertIn("BN+RBN", table)
         self.assertIn("Average", table)
         self.assertIn("0.2500", table)
+
+    def test_resolve_dataset_sources_maps_paper_names_to_released_prefixes(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "Diff_dataset" / "Test" / "Diff"
+            for key in ("Mix", "BN", "RBN", "EI", "Flux", "e", "t", "z", "IA", "PP"):
+                for subdir in ("f", "m", "d", "t"):
+                    (root / key / subdir).mkdir(parents=True)
+                Image.new("L", (2, 2)).save(root / key / "f" / "a.png")
+            cfg = OmegaConf.create(
+                {
+                    "test_dataset": {
+                        "Mix": {
+                            "name": "dataset.data_val.test_dataset",
+                            "params": {
+                                "image_root": str(root / "Mix" / "f") + "/",
+                                "gt_root": str(root / "Mix" / "m") + "/",
+                                "de_root": str(root / "Mix" / "d") + "/",
+                                "trace_root": str(root / "Mix" / "t") + "/",
+                                "testsize": 352,
+                            },
+                        }
+                    }
+                }
+            )
+
+            self.assertEqual(resolve_dataset_sources(cfg, "BN"), ["BN", "RBN"])
+            self.assertEqual(resolve_dataset_sources(cfg, "PE"), ["EI", "Flux", "e", "t", "z"])
+            self.assertEqual(resolve_dataset_sources(cfg, "IA"), ["IA"])
+            self.assertEqual(resolve_dataset_sources(cfg, "PP"), ["PP"])
+
+    def test_weighted_average_results_combines_source_prefixes_by_image_count(self):
+        source_results = {
+            "EI": {"F1": 0.2, "IoU": 0.4, "AUC": 0.6, "MAE": 0.1, "num_images": 1},
+            "e": {"F1": 0.8, "IoU": 1.0, "AUC": 0.0, "MAE": 0.3, "num_images": 3},
+        }
+
+        result = weighted_average_results(source_results, ["EI", "e"])
+
+        self.assertEqual(result["num_images"], 4)
+        self.assertEqual(result["sources"], ["EI", "e"])
+        self.assertAlmostEqual(result["F1"], (0.2 * 1 + 0.8 * 3) / 4)
+        self.assertAlmostEqual(result["IoU"], (0.4 * 1 + 1.0 * 3) / 4)
+        self.assertAlmostEqual(result["AUC"], (0.6 * 1 + 0.0 * 3) / 4)
 
     def test_validate_dataset_roots_reports_missing_subset_before_inference(self):
         with tempfile.TemporaryDirectory() as tmp:
