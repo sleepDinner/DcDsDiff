@@ -1,4 +1,6 @@
 import argparse
+import csv
+import io
 import json
 import os
 import sys
@@ -455,6 +457,68 @@ def format_results_table(dataset_results, average_results, dataset_keys, thresho
     return "\n".join(lines)
 
 
+def format_csv_metric(value):
+    if value != value:
+        return "nan"
+    return f"{value:.6f}"
+
+
+def format_results_csv(dataset_results, average_results, dataset_keys):
+    output = io.StringIO()
+    writer = csv.writer(output, lineterminator="\n")
+    writer.writerow(["Dataset", "Sources", "Images", "F1", "IoU", "AUC"])
+    for key in dataset_keys:
+        result = dataset_results[key]
+        writer.writerow(
+            [
+                key,
+                "+".join(result.get("sources", [key])),
+                result["num_images"],
+                format_csv_metric(result["F1"]),
+                format_csv_metric(result["IoU"]),
+                format_csv_metric(result["AUC"]),
+            ]
+        )
+    writer.writerow(
+        [
+            "Average",
+            "macro",
+            average_results["num_images"],
+            format_csv_metric(average_results["F1"]),
+            format_csv_metric(average_results["IoU"]),
+            format_csv_metric(average_results["AUC"]),
+        ]
+    )
+    return output.getvalue()
+
+
+def make_results_payload(dataset_results, source_results, average_results, dataset_keys, threshold, checkpoint):
+    return {
+        "dataset_keys": list(dataset_keys),
+        "threshold": float(threshold),
+        "checkpoint": str(checkpoint),
+        "datasets": dataset_results,
+        "sources": source_results,
+        "average": average_results,
+        "average_note": "Average is computed from dataset rows only.",
+        "source_mapping_note": "Paper dataset names are evaluated from the released source-prefix folders listed in each row.",
+    }
+
+
+def save_results_report(report_dir, table_text, payload, csv_text, prefix="evaluation_results"):
+    report_dir = Path(report_dir)
+    report_dir.mkdir(parents=True, exist_ok=True)
+    paths = {
+        "txt": report_dir / f"{prefix}.txt",
+        "json": report_dir / f"{prefix}.json",
+        "csv": report_dir / f"{prefix}.csv",
+    }
+    paths["txt"].write_text(table_text + "\n", encoding="utf-8")
+    paths["json"].write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    paths["csv"].write_text(csv_text, encoding="utf-8")
+    return {name: str(path) for name, path in paths.items()}
+
+
 def prediction_root_for_dataset(cfg, dataset_key, multi_dataset):
     if cfg.pred_root is not None:
         root = Path(cfg.pred_root)
@@ -474,6 +538,7 @@ def main():
         help="Dataset keys to evaluate. Defaults to BN PE IA PP.",
     )
     parser.add_argument("--results_folder", type=str, default="./eval_results")
+    parser.add_argument("--report-dir", dest="report_dir", type=str, default=None)
     parser.add_argument("--pred-root", dest="pred_root", type=str, default=None)
     parser.add_argument("--skip-inference", dest="skip_inference", action="store_true")
     parser.add_argument("--fp16", action="store_true")
@@ -558,15 +623,25 @@ def main():
         dataset_results[dataset_key]["checkpoint"] = str(cfg.checkpoint)
 
     average_results = average_dataset_results(dataset_results, dataset_keys)
-    print(format_results_table(dataset_results, average_results, dataset_keys, threshold=cfg.threshold))
+    table = format_results_table(dataset_results, average_results, dataset_keys, threshold=cfg.threshold)
+    payload = make_results_payload(
+        dataset_results,
+        source_results,
+        average_results,
+        dataset_keys,
+        threshold=cfg.threshold,
+        checkpoint=cfg.checkpoint,
+    )
+    csv_text = format_results_csv(dataset_results, average_results, dataset_keys)
+    report_dir = Path(cfg.report_dir) if cfg.report_dir else Path(cfg.results_folder)
+    saved_paths = save_results_report(report_dir, table, payload, csv_text)
+
+    print(table)
+    print("Saved evaluation reports:")
+    for name, path in saved_paths.items():
+        print(f"  {name}: {path}")
 
     if cfg.print_json:
-        payload = {
-            "datasets": dataset_results,
-            "sources": source_results,
-            "average": average_results,
-            "average_note": "Average is computed from dataset rows only.",
-        }
         print(json.dumps(payload, indent=2, ensure_ascii=False))
 
 

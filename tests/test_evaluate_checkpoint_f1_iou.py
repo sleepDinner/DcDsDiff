@@ -16,8 +16,11 @@ from tools.evaluate_checkpoint_f1_iou import (  # noqa: E402
     collect_mask_files,
     evaluate_prediction_folder,
     format_available_datasets,
+    format_results_csv,
     format_results_table,
+    make_results_payload,
     resolve_dataset_sources,
+    save_results_report,
     validate_dataset_roots,
     weighted_average_results,
 )
@@ -109,6 +112,40 @@ class EvaluateCheckpointF1IoUTests(unittest.TestCase):
         self.assertIn("BN+RBN", table)
         self.assertIn("Average", table)
         self.assertIn("0.2500", table)
+
+    def test_save_results_report_writes_text_json_and_csv(self):
+        dataset_keys = ["BN", "PE", "IA", "PP"]
+        dataset_results = {
+            "BN": {"F1": 0.1, "IoU": 0.2, "AUC": 0.3, "num_images": 1, "sources": ["BN", "RBN"]},
+            "PE": {"F1": 0.2, "IoU": 0.3, "AUC": 0.4, "num_images": 1, "sources": ["EI"]},
+            "IA": {"F1": 0.3, "IoU": 0.4, "AUC": 0.5, "num_images": 1, "sources": ["IA"]},
+            "PP": {"F1": 0.4, "IoU": 0.5, "AUC": 0.6, "num_images": 1, "sources": ["PP"]},
+        }
+        source_results = {"BN": {"num_images": 1, "F1": 0.1, "IoU": 0.2, "AUC": 0.3}}
+        average = average_dataset_results(dataset_results, dataset_keys)
+        table = format_results_table(dataset_results, average, dataset_keys, threshold=0.5)
+        csv_text = format_results_csv(dataset_results, average, dataset_keys)
+        payload = make_results_payload(
+            dataset_results,
+            source_results,
+            average,
+            dataset_keys,
+            threshold=0.5,
+            checkpoint="/tmp/model-best.pt",
+        )
+
+        with tempfile.TemporaryDirectory() as tmp:
+            paths = save_results_report(tmp, table, payload, csv_text)
+            txt_path = Path(paths["txt"])
+            json_path = Path(paths["json"])
+            csv_path = Path(paths["csv"])
+
+            self.assertTrue(txt_path.exists())
+            self.assertTrue(json_path.exists())
+            self.assertTrue(csv_path.exists())
+            self.assertIn("Evaluation metrics", txt_path.read_text(encoding="utf-8"))
+            self.assertIn('"average"', json_path.read_text(encoding="utf-8"))
+            self.assertIn("Dataset,Sources,Images,F1,IoU,AUC", csv_path.read_text(encoding="utf-8"))
 
     def test_resolve_dataset_sources_maps_paper_names_to_released_prefixes(self):
         with tempfile.TemporaryDirectory() as tmp:
