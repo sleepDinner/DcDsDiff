@@ -18,8 +18,12 @@ from tools.evaluate_checkpoint_f1_iou import (  # noqa: E402
     format_available_datasets,
     format_results_csv,
     format_results_table,
+    infer_external_image_mask_roots,
     make_results_payload,
+    parse_external_dataset_spec,
+    prepare_external_dataset,
     resolve_dataset_sources,
+    safe_dataset_dir_name,
     save_results_report,
     validate_dataset_roots,
     weighted_average_results,
@@ -61,6 +65,74 @@ class EvaluateCheckpointF1IoUTests(unittest.TestCase):
             masks = collect_mask_files(root)
 
         self.assertEqual(list(masks), ["sample"])
+
+    def test_safe_dataset_dir_name_keeps_cli_friendly_names(self):
+        self.assertEqual(safe_dataset_dir_name("DSO-1"), "DSO-1")
+        self.assertEqual(safe_dataset_dir_name("CASIA v1"), "CASIA_v1")
+
+    def test_parse_external_dataset_spec_inferrs_images_and_masks(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            image_root = root / "images"
+            mask_root = root / "masks"
+            image_root.mkdir()
+            mask_root.mkdir()
+            Image.new("RGB", (2, 2)).save(image_root / "a.jpg")
+            Image.new("L", (2, 2)).save(mask_root / "a.png")
+
+            name, parsed_image_root, parsed_mask_root = parse_external_dataset_spec(f"Casiav1={root}")
+
+        self.assertEqual(name, "Casiav1")
+        self.assertEqual(parsed_image_root, image_root)
+        self.assertEqual(parsed_mask_root, mask_root)
+
+    def test_parse_external_dataset_spec_accepts_explicit_roots(self):
+        name, image_root, mask_root = parse_external_dataset_spec("Korus=/data/images,/data/masks")
+
+        self.assertEqual(name, "Korus")
+        self.assertEqual(image_root, Path("/data/images"))
+        self.assertEqual(mask_root, Path("/data/masks"))
+
+    def test_infer_external_image_mask_roots_reports_child_folders(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "unknown").mkdir()
+
+            with self.assertRaises(SystemExit) as ctx:
+                infer_external_image_mask_roots(root)
+
+        self.assertIn("Cannot infer image/mask folders", str(ctx.exception))
+        self.assertIn("unknown", str(ctx.exception))
+
+    def test_prepare_external_dataset_writes_four_channel_layout(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            image_root = root / "images"
+            mask_root = root / "masks"
+            work_root = root / "prepared"
+            image_root.mkdir()
+            mask_root.mkdir()
+            Image.new("RGB", (4, 4), color=(128, 64, 32)).save(image_root / "sample.jpg")
+            Image.fromarray(np.array([[0, 0, 0, 0], [0, 255, 255, 0], [0, 255, 255, 0], [0, 0, 0, 0]], dtype=np.uint8)).save(mask_root / "sample.png")
+
+            prepared_root, num_images = prepare_external_dataset(
+                "External Test",
+                image_root,
+                mask_root,
+                work_root,
+                detail_radius=15.0,
+                edge_kernel=3,
+                cutoff_ratio=0.5,
+                boost=10.0,
+                overwrite=False,
+                num_workers=1,
+            )
+
+            self.assertEqual(num_images, 1)
+            self.assertTrue((prepared_root / "f" / "sample.png").exists())
+            self.assertTrue((prepared_root / "m" / "sample.png").exists())
+            self.assertTrue((prepared_root / "d" / "sample.png").exists())
+            self.assertTrue((prepared_root / "t" / "sample.png").exists())
 
     def test_evaluate_prediction_folder_resizes_predictions(self):
         with tempfile.TemporaryDirectory() as tmp:

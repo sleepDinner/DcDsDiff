@@ -3,7 +3,9 @@ import csv
 import io
 import json
 import os
+import re
 import sys
+from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
 os.environ.setdefault("NCCL_P2P_DISABLE", "1")
@@ -24,6 +26,11 @@ from utils.import_utils import instantiate_from_config, recurse_instantiate_from
 from utils.init_utils import add_args  # noqa: E402
 from utils.train_utils import set_random_seed  # noqa: E402
 from utils.trainer import Trainer  # noqa: E402
+from tools.generate_git10k_aux import (  # noqa: E402
+    build_generation_jobs,
+    pair_image_mask_files,
+    process_generation_job,
+)
 
 
 IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".tif", ".tiff", ".bmp"}
@@ -40,6 +47,28 @@ DATASET_SUBDIRS = {
     "de_root": "d",
     "trace_root": "t",
 }
+EXTERNAL_IMAGE_DIR_NAMES = (
+    "f",
+    "image",
+    "images",
+    "img",
+    "imgs",
+    "jpegimages",
+    "rgb",
+)
+EXTERNAL_MASK_DIR_NAMES = (
+    "m",
+    "mask",
+    "masks",
+    "gt",
+    "gts",
+    "groundtruth",
+    "ground_truth",
+    "annotation",
+    "annotations",
+    "label",
+    "labels",
+)
 
 try:
     BILINEAR = Image.Resampling.BILINEAR
@@ -189,6 +218,11 @@ def path_with_trailing_slash(path):
     return Path(path).as_posix().rstrip("/") + "/"
 
 
+def safe_dataset_dir_name(name):
+    safe_name = re.sub(r"[^A-Za-z0-9_.-]+", "_", name.strip())
+    return safe_name.strip("_") or "dataset"
+
+
 def infer_test_diff_root(cfg):
     template_key = "Mix" if "Mix" in cfg.test_dataset else next(iter(cfg.test_dataset.keys()))
     return Path(cfg.test_dataset[template_key].params.image_root).parent.parent
@@ -210,6 +244,151 @@ def image_count(root):
     if not root.is_dir():
         return 0
     return sum(1 for path in root.iterdir() if path.is_file() and path.suffix.lower() in IMAGE_EXTENSIONS)
+
+
+def child_dirs(root):
+    root = Path(root)
+    if not root.is_dir():
+        return []
+    return sorted(path for path in root.iterdir() if path.is_dir())
+
+
+def find_named_child_dir(root, names):
+    root = Path(root)
+    names_lower = {name.lower() for name in names}
+    for path in child_dirs(root):
+        if path.name.lower() in names_lower and image_count(path) > 0:
+            return path
+    return None
+
+
+def infer_external_image_mask_roots(root):
+    root = Path(root)
+    if not root.is_dir():
+        raise SystemExit(f"External dataset root does not exist: {root}")
+
+    image_root = find_named_child_dir(root, EXTERNAL_IMAGE_DIR_NAMES)
+    mask_root = find_named_child_dir(root, EXTERNAL_MASK_DIR_NAMES)
+    if image_root is not None and mask_root is not None:
+        return image_root, mask_root
+
+    child_summary = ", ".join(f"{path.name}({image_count(path)})" for path in child_dirs(root)) or "none"
+    raise SystemExit(
+        f"Cannot infer image/mask folders under external dataset root: {root}\n"
+        f"Child folders: {child_summary}\n"
+        "Use an explicit pair instead: --external-dataset NAME=/path/to/images,/path/to/masks"
+    )
+
+
+def parse_external_dataset_spec(spec):
+    if "=" not in spec:
+        raise SystemExit(
+            f"Invalid --external-dataset value: {spec}\n"
+            "Expected NAME=/dataset/root or NAME=/path/to/images,/path/to/masks"
+        )
+    name, path_spec = spec.split("=", 1)
+    name = name.strip()
+    if not name:
+        raise SystemExit(f"Invalid --external-dataset value with empty dataset name: {spec}")
+    paths = [Path(item.strip()) for item in path_spec.split(",") if item.strip()]
+    if len(paths) == 1:
+        image_root, mask_root = infer_external_image_mask_roots(paths[0])
+    elif len(paths) == 2:
+        image_root, mask_root = paths
+    else:
+        raise SystemExit(
+            f"Invalid --external-dataset paths for {name}: {path_spec}\n"
+            "Expected one root path or two comma-separated paths."
+        )
+    return name, image_root, mask_root
+
+
+def process_generation_jobs(jobs, num_workers):
+    if num_workers <= 1:
+        for job in jobs:
+            process_generation_job(job)
+        return
+    with ProcessPoolExecutor(max_workers=num_workers) as executor:
+        for _ in executor.map(process_generation_job, jobs, chunksize=8):
+            pass
+
+
+def prepare_external_dataset(
+    name,
+    image_root,
+    mask_root,
+    work_root,
+    *,
+    detail_radius,
+    edge_kernel,
+    cutoff_ratio,
+    boost,
+    overwrite,
+    num_workers,
+):
+    pairs = pair_image_mask_files(Path(image_root), Path(mask_root))
+    if not pairs:
+        raise SystemExit(f"No matched image/mask pairs found for external dataset {name}: {image_root} <-> {mask_root}")
+
+    dataset_root = Path(work_root) / safe_dataset_dir_name(name)
+    jobs = build_generation_jobs(
+        pairs,
+        out_root=dataset_root,
+        layout="flat",
+        assignment={},
+        detail_radius=detail_radius,
+        edge_kernel=edge_kernel,
+        cutoff_ratio=cutoff_ratio,
+        boost=boost,
+        overwrite=overwrite,
+        copy_inputs=True,
+        with_test_mix=False,
+        mix_name="Mix",
+    )
+    process_generation_jobs(jobs, num_workers=num_workers)
+    return dataset_root, len(pairs)
+
+
+def configure_external_datasets(cfg):
+    if not cfg.external_dataset:
+        return None
+
+    template_key = "Mix" if "Mix" in cfg.test_dataset else next(iter(cfg.test_dataset.keys()))
+    template_cfg = OmegaConf.create(OmegaConf.to_container(cfg.test_dataset[template_key], resolve=True))
+    work_root = Path(cfg.external_work_root) if cfg.external_work_root else Path(cfg.results_folder) / "external_datasets"
+
+    external_dataset_cfg = OmegaConf.create({})
+    dataset_keys = []
+    prepared = {}
+    for spec in cfg.external_dataset:
+        name, image_root, mask_root = parse_external_dataset_spec(spec)
+        dataset_root, num_images = prepare_external_dataset(
+            name,
+            image_root,
+            mask_root,
+            work_root,
+            detail_radius=cfg.external_detail_radius,
+            edge_kernel=cfg.external_edge_kernel,
+            cutoff_ratio=cfg.external_cutoff_ratio,
+            boost=cfg.external_boost,
+            overwrite=cfg.external_overwrite,
+            num_workers=cfg.external_num_workers,
+        )
+        dataset_cfg = OmegaConf.create(OmegaConf.to_container(template_cfg, resolve=True))
+        for root_name, subdir in DATASET_SUBDIRS.items():
+            dataset_cfg.params[root_name] = path_with_trailing_slash(dataset_root / subdir)
+        external_dataset_cfg[name] = dataset_cfg
+        dataset_keys.append(name)
+        prepared[name] = {
+            "source_image_root": str(image_root),
+            "source_mask_root": str(mask_root),
+            "prepared_root": str(dataset_root),
+            "num_images": num_images,
+        }
+
+    cfg.test_dataset = external_dataset_cfg
+    cfg.dataset_keys = dataset_keys
+    return prepared
 
 
 def dataset_has_images(cfg, dataset_key):
@@ -553,6 +732,23 @@ def main():
     parser.add_argument("--batch-ensemble", "--batch_ensemble", dest="batch_ensemble", action="store_true")
     parser.add_argument("--time-ensemble", "--time_ensemble", dest="time_ensemble", action="store_true", default=True)
     parser.add_argument("--no-time-ensemble", "--no_time_ensemble", dest="time_ensemble", action="store_false")
+    parser.add_argument(
+        "--external-dataset",
+        dest="external_dataset",
+        action="append",
+        default=None,
+        help=(
+            "Evaluate an external image/mask dataset. Use NAME=/dataset/root when it contains images/masks "
+            "folders, or NAME=/path/to/images,/path/to/masks for explicit roots. Can be repeated."
+        ),
+    )
+    parser.add_argument("--external-work-root", dest="external_work_root", type=str, default=None)
+    parser.add_argument("--external-num-workers", dest="external_num_workers", type=int, default=1)
+    parser.add_argument("--external-overwrite", dest="external_overwrite", action="store_true")
+    parser.add_argument("--external-detail-radius", dest="external_detail_radius", type=float, default=15.0)
+    parser.add_argument("--external-edge-kernel", dest="external_edge_kernel", type=int, default=3)
+    parser.add_argument("--external-cutoff-ratio", dest="external_cutoff_ratio", type=float, default=0.5)
+    parser.add_argument("--external-boost", dest="external_boost", type=float, default=10.0)
     parser.add_argument("--json", dest="print_json", action="store_true", help="Also print machine-readable JSON.")
     parser.add_argument("--list-datasets", dest="list_datasets", action="store_true", help="List available Test/Diff subsets and exit.")
 
@@ -565,6 +761,7 @@ def main():
     if cfg.batch_ensemble and cfg.time_ensemble:
         raise SystemExit("Cannot use both --batch-ensemble and --time-ensemble")
 
+    external_prepared = configure_external_datasets(cfg)
     dataset_keys = list(cfg.dataset_keys)
     if cfg.list_datasets:
         print(format_available_datasets(cfg))
@@ -632,6 +829,9 @@ def main():
         threshold=cfg.threshold,
         checkpoint=cfg.checkpoint,
     )
+    if external_prepared is not None:
+        payload["external_datasets"] = external_prepared
+        payload["source_mapping_note"] = "External datasets were converted to DcDsDiff f/m/d/t folders before inference."
     csv_text = format_results_csv(dataset_results, average_results, dataset_keys)
     report_dir = Path(cfg.report_dir) if cfg.report_dir else Path(cfg.results_folder)
     saved_paths = save_results_report(report_dir, table, payload, csv_text)
