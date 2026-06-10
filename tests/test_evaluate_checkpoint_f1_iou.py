@@ -15,13 +15,15 @@ from tools.evaluate_checkpoint_f1_iou import (  # noqa: E402
     binary_f1_iou,
     collect_mask_files,
     evaluate_prediction_folder,
+    evaluate_prediction_pairs,
+    ExternalImageMaskDataset,
     format_available_datasets,
     format_results_csv,
     format_results_table,
     infer_external_image_mask_roots,
+    pair_external_image_mask_files,
     make_results_payload,
     parse_external_dataset_spec,
-    prepare_external_dataset,
     resolve_dataset_sources,
     safe_dataset_dir_name,
     save_results_report,
@@ -93,6 +95,38 @@ class EvaluateCheckpointF1IoUTests(unittest.TestCase):
         self.assertEqual(image_root, Path("/data/images"))
         self.assertEqual(mask_root, Path("/data/masks"))
 
+    def test_pair_external_image_mask_files_accepts_mask_suffixes(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            image_root = root / "images"
+            mask_root = root / "masks"
+            image_root.mkdir()
+            mask_root.mkdir()
+            Image.new("RGB", (2, 2)).save(image_root / "sample.jpg")
+            Image.new("L", (2, 2)).save(mask_root / "sample_gt.png")
+
+            pairs = pair_external_image_mask_files(image_root, mask_root)
+
+        self.assertEqual(len(pairs), 1)
+        self.assertEqual(pairs[0].stem, "sample")
+        self.assertEqual(pairs[0].mask_path.name, "sample_gt.png")
+
+    def test_pair_external_image_mask_files_combines_exact_and_suffix_matches(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            image_root = root / "images"
+            mask_root = root / "masks"
+            image_root.mkdir()
+            mask_root.mkdir()
+            Image.new("RGB", (2, 2)).save(image_root / "exact.jpg")
+            Image.new("RGB", (2, 2)).save(image_root / "suffix.jpg")
+            Image.new("L", (2, 2)).save(mask_root / "exact.png")
+            Image.new("L", (2, 2)).save(mask_root / "suffix_mask.png")
+
+            pairs = pair_external_image_mask_files(image_root, mask_root)
+
+        self.assertEqual([pair.stem for pair in pairs], ["exact", "suffix"])
+
     def test_infer_external_image_mask_roots_reports_child_folders(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -104,35 +138,53 @@ class EvaluateCheckpointF1IoUTests(unittest.TestCase):
         self.assertIn("Cannot infer image/mask folders", str(ctx.exception))
         self.assertIn("unknown", str(ctx.exception))
 
-    def test_prepare_external_dataset_writes_four_channel_layout(self):
+    def test_external_image_mask_dataset_computes_aux_inputs_in_memory(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             image_root = root / "images"
             mask_root = root / "masks"
-            work_root = root / "prepared"
             image_root.mkdir()
             mask_root.mkdir()
             Image.new("RGB", (4, 4), color=(128, 64, 32)).save(image_root / "sample.jpg")
             Image.fromarray(np.array([[0, 0, 0, 0], [0, 255, 255, 0], [0, 255, 255, 0], [0, 0, 0, 0]], dtype=np.uint8)).save(mask_root / "sample.png")
+            pairs = pair_external_image_mask_files(image_root, mask_root)
 
-            prepared_root, num_images = prepare_external_dataset(
-                "External Test",
-                image_root,
-                mask_root,
-                work_root,
+            dataset = ExternalImageMaskDataset(
+                pairs,
+                testsize=8,
                 detail_radius=15.0,
                 edge_kernel=3,
                 cutoff_ratio=0.5,
                 boost=10.0,
-                overwrite=False,
-                num_workers=1,
             )
+            sample = dataset[0]
 
-            self.assertEqual(num_images, 1)
-            self.assertTrue((prepared_root / "f" / "sample.png").exists())
-            self.assertTrue((prepared_root / "m" / "sample.png").exists())
-            self.assertTrue((prepared_root / "d" / "sample.png").exists())
-            self.assertTrue((prepared_root / "t" / "sample.png").exists())
+            self.assertEqual(sample["image"].shape, (1, 3, 8, 8))
+            self.assertEqual(sample["trace"].shape, (1, 3, 8, 8))
+            self.assertEqual(sample["name"], "sample.png")
+            self.assertEqual(sample["gt"].mode, "L")
+            self.assertEqual(sample["de"].mode, "L")
+
+    def test_evaluate_prediction_pairs_uses_original_mask_names(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            image_root = root / "images"
+            mask_root = root / "masks"
+            pred_root = root / "pred"
+            image_root.mkdir()
+            mask_root.mkdir()
+            pred_root.mkdir()
+            Image.new("RGB", (2, 2)).save(image_root / "sample.jpg")
+            Image.fromarray(np.array([[255, 0], [255, 0]], dtype=np.uint8)).save(mask_root / "sample_gt.png")
+            Image.fromarray(np.array([[255, 0], [255, 0]], dtype=np.uint8)).save(pred_root / "sample.png")
+            pairs = pair_external_image_mask_files(image_root, mask_root)
+
+            results = evaluate_prediction_pairs(pairs, pred_root, threshold=0.5)
+
+        self.assertEqual(results["num_images"], 1)
+        self.assertAlmostEqual(results["F1"], 1.0)
+        self.assertAlmostEqual(results["IoU"], 1.0)
+        self.assertAlmostEqual(results["AUC"], 1.0)
 
     def test_evaluate_prediction_folder_resizes_predictions(self):
         with tempfile.TemporaryDirectory() as tmp:

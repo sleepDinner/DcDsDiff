@@ -5,7 +5,6 @@ import json
 import os
 import re
 import sys
-from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
 os.environ.setdefault("NCCL_P2P_DISABLE", "1")
@@ -15,7 +14,8 @@ import numpy as np
 import torch
 from omegaconf import OmegaConf
 from PIL import Image
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, Dataset
+import torchvision.transforms as transforms
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
@@ -27,9 +27,11 @@ from utils.init_utils import add_args  # noqa: E402
 from utils.train_utils import set_random_seed  # noqa: E402
 from utils.trainer import Trainer  # noqa: E402
 from tools.generate_git10k_aux import (  # noqa: E402
-    build_generation_jobs,
-    pair_image_mask_files,
-    process_generation_job,
+    ImageMaskPair,
+    make_detail_map,
+    make_high_frequency_view,
+    natural_key,
+    prefix_from_stem,
 )
 
 
@@ -68,6 +70,26 @@ EXTERNAL_MASK_DIR_NAMES = (
     "annotations",
     "label",
     "labels",
+)
+EXTERNAL_MASK_STEM_SUFFIXES = (
+    "_mask",
+    "_masks",
+    "_gt",
+    "_gts",
+    "_groundtruth",
+    "_ground_truth",
+    "_label",
+    "_labels",
+    "_annotation",
+    "_annotations",
+    "_binary",
+    "_bin",
+    "_tamper",
+    "_tampered",
+    "_forged",
+    "_forgery",
+    "_edgemask",
+    "_edge_mask",
 )
 
 try:
@@ -214,6 +236,74 @@ def evaluate_prediction_folder(gt_root, pred_root, threshold=0.5, sweep_threshol
     return results
 
 
+def evaluate_prediction_pairs(pairs, pred_root, threshold=0.5, sweep_thresholds=False, threshold_steps=256):
+    pred_files = collect_mask_files(pred_root)
+    pair_by_stem = {pair.stem: pair for pair in pairs}
+    common_stems = sorted(set(pair_by_stem).intersection(pred_files), key=natural_key)
+    if not common_stems:
+        pair_sample = ", ".join(pair.stem for pair in pairs[:5]) or "none"
+        pred_sample = sample_file_names(pred_files)
+        raise SystemExit(
+            f"No matching prediction/GT filenames under {pred_root} for external dataset.\n"
+            f"Sample expected prediction stems: {pair_sample}\n"
+            f"Sample prediction files: {pred_sample}"
+        )
+
+    f1_values = []
+    iou_values = []
+    auc_values = []
+    mae_values = []
+    thresholds = np.linspace(0.0, 1.0, threshold_steps) if sweep_thresholds else []
+    sweep_f1_sums = np.zeros(len(thresholds), dtype=np.float64)
+    sweep_iou_sums = np.zeros(len(thresholds), dtype=np.float64)
+
+    for stem in common_stems:
+        pair = pair_by_stem[stem]
+        gt_image = Image.open(pair.mask_path).convert("L")
+        gt = np.asarray(gt_image, dtype=np.float32)
+        pred = load_grayscale(pred_files[stem], size=gt_image.size)
+
+        pred_unit = normalize_to_unit(pred)
+        gt_unit = normalize_to_unit(gt)
+        f1, iou = binary_f1_iou(pred_unit, gt_unit, threshold=threshold)
+        f1_values.append(f1)
+        iou_values.append(iou)
+        auc_values.append(binary_auc(pred_unit, gt_unit))
+        mae_values.append(float(np.mean(np.abs(pred_unit - (gt_unit >= 0.5).astype(np.float32)))))
+
+        for idx, sweep_threshold in enumerate(thresholds):
+            sweep_f1, sweep_iou = binary_f1_iou(pred_unit, gt_unit, threshold=float(sweep_threshold))
+            sweep_f1_sums[idx] += sweep_f1
+            sweep_iou_sums[idx] += sweep_iou
+
+    results = {
+        "num_images": len(common_stems),
+        "threshold": float(threshold),
+        "F1": float(np.mean(f1_values)),
+        "IoU": float(np.mean(iou_values)),
+        "AUC": float(np.mean(auc_values)),
+        "MAE": float(np.mean(mae_values)),
+        "missing_predictions": sorted(set(pair_by_stem).difference(pred_files)),
+        "extra_predictions": sorted(set(pred_files).difference(pair_by_stem)),
+    }
+
+    if sweep_thresholds:
+        mean_f1 = sweep_f1_sums / len(common_stems)
+        mean_iou = sweep_iou_sums / len(common_stems)
+        best_f1_idx = int(np.argmax(mean_f1))
+        best_iou_idx = int(np.argmax(mean_iou))
+        results.update(
+            {
+                "best_F1": float(mean_f1[best_f1_idx]),
+                "best_F1_threshold": float(thresholds[best_f1_idx]),
+                "best_IoU": float(mean_iou[best_iou_idx]),
+                "best_IoU_threshold": float(thresholds[best_iou_idx]),
+            }
+        )
+
+    return results
+
+
 def path_with_trailing_slash(path):
     return Path(path).as_posix().rstrip("/") + "/"
 
@@ -221,6 +311,88 @@ def path_with_trailing_slash(path):
 def safe_dataset_dir_name(name):
     safe_name = re.sub(r"[^A-Za-z0-9_.-]+", "_", name.strip())
     return safe_name.strip("_") or "dataset"
+
+
+def collect_external_image_files(root):
+    root = Path(root)
+    if not root.is_dir():
+        raise SystemExit(f"Input folder does not exist: {root}")
+    return {
+        path.stem: path
+        for path in sorted(root.iterdir(), key=lambda item: natural_key(item.name))
+        if path.is_file() and path.suffix.lower() in IMAGE_EXTENSIONS
+    }
+
+
+def normalize_external_pair_key(stem):
+    key = stem.lower()
+    changed = True
+    while changed:
+        changed = False
+        for suffix in EXTERNAL_MASK_STEM_SUFFIXES:
+            if key.endswith(suffix) and len(key) > len(suffix):
+                key = key[: -len(suffix)]
+                changed = True
+                break
+    return key
+
+
+def unique_by_normalized_stem(files):
+    grouped = {}
+    for stem, path in files.items():
+        key = normalize_external_pair_key(stem)
+        grouped.setdefault(key, []).append((stem, path))
+    return {key: values[0] for key, values in grouped.items() if len(values) == 1}
+
+
+def sample_file_names(files, limit=5):
+    return ", ".join(path.name for _, path in sorted(files.items(), key=lambda item: natural_key(item[0]))[:limit]) or "none"
+
+
+def pair_external_image_mask_files(image_root, mask_root):
+    image_files = collect_external_image_files(image_root)
+    mask_files = collect_external_image_files(mask_root)
+
+    pairs = []
+    used_image_stems = set()
+    used_mask_stems = set()
+    exact_stems = sorted(set(image_files) & set(mask_files), key=natural_key)
+    for stem in exact_stems:
+        pairs.append(
+            ImageMaskPair(
+                stem=stem,
+                image_path=image_files[stem],
+                mask_path=mask_files[stem],
+                prefix=prefix_from_stem(stem),
+            )
+        )
+        used_image_stems.add(stem)
+        used_mask_stems.add(stem)
+
+    remaining_image_files = {
+        stem: path for stem, path in image_files.items() if stem not in used_image_stems
+    }
+    remaining_mask_files = {
+        stem: path for stem, path in mask_files.items() if stem not in used_mask_stems
+    }
+    image_by_key = unique_by_normalized_stem(remaining_image_files)
+    mask_by_key = unique_by_normalized_stem(remaining_mask_files)
+    common_keys = sorted(set(image_by_key) & set(mask_by_key), key=natural_key)
+    for key in common_keys:
+        image_stem, image_path = image_by_key[key]
+        mask_stem, mask_path = mask_by_key[key]
+        pairs.append(
+            ImageMaskPair(
+                stem=image_stem,
+                image_path=image_path,
+                mask_path=mask_path,
+                prefix=prefix_from_stem(image_stem),
+            )
+        )
+        used_image_stems.add(image_stem)
+        used_mask_stems.add(mask_stem)
+
+    return sorted(pairs, key=lambda pair: natural_key(pair.stem))
 
 
 def infer_test_diff_root(cfg):
@@ -303,90 +475,39 @@ def parse_external_dataset_spec(spec):
     return name, image_root, mask_root
 
 
-def process_generation_jobs(jobs, num_workers):
-    if num_workers <= 1:
-        for job in jobs:
-            process_generation_job(job)
-        return
-    with ProcessPoolExecutor(max_workers=num_workers) as executor:
-        for _ in executor.map(process_generation_job, jobs, chunksize=8):
-            pass
-
-
-def prepare_external_dataset(
-    name,
-    image_root,
-    mask_root,
-    work_root,
-    *,
-    detail_radius,
-    edge_kernel,
-    cutoff_ratio,
-    boost,
-    overwrite,
-    num_workers,
-):
-    pairs = pair_image_mask_files(Path(image_root), Path(mask_root))
-    if not pairs:
-        raise SystemExit(f"No matched image/mask pairs found for external dataset {name}: {image_root} <-> {mask_root}")
-
-    dataset_root = Path(work_root) / safe_dataset_dir_name(name)
-    jobs = build_generation_jobs(
-        pairs,
-        out_root=dataset_root,
-        layout="flat",
-        assignment={},
-        detail_radius=detail_radius,
-        edge_kernel=edge_kernel,
-        cutoff_ratio=cutoff_ratio,
-        boost=boost,
-        overwrite=overwrite,
-        copy_inputs=True,
-        with_test_mix=False,
-        mix_name="Mix",
-    )
-    process_generation_jobs(jobs, num_workers=num_workers)
-    return dataset_root, len(pairs)
-
-
 def configure_external_datasets(cfg):
     if not cfg.external_dataset:
         return None
 
     template_key = "Mix" if "Mix" in cfg.test_dataset else next(iter(cfg.test_dataset.keys()))
-    template_cfg = OmegaConf.create(OmegaConf.to_container(cfg.test_dataset[template_key], resolve=True))
-    work_root = Path(cfg.external_work_root) if cfg.external_work_root else Path(cfg.results_folder) / "external_datasets"
-
-    external_dataset_cfg = OmegaConf.create({})
+    testsize = int(cfg.test_dataset[template_key].params.testsize)
     dataset_keys = []
     prepared = {}
     for spec in cfg.external_dataset:
         name, image_root, mask_root = parse_external_dataset_spec(spec)
-        dataset_root, num_images = prepare_external_dataset(
-            name,
-            image_root,
-            mask_root,
-            work_root,
-            detail_radius=cfg.external_detail_radius,
-            edge_kernel=cfg.external_edge_kernel,
-            cutoff_ratio=cfg.external_cutoff_ratio,
-            boost=cfg.external_boost,
-            overwrite=cfg.external_overwrite,
-            num_workers=cfg.external_num_workers,
-        )
-        dataset_cfg = OmegaConf.create(OmegaConf.to_container(template_cfg, resolve=True))
-        for root_name, subdir in DATASET_SUBDIRS.items():
-            dataset_cfg.params[root_name] = path_with_trailing_slash(dataset_root / subdir)
-        external_dataset_cfg[name] = dataset_cfg
+        pairs = pair_external_image_mask_files(image_root, mask_root)
+        if not pairs:
+            image_files = collect_external_image_files(image_root)
+            mask_files = collect_external_image_files(mask_root)
+            raise SystemExit(
+                f"No matched image/mask pairs found for external dataset {name}: {image_root} <-> {mask_root}\n"
+                f"Sample image files: {sample_file_names(image_files)}\n"
+                f"Sample mask files: {sample_file_names(mask_files)}\n"
+                "If mask names use another convention, send these samples and I will add that rule."
+            )
         dataset_keys.append(name)
         prepared[name] = {
             "source_image_root": str(image_root),
             "source_mask_root": str(mask_root),
-            "prepared_root": str(dataset_root),
-            "num_images": num_images,
+            "num_images": len(pairs),
+            "testsize": testsize,
+            "pairs": pairs,
+            "detail_radius": cfg.external_detail_radius,
+            "edge_kernel": cfg.external_edge_kernel,
+            "cutoff_ratio": cfg.external_cutoff_ratio,
+            "boost": cfg.external_boost,
         }
 
-    cfg.test_dataset = external_dataset_cfg
     cfg.dataset_keys = dataset_keys
     return prepared
 
@@ -518,8 +639,92 @@ def weighted_average_results(source_results, source_keys):
     }
     return grouped
 
-def build_test_loader(cfg, dataset_key):
-    test_dataset = instantiate_from_config(get_dataset_cfg(cfg, dataset_key))
+
+class ExternalImageMaskDataset(Dataset):
+    def __init__(
+        self,
+        pairs,
+        testsize,
+        *,
+        detail_radius=15.0,
+        edge_kernel=3,
+        cutoff_ratio=0.5,
+        boost=10.0,
+        mean=None,
+        std=None,
+    ):
+        self.pairs = list(pairs)
+        self.size = len(self.pairs)
+        self.testsize = int(testsize)
+        self.detail_radius = detail_radius
+        self.edge_kernel = edge_kernel
+        self.cutoff_ratio = cutoff_ratio
+        self.boost = boost
+        self.transform = self.get_transform(mean, std)
+
+    def get_transform(self, mean=None, std=None):
+        mean = [0.485, 0.456, 0.406] if mean is None else mean
+        std = [0.229, 0.224, 0.225] if std is None else std
+        return transforms.Compose(
+            [
+                transforms.Resize((self.testsize, self.testsize)),
+                transforms.ToTensor(),
+                transforms.Normalize(mean, std),
+            ]
+        )
+
+    @staticmethod
+    def rgb_loader(path):
+        with open(path, "rb") as handle:
+            image = Image.open(handle)
+            return image.convert("RGB")
+
+    @staticmethod
+    def binary_loader(path):
+        with open(path, "rb") as handle:
+            image = Image.open(handle)
+            return image.convert("L")
+
+    def __len__(self):
+        return self.size
+
+    def __getitem__(self, item):
+        pair = self.pairs[item]
+        image = self.rgb_loader(pair.image_path)
+        gt = self.binary_loader(pair.mask_path)
+
+        detail = make_detail_map(
+            np.asarray(gt, dtype=np.uint8),
+            radius=self.detail_radius,
+            edge_kernel=self.edge_kernel,
+        )
+        trace = make_high_frequency_view(
+            np.asarray(image, dtype=np.uint8),
+            cutoff_ratio=self.cutoff_ratio,
+            boost=self.boost,
+        )
+
+        image_for_post = self.get_transform()(image.copy())
+        image = self.transform(image).unsqueeze(0)
+        trace = self.transform(Image.fromarray(trace)).unsqueeze(0)
+        de = Image.fromarray(detail)
+        name = f"{pair.stem}.png"
+        return {"image": image, "gt": gt, "de": de, "trace": trace, "name": name, "image_for_post": image_for_post}
+
+
+def build_test_loader(cfg, dataset_key, external_datasets=None):
+    if external_datasets and dataset_key in external_datasets:
+        info = external_datasets[dataset_key]
+        test_dataset = ExternalImageMaskDataset(
+            info["pairs"],
+            info["testsize"],
+            detail_radius=info["detail_radius"],
+            edge_kernel=info["edge_kernel"],
+            cutoff_ratio=info["cutoff_ratio"],
+            boost=info["boost"],
+        )
+    else:
+        test_dataset = instantiate_from_config(get_dataset_cfg(cfg, dataset_key))
     return DataLoader(
         test_dataset,
         batch_size=cfg.batch_size,
@@ -552,8 +757,8 @@ def build_trainer(cfg):
     )
 
 
-def run_inference_for_dataset(trainer, cfg, dataset_key, pred_root):
-    test_loader = build_test_loader(cfg, dataset_key)
+def run_inference_for_dataset(trainer, cfg, dataset_key, pred_root, external_datasets=None):
+    test_loader = build_test_loader(cfg, dataset_key, external_datasets=external_datasets)
     test_loader = trainer.accelerator.prepare(test_loader)
 
     pred_root.mkdir(parents=True, exist_ok=True)
@@ -742,9 +947,9 @@ def main():
             "folders, or NAME=/path/to/images,/path/to/masks for explicit roots. Can be repeated."
         ),
     )
-    parser.add_argument("--external-work-root", dest="external_work_root", type=str, default=None)
-    parser.add_argument("--external-num-workers", dest="external_num_workers", type=int, default=1)
-    parser.add_argument("--external-overwrite", dest="external_overwrite", action="store_true")
+    parser.add_argument("--external-work-root", dest="external_work_root", type=str, default=None, help=argparse.SUPPRESS)
+    parser.add_argument("--external-num-workers", dest="external_num_workers", type=int, default=1, help=argparse.SUPPRESS)
+    parser.add_argument("--external-overwrite", dest="external_overwrite", action="store_true", help=argparse.SUPPRESS)
     parser.add_argument("--external-detail-radius", dest="external_detail_radius", type=float, default=15.0)
     parser.add_argument("--external-edge-kernel", dest="external_edge_kernel", type=int, default=3)
     parser.add_argument("--external-cutoff-ratio", dest="external_cutoff_ratio", type=float, default=0.5)
@@ -767,15 +972,19 @@ def main():
         print(format_available_datasets(cfg))
         return
 
-    candidate_sources = resolve_requested_sources(cfg, dataset_keys)
-    unique_source_keys = sorted({source_key for source_keys in candidate_sources.values() for source_key in source_keys})
-    source_multi_dataset = len(unique_source_keys) > 1
-    dataset_sources = validate_dataset_roots(
-        cfg,
-        dataset_keys,
-        skip_inference=cfg.skip_inference,
-        multi_dataset=source_multi_dataset,
-    )
+    if external_prepared is not None:
+        dataset_sources = {dataset_key: [dataset_key] for dataset_key in dataset_keys}
+        source_multi_dataset = len(dataset_keys) > 1
+    else:
+        candidate_sources = resolve_requested_sources(cfg, dataset_keys)
+        unique_source_keys = sorted({source_key for source_keys in candidate_sources.values() for source_key in source_keys})
+        source_multi_dataset = len(unique_source_keys) > 1
+        dataset_sources = validate_dataset_roots(
+            cfg,
+            dataset_keys,
+            skip_inference=cfg.skip_inference,
+            multi_dataset=source_multi_dataset,
+        )
 
     trainer = None
     if not cfg.skip_inference:
@@ -788,25 +997,44 @@ def main():
         for source_key in source_keys:
             if source_key in source_results:
                 continue
-            dataset_cfg = get_dataset_cfg(cfg, source_key)
-            gt_root = Path(dataset_cfg.params.gt_root)
             pred_root = prediction_root_for_dataset(cfg, source_key, source_multi_dataset)
+            external_info = external_prepared.get(source_key) if external_prepared is not None else None
+            if external_info is not None:
+                gt_root = Path(external_info["source_mask_root"])
+            else:
+                dataset_cfg = get_dataset_cfg(cfg, source_key)
+                gt_root = Path(dataset_cfg.params.gt_root)
 
             inference_mae = None
             if not cfg.skip_inference:
-                inference_mae = run_inference_for_dataset(trainer, cfg, source_key, pred_root)
+                inference_mae = run_inference_for_dataset(
+                    trainer,
+                    cfg,
+                    source_key,
+                    pred_root,
+                    external_datasets=external_prepared,
+                )
                 if not trainer.accelerator.is_main_process:
                     return
             elif not pred_root.is_dir():
                 raise SystemExit(f"--skip-inference was set but prediction folder does not exist: {pred_root}")
 
-            results = evaluate_prediction_folder(
-                gt_root=gt_root,
-                pred_root=pred_root,
-                threshold=cfg.threshold,
-                sweep_thresholds=cfg.sweep_thresholds,
-                threshold_steps=cfg.threshold_steps,
-            )
+            if external_info is not None:
+                results = evaluate_prediction_pairs(
+                    external_info["pairs"],
+                    pred_root=pred_root,
+                    threshold=cfg.threshold,
+                    sweep_thresholds=cfg.sweep_thresholds,
+                    threshold_steps=cfg.threshold_steps,
+                )
+            else:
+                results = evaluate_prediction_folder(
+                    gt_root=gt_root,
+                    pred_root=pred_root,
+                    threshold=cfg.threshold,
+                    sweep_thresholds=cfg.sweep_thresholds,
+                    threshold_steps=cfg.threshold_steps,
+                )
             if inference_mae is not None:
                 results["inference_MAE"] = float(inference_mae)
             results["dataset_key"] = source_key
@@ -830,8 +1058,15 @@ def main():
         checkpoint=cfg.checkpoint,
     )
     if external_prepared is not None:
-        payload["external_datasets"] = external_prepared
-        payload["source_mapping_note"] = "External datasets were converted to DcDsDiff f/m/d/t folders before inference."
+        payload["external_datasets"] = {
+            key: {
+                item_key: item_value
+                for item_key, item_value in info.items()
+                if item_key != "pairs"
+            }
+            for key, info in external_prepared.items()
+        }
+        payload["source_mapping_note"] = "External datasets were evaluated directly from image/mask pairs; auxiliary inputs are computed in memory during inference."
     csv_text = format_results_csv(dataset_results, average_results, dataset_keys)
     report_dir = Path(cfg.report_dir) if cfg.report_dir else Path(cfg.results_folder)
     saved_paths = save_results_report(report_dir, table, payload, csv_text)
