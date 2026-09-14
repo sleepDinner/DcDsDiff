@@ -17,11 +17,11 @@
 
 Historical runs are summarized separately in [pre-rebuild audit](docs/history/pre-rebuild-audit.md). They do not fulfill this registered protocol.
 
-## CASIA2-ALL8-V1 — PREPARING
+## CASIA2-ALL8-V1 — READY_TO_LAUNCH
 
 - Authorized 2026-09-14: one fresh CASIA2 training arm on GPU 1 and one All8 best evaluation after training. Run ID reserved: `DCDSDIFF-CASIA2-ALL8-20260914-A`.
 - Protocol: [CASIA2/All8](docs/casia2_all8_protocol.md); config `config/experiments/casia2_all8.yaml` inherits all non-data model/training parameters from the original baseline.
-- Training: 5,123 paired CASIA2 Tp/Gt samples; All8 test count 4,295. Preparation is in progress; no formal CASIA2 run has started yet.
+- Training: 5,123 paired CASIA2 Tp/Gt samples; All8 test count 4,295. Data preparation READY; [manifest](manifests/casia2-all8-v1.csv) SHA-256 `b5d7c329a957bb62e39d22bbef79f4b3d3bb071487fc97212ca2e99455c1bd8b`. [Dataset receipt](docs/casia2_all8_dataset_receipt.json). All image/mask dimensions match, no empty masks or unit-mask scaling, and zero exact train/test RGB overlaps. All 9,418 manifest RGB hashes match the independent raw-image audit.
 - Reporting: existing `model-best.pt` minimizes pooled All8 per-image MAE. Eight individual datasets plus macro/pooled summaries; explicitly test-selected. No aliases, checkpoint sweep or extra seed.
 - Original GIT10K follow-up: one external All8 evaluation of its original GIT10K-MAE-selected `model-best.pt`, after the existing controller completes. Its training source and final99 primary result remain unchanged. Registration evidence will be added after the durable follow-up starts.
-- Engineering: new environment CPU lifecycle/lock guards and actual GPU 1 six-image backward / eight-set sample evaluation passed. These temporary fixtures are not scientific results. Data completion, final publication and formal startup remain.
+- Engineering: new environment CPU lifecycle/lock guards and actual GPU 1 six-image backward / eight-set sample evaluation passed. The 5,123-image batch sampler covers every sample without padding duplicates (854 batches, last batch 5). These temporary fixtures are not scientific results. Temporary validation code/data/checkpoints and preparation staging were removed; [cleanup receipt](docs/transfer_cleanup_receipt.json). Final publication, full file preflight and formal startup remain.

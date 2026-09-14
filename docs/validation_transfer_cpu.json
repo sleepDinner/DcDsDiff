@@ -42,5 +42,11 @@
     "tools/prepare_benchmark_data.py": "422eefeaec70f470daac629f7d178663acd0d01bf9478d58e7f02dd0c7f6f3da",
     "tools/evaluate_benchmarks.py": "5238235f4574a290b2b1bbb668a3dff5b5195cd11471b81fd0095f7edc9a2b7f",
     "tools/queue_benchmark.py": "bf1f1a3246b22ad0fc7d71484430637c8d01ebb02fe5df0c8675444f63edd365"
+  },
+  "casia_nondivisible_batch_check": {
+    "samples": 5123,
+    "batches": 854,
+    "last_batch": 5,
+    "exact_coverage_no_padding_duplicates": true
   }
 }

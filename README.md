@@ -66,6 +66,13 @@ $PY tools/manage_experiment.py launch --run-id NEW_AUTHORIZED_RUN_ID --gpu 0 \
 
 2026-09-14 用户授权的新实验见 [CASIA2/All8 协议](docs/casia2_all8_protocol.md)。训练使用 CASIA2 的 5,123 对 Tp/Gt；测试使用指定八集，共 4,295 张。模型和训练参数继承原基线。数据路径、配对后缀和数量固定在 `config/benchmark_all8.json`，处理数据为 `data/casia2-all8-v1`，完整清单提交到 `manifests/casia2-all8-v1.csv`。
 
+在尚未建立此数据快照的新服务器 checkout 中，先执行以下准备与清单比对；已有快照直接复用，启动器会核验其文件哈希：
+
+```bash
+$PY tools/prepare_benchmark_data.py --workers 8
+cmp data/casia2-all8-v1/manifest.csv manifests/casia2-all8-v1.csv
+```
+
 ```bash
 $PY tools/manage_experiment.py launch --run-id DCDSDIFF-CASIA2-ALL8-20260914-A \
   --gpu 1 --config config/experiments/casia2_all8.yaml

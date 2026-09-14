@@ -1,0 +1,94 @@
+{
+  "status": "READY",
+  "suite_id": "ALL8-20260914-V1",
+  "spec_sha256": "edb414ec31da0e73f5f9a83380b16360cbbb52d5eca1f5617e3486e1807c3dbc",
+  "manifest_sha256": "b5d7c329a957bb62e39d22bbef79f4b3d3bb071487fc97212ca2e99455c1bd8b",
+  "counts": {
+    "CASIA2": 5123,
+    "Casiav1": 920,
+    "Columbia": 180,
+    "NIST16": 564,
+    "IMD2020": 2010,
+    "DSO-1": 100,
+    "wild": 201,
+    "coverage": 100,
+    "Korus": 220
+  },
+  "train_count": 5123,
+  "test_count": 4295,
+  "anomalies_by_dataset": {
+    "CASIA2": {
+      "size_mismatch": 0,
+      "binary_unit_mask_scaled": 0,
+      "soft_mask": 17,
+      "empty_mask": 0
+    },
+    "Casiav1": {
+      "size_mismatch": 0,
+      "binary_unit_mask_scaled": 0,
+      "soft_mask": 1,
+      "empty_mask": 0
+    },
+    "Columbia": {
+      "size_mismatch": 0,
+      "binary_unit_mask_scaled": 0,
+      "soft_mask": 4,
+      "empty_mask": 0
+    },
+    "NIST16": {
+      "size_mismatch": 0,
+      "binary_unit_mask_scaled": 0,
+      "soft_mask": 0,
+      "empty_mask": 0
+    },
+    "IMD2020": {
+      "size_mismatch": 0,
+      "binary_unit_mask_scaled": 0,
+      "soft_mask": 5,
+      "empty_mask": 0
+    },
+    "DSO-1": {
+      "size_mismatch": 0,
+      "binary_unit_mask_scaled": 0,
+      "soft_mask": 0,
+      "empty_mask": 0
+    },
+    "wild": {
+      "size_mismatch": 0,
+      "binary_unit_mask_scaled": 0,
+      "soft_mask": 0,
+      "empty_mask": 0
+    },
+    "coverage": {
+      "size_mismatch": 0,
+      "binary_unit_mask_scaled": 0,
+      "soft_mask": 3,
+      "empty_mask": 0
+    },
+    "Korus": {
+      "size_mismatch": 0,
+      "binary_unit_mask_scaled": 0,
+      "soft_mask": 0,
+      "empty_mask": 0
+    }
+  },
+  "cross_train_test_identical_rgb_groups": 0,
+  "cross_train_test_identical_rgb_samples": [],
+  "duplicate_rgb_groups": 6,
+  "sample_policy": "retain all paired tampered samples; authentic CASIA2 Au images are not added; no score-based exclusions",
+  "auxiliary_parameters": {
+    "detail_radius": 15,
+    "edge_kernel": 3,
+    "cutoff_ratio": 0.5,
+    "boost": 10
+  },
+  "generator_sha256": "a3d7dcf40fc618467f68af0bdb05e2c6cc657671d546d4227c62c3b91bc7cc5f",
+  "preparation_script_sha256": "422eefeaec70f470daac629f7d178663acd0d01bf9478d58e7f02dd0c7f6f3da",
+  "preparation_environment": {
+    "python_prefix": "/data0/hl/conda_envs/dcdsdiff",
+    "user_site_enabled": false,
+    "opencv": "4.9.0",
+    "numpy": "1.26.4",
+    "pillow": "10.2.0"
+  }
+}

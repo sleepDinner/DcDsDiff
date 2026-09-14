@@ -1,0 +1,19 @@
+{
+  "captured_at": "2026-09-14T20:18:01.801368+08:00",
+  "status": "ALL_TEMPORARY_TEST_AND_STAGING_ARTIFACTS_REMOVED",
+  "verified_no_active_validation_processes": true,
+  "removed": [
+    "/data1/hl/DcDsDiff-and-GIT10K/runtime/transfer-validation",
+    "/data1/hl/DcDsDiff-and-GIT10K/runtime/transfer-code.tar.gz",
+    "/data1/hl/DcDsDiff-and-GIT10K/runtime/locks/run-VALIDATION-GPU0.lock",
+    "/data1/hl/DcDsDiff-and-GIT10K/runtime/transfer-staging"
+  ],
+  "preparation_staging": "removed after verified completion",
+  "original_training_untouched": true,
+  "completed_at": "2026-09-14T20:34:24.415959+08:00",
+  "local_removed": [
+    ".local/validate_transfer_cpu.py",
+    ".local/validate_transfer_gpu.py",
+    ".local/transfer-code.tar.gz"
+  ]
+}
