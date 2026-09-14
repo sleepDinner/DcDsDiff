@@ -1,0 +1,29 @@
+# Direct dependencies for the project-owned Python 3.10 environment.
+# Bootstrap torch wheels first using the official CUDA 12.1 index, then install this file.
+# Pins were selected from the readable historical lzb environment on 2026-09-14.
+# MMCV/MMEngine require opencv-python and Albumentations requires the headless
+# distribution. Pin both to the same release; runtime uses only CPU image operations.
+torch==2.1.2+cu121
+torchvision==0.16.2+cu121
+numpy==1.26.4
+Pillow==10.2.0
+accelerate==1.13.0
+albumentations==1.3.1
+einops==0.8.2
+ema-pytorch==0.7.9
+huggingface-hub==1.15.0
+matplotlib==3.10.9
+mmcv-lite==2.2.0
+mmengine==0.10.7
+numba==0.58.1
+omegaconf==2.3.0
+opencv-python-headless==4.9.0.80
+opencv-python==4.9.0.80
+pytorch-fid==0.3.0
+PyYAML==6.0.1
+scikit-image==0.22.0
+scikit-learn==1.3.2
+scipy==1.11.4
+timm==0.9.12
+tqdm==4.66.1
+wandb==0.27.2

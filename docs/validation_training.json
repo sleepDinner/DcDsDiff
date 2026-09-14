@@ -1,0 +1,31 @@
+{
+  "status": "PASS",
+  "checked_at": "2026-09-14T11:07:03.862259+00:00",
+  "environment": "/data0/hl/conda_envs/dcdsdiff",
+  "torch": "2.1.2+cu121",
+  "user_site_enabled": false,
+  "module_paths": {
+    "torch": "/data0/hl/conda_envs/dcdsdiff/lib/python3.10/site-packages/torch/__init__.py",
+    "accelerate": "/data0/hl/conda_envs/dcdsdiff/lib/python3.10/site-packages/accelerate/__init__.py",
+    "omegaconf": "/data0/hl/conda_envs/dcdsdiff/lib/python3.10/site-packages/omegaconf/__init__.py"
+  },
+  "scope": "CPU toy training; this is not a GPU numerical determinism or scientific-result test",
+  "source_sha256_normalized": {
+    "utils/trainer.py": "37e3d569a1129be72dcdd537d1f96ef8e56f3aba830973591426ab3ff64548da",
+    "utils/init_utils.py": "39404e2ccfba8287e50a94fd781ac372c83da4317c20e02ea76f29298283a064"
+  },
+  "architecture_provenance_saved": true,
+  "checks": [
+    "yaml_preserved",
+    "explicit_cli_override",
+    "dotlist_override",
+    "three_epoch_backward",
+    "epoch_boundary_resume_model_optimizer_scheduler_rng_exact",
+    "four_worker_exact_resume",
+    "validation_rng_restored_on_exception",
+    "final_endpoint_and_hardlink",
+    "metrics_reconciliation",
+    "legacy_resume_rejected"
+  ],
+  "temporary_artifacts_removed_on_exit": true
+}

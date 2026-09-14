@@ -1,0 +1,18 @@
+{
+  "date": "2026-09-14",
+  "python": "/data0/hl/conda_envs/dcdsdiff/bin/python",
+  "scope": "Real controller subprocess lifecycle with temporary toy stages; no scientific model training",
+  "normal_completion": "PASS",
+  "nonzero_exit_records_failure": "PASS",
+  "sigterm_records_interruption": "PASS",
+  "interruption_terminates_stage_and_grandchild": "PASS",
+  "run_id_path_escape_rejected": "PASS",
+  "temporary_test_directories_removed": true,
+  "user_site_enabled": false,
+  "nonzero_stage_exit_with_live_lock_holding_grandchild": "PASS",
+  "bounded_sigkill_escalation_for_sigterm_ignoring_stage": "PASS",
+  "project_lock_released_after_all_four_lifecycle_cases": "PASS",
+  "source_sha256_normalized": {
+    "tools/manage_experiment.py": "fb65742365a5f590ccc79f357d5da18759f18e8a0b9126d9678041a8d36c7a39"
+  }
+}

@@ -1,0 +1,29 @@
+# Pre-launch implementation review — 2026-09-14
+
+Verdict: the reviewed training/controller code has no remaining Required implementation findings. This approves the code path for the registered main run, subject to its environment, dataset, GPU and clean-commit launch gates. It does not certify a completed scientific experiment or establish that the reconstructed split is the unpublished official split.
+
+## Required findings and disposition
+
+| Finding | Final disposition | Evidence |
+|---|---|---|
+| CLI defaults overwrote YAML; hidden GPU override and inconsistent AMP | Explicit CLI/--set precedence; launcher owns the one visible GPU; one-process training; one Accelerator precision setting | `train.py`, `utils/init_utils.py`, `utils/init_env.py`; configuration checks in `validation_training.json` |
+| Resume omitted optimizer/scheduler/RNG and repeated an epoch | Atomic format-2 checkpoints include all states, next_epoch, metrics history, best diagnostic score, config contract and actual model/pretrained provenance | CPU uninterrupted-versus-resumed comparisons pass with 0 and 4 workers; model/AdamW/scheduler/RNG tensors are exactly equal |
+| Repeated Mix images and test-selected primary checkpoint | Mix is traversed once; primary is fixed final epoch 99; MAE best is explicitly diagnostic and test-selected | `train.py`, `utils/trainer.py`, `config/reproduction.yaml` |
+| Final evaluation could read the wrong endpoint or use a different sampling seed | Strict epoch99/next100/format2/fixed-final checks; sampling seed reset after model construction; fixed threshold and full unique image coverage | `tools/evaluate_reproduction.py` |
+| Incomplete evaluation directories prevented recovery; completed training could rewrite an already evaluated checkpoint | Evaluation writes to a unique staging directory and publishes by rename; controller skips a completed fixed-final training stage and verifies evaluation checkpoint hash | `tools/manage_experiment.py`, `tools/evaluate_reproduction.py` |
+| User site packages contaminated the new environment | CLI entrypoints disable user site and preserve that setting for children. Without isolation, OpenCV was loaded from `/home/hl/.local`; with `-s`, live freeze exactly matches the environment receipt | Actual freeze comparison and isolated CPU validation; `validation_training.json` includes module paths and `user_site_enabled=false` |
+| Stage leader exit could leave lock-holding descendants alive | Cleanup targets the owned process group even after its leader exits; bounded TERM-to-KILL escalation inspects live members of that stage session; unresolved cleanup becomes FAILED_CLEANUP | Four real controller lifecycle cases pass, including `os._exit(7)` leaving an inherited-lock grandchild; TERM-ignoring escalation also passes |
+| Configured data could diverge from the provenance manifest | Controller checks all eight actual modality roots, both 352px sizes, batch 6, no accumulation, 100 epochs, 10 steps, receipt counts and hashes | `validate_data_config` and launch gates |
+| Running source/environment could silently change on resume | Git archive snapshots the committed source; resume verifies recorded source/config hashes and environment requirements/lock/live freeze | Controller source inspection; requirement/lock raw hashes match the READY receipt |
+
+## Verification boundaries
+
+`validation_training.json` binds the tested trainer/config source hashes. The tests execute real CPU optimization and fault recovery; they do not establish bitwise determinism of every GPU kernel. `validation_controller.json` binds the tested controller hash and records success, nonzero failure, orphan failure, interruption, lock release, path rejection and bounded escalation. Temporary test directories were removed; temporary validation scripts are excluded from the repository and must be deleted during final cleanup.
+
+The final entrypoint `train.py --help` also succeeds when invoked without PYTHONNOUSERSITE: its early re-exec supplies `-s` before project/third-party imports. Static parsing and scoped `git diff --check` pass. Full model GPU forward/backward and sampling are verified by the separate model validation, not by these CPU/controller checks.
+
+The original data contain mismatched image/mask dimensions; the declared policy independently resizes training modalities to 352px and evaluates masks in their original GT coordinates. Keep exact stem pairing and disclose this geometry policy rather than silently discarding those samples. The reconstructed manifest now places identical RGB content on the same side: an independent CSV check confirms 10,000 unique stems, 9,000/1,000 images, 26 duplicate groups, zero cross-split RGB hashes, and exact agreement with grouped_split(seed=42). Natural sort has no key collisions in this dataset.
+
+Manifest canonicalization removes only the operational reuse-count column and writes LF line endings. It is idempotent, leaves every remaining field and row order unchanged, and gives the same bytes when reuse flags are changed from cached to fresh. The independently calculated canonical SHA-256 is `d865abb3144ae843ba44a9d9d8e3bef547acdccaaad5936a64bd82e99b72d189`; the server receipt must bind those canonical bytes. Auxiliary file hashes remain part of the manifest, so genuinely different PNG bytes correctly produce a different resource fingerprint even if decoded pixels are equal.
+
+The shared logger helper adds handlers when multiple Trainer objects are constructed in one Python process; the temporary multi-trainer test consequently prints repeated log lines. The registered controller creates one trainer per process and separates its process log from its file log, so this does not affect the registered run or its metrics. A future in-process experiment runner should use separate logger instances.

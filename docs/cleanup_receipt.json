@@ -1,0 +1,16 @@
+{
+  "status": "COMPLETED",
+  "removed": [
+    "/data1/hl/DcDsDiff-and-GIT10K/runtime/validation/smoke-data",
+    "/data1/hl/DcDsDiff-and-GIT10K/runtime/validation/smoke-evaluator-3784152",
+    "/data1/hl/DcDsDiff-and-GIT10K/runtime/validation/source",
+    "/data1/hl/DcDsDiff-and-GIT10K/runtime/validation/validation_gpu.py",
+    "/data1/hl/DcDsDiff-and-GIT10K/runtime/validation/validation_manager.py",
+    "/data1/hl/DcDsDiff-and-GIT10K/runtime/validation/prepare_server.sh",
+    "/data1/hl/DcDsDiff-and-GIT10K/runtime/validation/rebuild-stage.tar.gz",
+    "/data1/hl/DcDsDiff-and-GIT10K/data/git10k-recon-v1-rejected-ungrouped",
+    "/data1/hl/DcDsDiff-and-GIT10K/data/git10k-recon-v1/manifest.precanonical.csv"
+  ],
+  "validation_logs_retained": true,
+  "source_dataset_untouched": true
+}

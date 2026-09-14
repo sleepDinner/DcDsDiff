@@ -61,6 +61,7 @@ def collect_images(root: Path) -> dict[str, Path]:
 
 
 def pair_image_mask_files(image_root: Path, mask_root: Path) -> list[ImageMaskPair]:
+    # 原图和 mask 按文件 stem 配对，只有两边都存在同名文件才会进入生成流程。
     image_files = collect_images(image_root)
     mask_files = collect_images(mask_root)
     common_stems = sorted(set(image_files) & set(mask_files), key=natural_key)
@@ -83,18 +84,21 @@ def make_detail_map(mask: np.ndarray, radius: float = 15.0, edge_kernel: int = 3
     """
     if mask.ndim == 3:
         mask = cv2.cvtColor(mask, cv2.COLOR_RGB2GRAY)
+    # 先把任意灰度 mask 二值化，后续形态学操作只关心前景/背景。
     binary = ((mask > 127).astype(np.uint8)) * 255
     if np.count_nonzero(binary) == 0:
         return np.zeros_like(binary, dtype=np.uint8)
 
     kernel_size = max(3, int(edge_kernel) | 1)
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (kernel_size, kernel_size))
+    # 膨胀减腐蚀得到一圈边界区域，这是 detail 图的高响应中心。
     dilated = cv2.dilate(binary, kernel, iterations=1)
     eroded = cv2.erode(binary, kernel, iterations=1)
     edge = cv2.subtract(dilated, eroded)
     if np.count_nonzero(edge) == 0:
         return np.zeros_like(binary, dtype=np.uint8)
 
+    # 离边界越近值越高，超过 radius 后衰减为 0。
     distance = cv2.distanceTransform(255 - edge, cv2.DIST_L2, 5)
     detail = np.clip(1.0 - distance / float(radius), 0.0, 1.0)
     return np.rint(detail * 255.0).astype(np.uint8)
@@ -102,6 +106,7 @@ def make_detail_map(mask: np.ndarray, radius: float = 15.0, edge_kernel: int = 3
 
 def make_high_frequency_view(image: np.ndarray, cutoff_ratio: float = 0.5, boost: float = 10.0) -> np.ndarray:
     """Create the HFVG high-frequency view from an RGB image."""
+    # 兼容灰度图和 RGBA 图，最终都转成 3 通道 RGB 形式处理。
     if image.ndim == 2:
         image = np.repeat(image[:, :, None], 3, axis=2)
     if image.shape[2] == 4:
@@ -111,16 +116,20 @@ def make_high_frequency_view(image: np.ndarray, cutoff_ratio: float = 0.5, boost
     height, width, channels = arr.shape
     y, x = np.ogrid[:height, :width]
     cy, cx = height // 2, width // 2
+    # 用频谱中心圆形区域表示低频；半径由 cutoff_ratio 控制，默认对应论文中的 zeta=0.5。
     radius = max(1.0, float(cutoff_ratio) * min(height, width) / 2.0)
     high_pass = ((y - cy) ** 2 + (x - cx) ** 2) >= radius**2
 
     output = np.empty_like(arr, dtype=np.float32)
     for channel in range(channels):
+        # 对每个颜色通道独立执行 FFT -> 高通滤波 -> IFFT，符合论文 HFVG 的高层流程。
         spectrum = np.fft.fftshift(np.fft.fft2(arr[:, :, channel]))
         filtered = spectrum * high_pass
         restored = np.fft.ifft2(np.fft.ifftshift(filtered)).real
+        # IFFT 后取幅值并乘 boost，突出局部高频异常；默认 boost=10。
         output[:, :, channel] = np.abs(restored) * float(boost)
 
+    # 保存为普通图像前裁剪到 [0,1] 并转回 uint8。
     output = np.clip(output, 0.0, 1.0)
     return np.rint(output * 255.0).astype(np.uint8)
 

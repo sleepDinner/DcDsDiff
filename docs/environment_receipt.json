@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "status": "READY",
+  "prefix": "/data0/hl/conda_envs/dcdsdiff",
+  "requirements_sha256": "e2c4e5b58dca86f09f66aa5efafb0716f9dc9f8e63c46c213a3a72edb6637eb5",
+  "dependency_lock_sha256": "b846c703ddebceffa2efece65c08501b3656a1f2af78ef51e747c1ed42ce0300",
+  "freeze_sha256": "97c473a85a8cbbafe7047cab2d8e3b81a60f4026f1b60226ddbe0ecee714415f",
+  "python_version": "3.10.21 | packaged by conda-forge | (main, Aug 21 2026, 22:42:31) [GCC 14.4.0]",
+  "torch_version": "2.1.2+cu121",
+  "torchvision_version": "0.16.2+cu121",
+  "cuda_runtime": "12.1",
+  "cuda_device_count": 2,
+  "pip_check": "No broken requirements found.",
+  "ready_at": "2026-09-14T11:03:08.385326+00:00"
+}

@@ -1,0 +1,335 @@
+{
+  "status": "PASS",
+  "pid": 3784152,
+  "started_utc": "2026-09-14T11:13:08.773969+00:00",
+  "scientific_result": false,
+  "saved_training_checkpoint": false,
+  "purpose": "bounded fresh model runtime validation, not a scientific experiment",
+  "source": "/data1/hl/DcDsDiff-and-GIT10K/runtime/validation/source",
+  "config": {
+    "project_name": "DcDsDiff-GIT10K-reconstruction-v1",
+    "protocol_id": "GIT10K-PAPER-RECON-V1",
+    "seed": 42,
+    "num_epoch": 100,
+    "batch_size": 6,
+    "gradient_accumulate_every": 1,
+    "num_workers": 4,
+    "lr_min": 1e-06,
+    "fp16": false,
+    "log_with": "none",
+    "save_every": 10,
+    "status_interval_seconds": 60,
+    "results_folder": "runs/manual",
+    "resume": null,
+    "pretrained": null,
+    "model": {
+      "name": "model.net.net",
+      "params": {
+        "class_num": 1,
+        "mask_chans": 1,
+        "architecture_version": "paper-aligned-v1",
+        "allow_pretrained_download": false,
+        "pretrained_path": "/data1/hl/DcDsDiff-and-GIT10K/pretrained_weights/pvt_v2_b2.pth"
+      }
+    },
+    "cond_uvit": {
+      "name": "model.net.EmptyObject",
+      "params": {
+        "conditioning_klass": "model.net.EmptyObject"
+      }
+    },
+    "diffusion_model": {
+      "name": "model.SimpleDiffSef.CondGaussianDiffusion",
+      "params": {
+        "image_size": 352,
+        "channels": 1,
+        "cond_channels": 3,
+        "noise_d": 64,
+        "num_sample_steps": 10,
+        "clip_sample_denoised": true,
+        "pred_objective": "x0",
+        "loss_type": "model.loss.structure_loss"
+      }
+    },
+    "optimizer": {
+      "name": "torch.optim.AdamW",
+      "params": {
+        "lr": 0.001,
+        "weight_decay": 0.01
+      }
+    },
+    "train_val_forward_fn": "model.train_val_forward.modification_train_val_forward",
+    "train_dataset": {
+      "name": "dataset.data_val.PolypObjDataset",
+      "params": {
+        "image_root": "/data1/hl/DcDsDiff-and-GIT10K/runtime/validation/smoke-data/train/f",
+        "gt_root": "/data1/hl/DcDsDiff-and-GIT10K/runtime/validation/smoke-data/train/m",
+        "de_root": "/data1/hl/DcDsDiff-and-GIT10K/runtime/validation/smoke-data/train/d",
+        "trace_root": "/data1/hl/DcDsDiff-and-GIT10K/runtime/validation/smoke-data/train/t",
+        "trainsize": 352,
+        "horizontal_flip": true
+      }
+    },
+    "test_dataset": {
+      "Mix": {
+        "name": "dataset.data_val.test_dataset",
+        "params": {
+          "image_root": "/data1/hl/DcDsDiff-and-GIT10K/runtime/validation/smoke-data/test/f",
+          "gt_root": "/data1/hl/DcDsDiff-and-GIT10K/runtime/validation/smoke-data/test/m",
+          "de_root": "/data1/hl/DcDsDiff-and-GIT10K/runtime/validation/smoke-data/test/d",
+          "trace_root": "/data1/hl/DcDsDiff-and-GIT10K/runtime/validation/smoke-data/test/t",
+          "testsize": 352
+        }
+      }
+    }
+  },
+  "python": "3.10.21 | packaged by conda-forge | (main, Aug 21 2026, 22:42:31) [GCC 14.4.0]",
+  "torch": "2.1.2+cu121",
+  "cuda_runtime": "12.1",
+  "no_user_site": 1,
+  "user_site_enabled": false,
+  "opencv": {
+    "version": "4.9.0",
+    "file": "/data0/hl/conda_envs/dcdsdiff/lib/python3.10/site-packages/cv2/__init__.py"
+  },
+  "cuda_visible_devices": "0",
+  "device_name": "NVIDIA GeForce RTX 4090",
+  "device_total_memory_bytes": 25393692672,
+  "source_sha256": {
+    "model/net.py": "875d7c656d301464a9945a3e278b5cdb49aa2e68b108bc59bd5743f93435346f",
+    "model/loss.py": "b9c6a34d47c7beaf0a82ae63e25063eba0f54fddc8e829f61cc3f8692b436b6b",
+    "model/SimpleDiffSef.py": "d7676800339b573c34b80739b4a740ac680c01f5f5f50ab78e0669df09d03c41",
+    "model/train_val_forward.py": "f0fe749395adeac8570c21c8887a45385d4104d5f305a37f3189a644c01a9e7a",
+    "dataset/data_val.py": "16136814c4c8ededa33c99934949b18466152d01381a807886672f5427764d8f",
+    "utils/import_utils.py": "51e0eb98a8381bcb26a13793201952d7cc5f7321ca6c04fb2a0efe33d838e37f",
+    "utils/init_utils.py": "39404e2ccfba8287e50a94fd781ac372c83da4317c20e02ea76f29298283a064",
+    "tools/evaluate_reproduction.py": "f345ba88cc041234eda8251527a53c9200c1004badb41b3e0a086094d0a5f142",
+    "denoisingdiffusionpytorch/denoising_diffusion_pytorch/simple_diffusion.py": "30d5e46367bdadbf9671d2467a039af57dda1b346a66549c77178091e6b67e4e"
+  },
+  "initialization_seconds": 3.4949507154524326,
+  "architecture_version": "paper-aligned-v1",
+  "pretrained_load_report": {
+    "path": "/data1/hl/DcDsDiff-and-GIT10K/pretrained_weights/pvt_v2_b2.pth",
+    "sha256": "80711cd1b37ffba12bec6c7a2a7c54efe2315ed635e6d2055fd51c3e909ede4d",
+    "branches": {
+      "backbone": {
+        "required_feature_keys": 332,
+        "loaded_feature_keys": 332,
+        "feature_coverage": 1.0,
+        "loaded_feature_numel": 24849856,
+        "fresh_diffusion_keys": [
+          "patch_embed1.mask_proj.bias",
+          "patch_embed1.mask_proj.weight",
+          "time_embed.0.0.bias",
+          "time_embed.0.0.weight",
+          "time_embed.0.2.bias",
+          "time_embed.0.2.weight",
+          "time_embed.1.0.bias",
+          "time_embed.1.0.weight",
+          "time_embed.1.2.bias",
+          "time_embed.1.2.weight",
+          "time_embed.2.0.bias",
+          "time_embed.2.0.weight",
+          "time_embed.2.2.bias",
+          "time_embed.2.2.weight",
+          "time_embed.3.0.bias",
+          "time_embed.3.0.weight",
+          "time_embed.3.2.bias",
+          "time_embed.3.2.weight"
+        ]
+      },
+      "backbone_t": {
+        "required_feature_keys": 332,
+        "loaded_feature_keys": 332,
+        "feature_coverage": 1.0,
+        "loaded_feature_numel": 24849856,
+        "fresh_diffusion_keys": [
+          "patch_embed1.mask_proj.bias",
+          "patch_embed1.mask_proj.weight",
+          "time_embed.0.0.bias",
+          "time_embed.0.0.weight",
+          "time_embed.0.2.bias",
+          "time_embed.0.2.weight",
+          "time_embed.1.0.bias",
+          "time_embed.1.0.weight",
+          "time_embed.1.2.bias",
+          "time_embed.1.2.weight",
+          "time_embed.2.0.bias",
+          "time_embed.2.0.weight",
+          "time_embed.2.2.bias",
+          "time_embed.2.2.weight",
+          "time_embed.3.0.bias",
+          "time_embed.3.0.weight",
+          "time_embed.3.2.bias",
+          "time_embed.3.2.weight"
+        ]
+      }
+    }
+  },
+  "parameter_count": 66324658,
+  "data": {
+    "train_count": 6,
+    "test_count": 2,
+    "train_samples": [
+      "BN (2551).png",
+      "EI (2001).png",
+      "Flux (1).png",
+      "IA (1).png",
+      "PP (1951).png",
+      "RBN (1).png"
+    ],
+    "train_input_shapes": {
+      "image": [
+        6,
+        3,
+        352,
+        352
+      ],
+      "gt": [
+        6,
+        1,
+        352,
+        352
+      ],
+      "de": [
+        6,
+        1,
+        352,
+        352
+      ],
+      "trace": [
+        6,
+        3,
+        352,
+        352
+      ]
+    }
+  },
+  "training_step": {
+    "loss": 1.8024611473083496,
+    "forward_backward_seconds": 1.0383130609989166,
+    "optimizer_step_seconds": 0.09629546850919724,
+    "unclipped_grad_l2": 3.7648508548736572,
+    "group_gradient_l2": {
+      "backbone": 0.3478662371635437,
+      "backbone_t": 0.3725406229496002,
+      "decoder": 3.6690986156463623,
+      "fusion": 0.6723273396492004
+    },
+    "parameters_without_gradient": [
+      "backbone.patch_embed1.mask_proj.weight",
+      "backbone.patch_embed1.mask_proj.bias",
+      "backbone_t.patch_embed1.mask_proj.weight",
+      "backbone_t.patch_embed1.mask_proj.bias",
+      "decode_head1.pred3.0.conv.weight",
+      "decode_head1.pred3.0.bn.weight",
+      "decode_head1.pred3.0.bn.bias",
+      "decode_head1.pred3.2.weight",
+      "decode_head1.pred3.2.bias",
+      "decode_head1.pred4.0.conv.weight",
+      "decode_head1.pred4.0.bn.weight",
+      "decode_head1.pred4.0.bn.bias",
+      "decode_head1.pred4.2.weight",
+      "decode_head1.pred4.2.bias",
+      "mmff4.MMFF_att.rgb_spatial_attention.conv1.weight",
+      "mmff4.MMFF_att.de_spatial_attention.conv1.weight",
+      "mmff3.MMFF_att.rgb_spatial_attention.conv1.weight",
+      "mmff3.MMFF_att.de_spatial_attention.conv1.weight",
+      "mmff2.MMFF_att.rgb_spatial_attention.conv1.weight",
+      "mmff2.MMFF_att.de_spatial_attention.conv1.weight",
+      "mmff1.MMFF_att.rgb_spatial_attention.conv1.weight",
+      "mmff1.MMFF_att.de_spatial_attention.conv1.weight"
+    ],
+    "representative_parameter_delta": {
+      "backbone.patch_embed1.proj.weight": {
+        "l2": 0.09696585685014725,
+        "max_abs": 0.0010045766830444336
+      },
+      "backbone_t.patch_embed1.proj.weight": {
+        "l2": 0.09696020931005478,
+        "max_abs": 0.0010046958923339844
+      },
+      "decode_head1.pred1.2.weight": {
+        "l2": 0.005657271482050419,
+        "max_abs": 0.0010017752647399902
+      },
+      "decode_head1.pred2.2.weight": {
+        "l2": 0.0056557063944637775,
+        "max_abs": 0.0010017156600952148
+      },
+      "mmff1.MMFF_att.rd_spatial_attention.conv1.weight": {
+        "l2": 0.002999706659466028,
+        "max_abs": 0.0010028481483459473
+      },
+      "mmff1.MMFF_att.rgb_channel_attention.fc1.weight": {
+        "l2": 0.1992121934890747,
+        "max_abs": 0.0010005570948123932
+      }
+    },
+    "peak_allocated_bytes": 11161406976,
+    "peak_reserved_bytes": 13583253504
+  },
+  "temporary_interface_checkpoint": {
+    "path": "/data1/hl/DcDsDiff-and-GIT10K/runtime/validation/smoke-evaluator-3784152/SMOKE_ONLY_one_step_metadata_epoch0.pt",
+    "sha256": "8d5fe7a98492293cf0058ea806fd6f0aea5a672e4e3d0bf7d593f7e50474458e",
+    "synthetic_metadata": {
+      "epoch": 0,
+      "next_epoch": 1,
+      "selection": "FIXED_FINAL_EPOCH"
+    },
+    "actual_optimizer_steps": 1,
+    "completed_formal_epochs": 0,
+    "warning": "Metadata is only for evaluator interface validation; this is neither a completed epoch nor the formal epoch-99 endpoint."
+  },
+  "inference": {
+    "entrypoint": "tools/evaluate_reproduction.py CLI",
+    "command": [
+      "/data0/hl/conda_envs/dcdsdiff/bin/python",
+      "-s",
+      "-u",
+      "/data1/hl/DcDsDiff-and-GIT10K/runtime/validation/source/tools/evaluate_reproduction.py",
+      "--config",
+      "/data1/hl/DcDsDiff-and-GIT10K/runtime/validation/smoke-evaluator-3784152/smoke-config.yaml",
+      "--checkpoint",
+      "/data1/hl/DcDsDiff-and-GIT10K/runtime/validation/smoke-evaluator-3784152/SMOKE_ONLY_one_step_metadata_epoch0.pt",
+      "--output",
+      "/data1/hl/DcDsDiff-and-GIT10K/runtime/validation/smoke-evaluator-3784152/SMOKE_ONLY_evaluator_output",
+      "--expected-epoch",
+      "0",
+      "--expected-count",
+      "2"
+    ],
+    "test_samples": [
+      {
+        "name": "e (1).png",
+        "gt_shape": [
+          450,
+          600
+        ]
+      },
+      {
+        "name": "t (87).png",
+        "gt_shape": [
+          426,
+          640
+        ]
+      }
+    ],
+    "batch_size": 2,
+    "steps": 10,
+    "time_ensemble": true,
+    "seed": 0,
+    "seconds_including_model_reload": 6.137878302484751,
+    "exit_code": 0,
+    "coverage_verified": true,
+    "finite_metrics_verified": true,
+    "epoch_verified": 0,
+    "checkpoint_hash_verified": true,
+    "prediction_shape_finite_validation": "Enforced by the actual evaluator before each metric computation",
+    "detail_output_validation": "Single-channel detail temporal mean was separately checked by the local CPU invariant test",
+    "metrics_are_not_scientific_results": true,
+    "temporary_work_directory": "/data1/hl/DcDsDiff-and-GIT10K/runtime/validation/smoke-evaluator-3784152"
+  },
+  "finished_utc": "2026-09-14T11:13:22.761589+00:00",
+  "total_seconds": 13.987640172243118
+}

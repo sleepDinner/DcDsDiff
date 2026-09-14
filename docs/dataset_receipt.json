@@ -1,0 +1,65 @@
+{
+  "protocol_id": "GIT10K-PAPER-RECON-V1",
+  "source": "/data0/hl/DcDsDiff-and-GIT10K/GIT10K",
+  "seed": 42,
+  "split_policy": "natural-sort stems; group identical decoded RGB; Random(seed) shuffle groups; whole groups fill 9000 train",
+  "official_split": false,
+  "official_generator_mapping_available": false,
+  "count": 10000,
+  "train_count": 9000,
+  "test_count": 1000,
+  "prefix_counts": {
+    "train": {
+      "BN": 227,
+      "e": 185,
+      "EI": 2000,
+      "Flux": 4,
+      "IA": 2217,
+      "PP": 2057,
+      "RBN": 2085,
+      "t": 45,
+      "z": 180
+    },
+    "test": {
+      "BN": 24,
+      "e": 15,
+      "EI": 225,
+      "IA": 258,
+      "PP": 217,
+      "RBN": 237,
+      "t": 5,
+      "z": 19
+    }
+  },
+  "size_mismatches": 1627,
+  "soft_masks": 7516,
+  "empty_masks": 1,
+  "cross_split_identical_rgb_images": 0,
+  "distinct_rgb_images": 9974,
+  "duplicate_content_groups": 26,
+  "reused_auxiliary_files": 20000,
+  "auxiliary_parameters": {
+    "detail_radius": 15,
+    "edge_kernel": 3,
+    "cutoff_ratio": 0.5,
+    "boost": 10
+  },
+  "source_image_and_mask_policy": "read-only symlinks; resize both independently to 352 for training",
+  "manifest_sha256": "d865abb3144ae843ba44a9d9d8e3bef547acdccaaad5936a64bd82e99b72d189",
+  "generator_sha256": "a3d7dcf40fc618467f68af0bdb05e2c6cc657671d546d4227c62c3b91bc7cc5f",
+  "preparation_environment": {
+    "python_prefix": "/data0/hl/conda_envs/dcdsdiff",
+    "user_site_enabled": false,
+    "opencv": "4.9.0",
+    "opencv_path": "/data0/hl/conda_envs/dcdsdiff/lib/python3.10/site-packages/cv2/__init__.py",
+    "numpy": "1.26.4",
+    "pillow": "10.2.0"
+  },
+  "auxiliary_verification": {
+    "status": "PASS",
+    "count": 10000,
+    "check": "all d/t constructed in isolated pinned environment; reused files checked pixel-by-pixel"
+  },
+  "status": "READY",
+  "manifest_format": "UTF-8, LF, no per-sample cache provenance; columns identify scientific data only"
+}
