@@ -1,125 +1,56 @@
+"""The active DcDsDiff training and temporal-ensemble inference interface."""
+
 import torch
-from torch import nn
 import torch.nn.functional as F
-import numpy as np
+from torch import nn
 
 
 def normalize_to_01(x):
     return (x - x.min()) / (x.max() - x.min() + 1e-8)
 
 
-def simple_train_val_forward(model: nn.Module, gt=None, image=None,trace=None, **kwargs):
+def modification_train_val_forward(model: nn.Module, gt=None, image=None, de=None,
+                                   trace=None, seg=None, **kwargs):
+    """Generate mask/detail jointly; inference never uses ground-truth content."""
+    if image is None or trace is None:
+        raise ValueError("RGB and HFVG conditions are required")
     if model.training:
-        assert gt is not None and image is not None
-        return model(gt, image,trace **kwargs)
-    else:
-        time_ensemble = kwargs.pop('time_ensemble') if 'time_ensemble' in kwargs else False
-        gt_sizes = kwargs.pop('gt_sizes') if time_ensemble else None
-        pred = model.sample(image,trace **kwargs)
-        if time_ensemble:
-            preds = torch.concat(model.history, dim=1).detach().cpu()
-            pred = torch.mean(preds, dim=1, keepdim=True)
+        if gt is None or de is None:
+            raise ValueError("Training requires mask and detail targets")
+        return model(gt, de, image, trace, seg=seg, **kwargs)
 
-            def process(i, p, gt_size):
-                p = F.interpolate(p.unsqueeze(0), size=gt_size, mode='bilinear', align_corners=False)
-                p = normalize_to_01(p)
-                ps = F.interpolate(preds[i].unsqueeze(0), size=gt_size, mode='bilinear', align_corners=False)
-                preds_round = (ps > 0).float().mean(dim=1, keepdim=True)
-                p_postion = (preds_round > 0.5).float()
-                p = p_postion * p
-                return p
+    time_ensemble = kwargs.pop("time_ensemble", False)
+    gt_sizes = kwargs.pop("gt_sizes", None)
+    pred_gt, pred_de = model.sample(image, trace, **kwargs)
+    if time_ensemble:
+        steps = model.num_sample_steps
+        if len(model.history) != 2 * steps or steps < 1:
+            raise ValueError(f"Expected {2 * steps} alternating mask/detail states, got {len(model.history)}")
+        batch_size = image.shape[0]
+        if gt_sizes is None or len(gt_sizes) != batch_size:
+            raise ValueError("Temporal ensemble requires one original output size per image")
+        if any(state.ndim != 4 or state.shape[:2] != (batch_size, 1) for state in model.history):
+            raise ValueError("Temporal states must have shape [batch, 1, height, width]")
+        masks = torch.cat(model.history[0::2], dim=1).detach().cpu()
+        details = torch.cat(model.history[1::2], dim=1).detach().cpu()
+        mask_mean = masks.mean(dim=1, keepdim=True)
+        detail_mean = details.mean(dim=1, keepdim=True)
+        pred_gt, pred_de = [], []
+        for index, size in enumerate(gt_sizes):
+            # Preserve the public mask mean/minmax/positive-majority mathematics.
+            mask = F.interpolate(mask_mean[index].unsqueeze(0), size=size,
+                                 mode="bilinear", align_corners=False)
+            mask = normalize_to_01(mask)
+            steps_at_size = F.interpolate(masks[index].unsqueeze(0), size=size,
+                                          mode="bilinear", align_corners=False)
+            majority = ((steps_at_size > 0).float().mean(dim=1, keepdim=True) > 0.5).float()
+            pred_gt.append(mask * majority)
+            # The paper describes one averaged detail image. The previous
+            # per-step multiplication broadcast this output to T channels.
+            pred_de.append(F.interpolate(detail_mean[index].unsqueeze(0), size=size,
+                                         mode="bilinear", align_corners=False))
 
-            pred = [process(index, p, gt_size) for index, (p, gt_size) in enumerate(zip(pred, gt_sizes))]
-        return {
-            "image": image,
-            "pred": pred,
-            "gt": gt if gt is not None else None,
-        }
-
-
-def modification_train_val_forward(model: nn.Module, gt=None, image=None, de=None,trace=None,seg=None, **kwargs):
-    """This is for the modification task. When diffusion model add noise, will use seg instead of gt."""
-    if model.training:
-        assert gt is not None and image is not None
-        return model(gt,de, image,trace, seg=seg, **kwargs)
-    else:
-        time_ensemble = kwargs.pop('time_ensemble') if 'time_ensemble' in kwargs else False
-        gt_sizes = kwargs.pop('gt_sizes') if time_ensemble else None
-        pred1,pred2 = model.sample(image,trace, **kwargs)
-        if time_ensemble:
-            """ Here is the function 3, Uncertainty based"""
-
-            preds = torch.concat(model.history, dim=1) #([b, t, 384, 384])
-            chunks = torch.chunk(preds, 20, dim=1)
-            gt_chunks = torch.cat(
-                (chunks[0],chunks[2],chunks[4],chunks[6],chunks[8],chunks[10],
-                 chunks[12],chunks[14],chunks[16],chunks[18]),dim=1)
-            de_chunks = torch.cat(
-                (chunks[1],chunks[3],chunks[5],chunks[7],chunks[9],chunks[11],
-                 chunks[13],chunks[15],chunks[17],chunks[19]),dim=1)
-            preds1 = gt_chunks.detach().cpu()
-            preds2 = de_chunks.detach().cpu()
-            pred1 = torch.mean(preds1, dim=1, keepdim=True)
-            pred2 = torch.mean(preds2, dim=1, keepdim=True)
-
-            def process1(i, p, gt_size):
-                p = F.interpolate(p.unsqueeze(0), size=gt_size, mode='bilinear', align_corners=False)
-                p = normalize_to_01(p)
-                ps = F.interpolate(preds1[i].unsqueeze(0), size=gt_size, mode='bilinear', align_corners=False)
-                preds_round = (ps > 0).float().mean(dim=1, keepdim=True)
-                p_postion = (preds_round > 0.5).float()
-                p = p_postion * p
-                return p
-            def process2(i, p, gt_size):
-                p = F.interpolate(p.unsqueeze(0), size=gt_size, mode='bilinear', align_corners=False)
-                ps = F.interpolate(preds2[i].unsqueeze(0), size=gt_size, mode='bilinear', align_corners=False)
-                p = ps * p
-       
-                return p
-            pred1 = [process1(index, p, gt_size) for index, (p, gt_size) in enumerate(zip(pred1, gt_sizes))]
-            pred2 = [process2(index, p, gt_size) for index, (p, gt_size) in enumerate(zip(pred2, gt_sizes))]
-      
-
-        return {
-            "image": image,
-            "pred_gt": pred1,
-            "pred_de": pred2,
-  
-            "gt": gt if gt is not None else None,
-            "de": de if de is not None else None,
-            "trace": trace if trace is not None else None,
-        }
-
-
-def modification_train_val_forward_e(model: nn.Module, gt=None, image=None, seg=None, **kwargs):
-    """This is for the modification task. When diffusion model add noise, will use seg instead of gt."""
-    if model.training:
-        assert gt is not None and image is not None and seg is not None
-        return model(gt, image, seg=seg, **kwargs)
-    else:
-        time_ensemble = kwargs.pop('time_ensemble') if 'time_ensemble' in kwargs else False
-        gt_sizes = kwargs.pop('gt_sizes') if time_ensemble else None
-        pred = model.sample(image, **kwargs).detach().cpu()
-        if time_ensemble:
-            """ Here is extend function 4, with batch extend."""
-            preds = torch.concat(model.history, dim=1).detach().cpu()
-            for i in range(2):
-                model.sample(image, **kwargs)
-                preds = torch.cat([preds, torch.concat(model.history, dim=1).detach().cpu()], dim=1)
-            pred = torch.mean(preds, dim=1, keepdim=True)
-
-            def process(i, p, gt_size):
-                p = F.interpolate(p.unsqueeze(0), size=gt_size, mode='bilinear', align_corners=False)
-                p = normalize_to_01(p)
-                ps = F.interpolate(preds[i].unsqueeze(0), size=gt_size, mode='bilinear', align_corners=False)
-                preds_round = (ps > 0).float().mean(dim=1, keepdim=True)
-                p_postion = (preds_round > 0.5).float()
-                p = p_postion * p
-                return p
-
-            pred = [process(index, p, gt_size) for index, (p, gt_size) in enumerate(zip(pred, gt_sizes))]
-        return {
-            "image": image,
-            "pred": pred,
-            "gt": gt if gt is not None else None,
-        }
+    return {
+        "image": image, "pred_gt": pred_gt, "pred_de": pred_de,
+        "gt": gt, "de": de, "trace": trace,
+    }

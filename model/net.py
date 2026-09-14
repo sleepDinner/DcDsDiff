@@ -1,4 +1,6 @@
 import os
+import hashlib
+from pathlib import Path
 import torch
 import warnings
 from functools import partial
@@ -759,6 +761,7 @@ class Decoder1(Module):
             nn.Linear(4 * self.time_embed_dim, self.time_embed_dim),
         )
         resnet_block = partial(ResnetBlock, groups=8)
+        # down1/down2 分别编码 detail 噪声图和 mask 噪声图，并注入时间步信息。
         self.down1 = nn.Sequential(
             ConvModule(in_channels=1, out_channels=embedding_dim, kernel_size=7, padding=3, stride=4,
                        norm_cfg=dict(type='BN', requires_grad=True)),
@@ -821,8 +824,10 @@ class Decoder1(Module):
             Conv2d(256, 1, kernel_size=1)
         )
         self.msff = MSFF()
+        # MSIE 让 mask/detail 两条解码分支互相交换局部细节和整体区域信息。
         self.msie = MSIE(embedding_dim // 8)
     def forward(self, inputs, timesteps,x,y):
+        # timesteps 编码后送入 ResnetBlock，使解码器知道当前噪声强度。
         t = self.time_embed(timestep_embedding(timesteps, self.time_embed_dim))
         ##############################################
         xx=x
@@ -841,8 +846,10 @@ class Decoder1(Module):
             else:
                 x = blk2(x)
         ############## MLP decoder on C1-C4 ###########
+        # inputs 是四个尺度的条件特征，MSFF 将其汇聚成统一条件特征 out_c。
         out_c = self.msff(inputs)
 
+        # detail 分支和 mask 分支都拼接同一个条件特征，但保留各自的上采样路径。
         y = torch.cat([out_c, y], dim=1)
         for blk1 in self.up1:
             if isinstance(blk1, ResnetBlock):
@@ -857,47 +864,37 @@ class Decoder1(Module):
                 x = blk2(x, t)
             else:
                 x = blk2(x)
+        # 双流交互后分别预测 detail 图和 mask 图。
         x,y = self.msie(x, y)
         pred_de = self.pred1(y)
         pred_gt = self.pred2(x)
         return pred_gt, pred_de
 
 class ChannelAttention(nn.Module):
-    def __init__(self, in_planes, ratio=16):
-        super(ChannelAttention, self).__init__()
-        self.avg_pool = nn.AdaptiveAvgPool2d(1)
-        self.max_pool = nn.AdaptiveMaxPool2d(1)
+    """Paper section 3.4: global max pool, 1x1 convolution, ReLU, sigmoid."""
 
-        self.fc1 = nn.Conv2d(in_planes, in_planes // ratio, 1, bias=False)
+    def __init__(self, in_planes):
+        super(ChannelAttention, self).__init__()
+        self.max_pool = nn.AdaptiveMaxPool2d(1)
+        self.fc1 = nn.Conv2d(in_planes, in_planes, 1, bias=False)
         self.relu1 = nn.ReLU()
-        self.fc2 = nn.Conv2d(in_planes // ratio, in_planes, 1, bias=False)
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
-        avg_out = self.fc2(self.relu1(self.fc1(self.avg_pool(x))))
-        max_out = self.fc2(self.relu1(self.fc1(self.max_pool(x))))
-        out = avg_out + max_out
-        #print(out.size())
-        return self.sigmoid(out)
+        return self.sigmoid(self.relu1(self.fc1(self.max_pool(x))))
 
 
 class SpatialAttention(nn.Module):
-    def __init__(self, kernel_size=7):
+    """Paper section 3.4: channel max pool, 3x3 convolution, sigmoid."""
+
+    def __init__(self):
         super(SpatialAttention, self).__init__()
-
-        assert kernel_size in (3, 7), 'kernel size must be 3 or 7'
-        padding = 3 if kernel_size == 7 else 1
-
-        self.conv1 = nn.Conv2d(2, 1, kernel_size, padding=padding, bias=False)  # 7,3     3,1
+        self.conv1 = nn.Conv2d(1, 1, 3, padding=1, bias=False)
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
-        avg_out = torch.mean(x, dim=1, keepdim=True)
         max_out, _ = torch.max(x, dim=1, keepdim=True)
-        x = torch.cat([avg_out, max_out], dim=1)
-        x = self.conv1(x)
-        #print(x.size())
-        return self.sigmoid(x)
+        return self.sigmoid(self.conv1(max_out))
 class BasicConv2d(nn.Module):
     def __init__(self, in_planes, out_planes, kernel_size, stride=1, padding=0, dilation=1):
         super(BasicConv2d, self).__init__()
@@ -929,12 +926,14 @@ class MMFF_att(nn.Module):
     def forward(self,r,d):
         assert r.shape == d.shape,"rgb and de should have same size"
 
+        # r 是 RGB 空间特征，d 是高频 trace 特征；先用逐元素乘法估计共享空间关注区域。
         mul_fuse = r * d
         sa = self.rd_spatial_attention(mul_fuse)
         r_f = r * sa
         d_f = d * sa
         r_ca = self.rgb_channel_attention(r_f)
         d_ca = self.de_channel_attention(d_f)
+        # 通道注意力分别突出 RGB 与 trace 中更有用的语义/痕迹通道。
         r_out = r * r_ca
         d_out = d * d_ca
         wweight = nn.Sigmoid()(self.layer1(r_out + d_out))
@@ -951,19 +950,26 @@ class MMFF(nn.Module):
         self.reduce2 = BasicConv2d(in_channel, out_channel,1,stride=1, padding=0, dilation=1)
         self.MMFF_att=MMFF_att(out_channel)
     def forward(self,rgb,de):
+        # 两路特征通道数不同，先用 1x1 卷积统一到 out_channel 再融合。
         rgb=self.reduce1(rgb)
         de = self.reduce2(de)
         f=self.MMFF_att(rgb,de)
         return f
 
 class net(nn.Module):
-    def __init__(self, class_num=2, mask_chans=0, **kwargs):
+    def __init__(self, class_num=2, mask_chans=0, pretrained_path=None,
+                 allow_pretrained_download=False, architecture_version='paper-aligned-v1', **kwargs):
         super(net, self).__init__()
+        if architecture_version != 'paper-aligned-v1':
+            raise ValueError(f'Unsupported architecture version: {architecture_version!r}')
+        self.architecture_version = architecture_version
         self.class_num = class_num
+        # backbone 处理 RGB 原图，backbone_t 处理 HFVG/trace 高频图。
         self.backbone = pvt_v2_b2(in_chans=3, mask_chans=mask_chans)
         self.backbone_t = pvt_v2_b2(in_chans=3, mask_chans=mask_chans)
+        # 解码器接收融合条件特征和两路噪声图，输出 mask/detail 两个预测。
         self.decode_head1 = Decoder1(dims=[256, 256, 256, 256], dim=256, class_num=class_num, mask_chans=mask_chans)
-        self._init_weights()  # load pretrain
+        self._init_weights(pretrained_path, allow_pretrained_download)
         self.freq_nums = 0.3
         self.mmff4=MMFF(512,256)
         self.mmff3 = MMFF(320, 256)
@@ -973,9 +979,11 @@ class net(nn.Module):
     def forward(self, x, y, timesteps, cond_img,trace):
         # Feature Extraction
         # max_shape = cond_img.size()[2:]
+        # cond_img 是 RGB 原图，trace 是高频痕迹图；二者分别进入独立 PVT。
         features = self.backbone(timesteps, cond_img)
         features_tr = self.backbone_t(timesteps, trace)
         out=features
+        # 对四个尺度逐层融合 RGB 特征和 trace 特征。
         out[0] =self.mmff1(features[0],features_tr[0])
         out[1] = self.mmff2(features[1],features_tr[1])
         out[2] = self.mmff3(features[2],features_tr[2])
@@ -999,18 +1007,59 @@ class net(nn.Module):
         from huggingface_hub import hf_hub_download
         return hf_hub_download('Anonymity/pvt_pretrained', f'{model_name}.pth', cache_dir='./pretrained_weights')
 
-    def _init_weights(self):
-        pretrained_dict = torch.load(self._download_weights('pvt_v2_b2')) #for save mem
-        model_dict = self.backbone.state_dict()
-        pretrained_dict = {k: v for k, v in pretrained_dict.items() if k in model_dict}
-        model_dict.update(pretrained_dict)
-        self.backbone.load_state_dict(model_dict, strict=False)
-
-        pretrained_dict = torch.load(self._download_weights('pvt_v2_b2'))  # for save mem
-        model_dict = self.backbone_t.state_dict()
-        pretrained_dict = {k: v for k, v in pretrained_dict.items() if k in model_dict}
-        model_dict.update(pretrained_dict)
-        self.backbone_t.load_state_dict(model_dict, strict=False)
+    def _init_weights(self, pretrained_path=None, allow_pretrained_download=False):
+        # PVT feature weights are shared at initialization, not tied during training.
+        explicit_path = pretrained_path if pretrained_path is not None else os.environ.get('DCDSDIFF_PRETRAINED')
+        if explicit_path is not None and not str(explicit_path).strip():
+            raise ValueError('pretrained_path / DCDSDIFF_PRETRAINED must not be empty')
+        path = Path(explicit_path) if explicit_path is not None else Path(__file__).resolve().parents[1] / 'pretrained_weights' / 'pvt_v2_b2.pth'
+        if not path.is_file() and allow_pretrained_download and explicit_path is None:
+            path = Path(self._download_weights('pvt_v2_b2'))
+        if not path.is_file():
+            raise FileNotFoundError(f'PVTv2-b2 pretrained checkpoint missing: {path}; supply pretrained_path or DCDSDIFF_PRETRAINED')
+        path = path.resolve()
+        checkpoint = torch.load(path, map_location='cpu', weights_only=True)
+        if not isinstance(checkpoint, dict):
+            raise TypeError(f'Expected a tensor state dictionary in {path}')
+        if 'state_dict' in checkpoint:
+            checkpoint = checkpoint['state_dict']
+        elif 'model' in checkpoint and isinstance(checkpoint['model'], dict):
+            checkpoint = checkpoint['model']
+        if not isinstance(checkpoint, dict) or not all(isinstance(key, str) for key in checkpoint):
+            raise TypeError(f'Invalid pretrained state dictionary in {path}')
+        with path.open('rb') as source:
+            digest = hashlib.file_digest(source, 'sha256').hexdigest() if hasattr(hashlib, 'file_digest') else None
+        if digest is None:
+            hasher = hashlib.sha256()
+            with path.open('rb') as source:
+                for chunk in iter(lambda: source.read(1024 * 1024), b''):
+                    hasher.update(chunk)
+            digest = hasher.hexdigest()
+        self.pretrained_load_report = {'path': str(path), 'sha256': digest, 'branches': {}}
+        for branch_name in ('backbone', 'backbone_t'):
+            backbone = getattr(self, branch_name)
+            target = backbone.state_dict()
+            # Diffusion time embeddings and the unused mask projection have no
+            # counterparts in the ImageNet PVT checkpoint and remain fresh.
+            fresh = {key for key in target if key.startswith('time_embed.') or key.startswith('patch_embed1.mask_proj.')}
+            required = set(target) - fresh
+            missing = sorted(required - set(checkpoint))
+            mismatch = [key for key in sorted(required & set(checkpoint))
+                        if not isinstance(checkpoint[key], torch.Tensor) or checkpoint[key].shape != target[key].shape]
+            unexpected = sorted(set(checkpoint) - required - {'head.weight', 'head.bias'})
+            if missing or mismatch or unexpected:
+                raise ValueError(f'Invalid PVT pretrained coverage for {branch_name}: '
+                                 f'missing={missing[:8]}, shape_mismatch={mismatch[:8]}, unexpected={unexpected[:8]}')
+            matched = {key: checkpoint[key] for key in required}
+            incompatible = backbone.load_state_dict(matched, strict=False)
+            if set(incompatible.missing_keys) != fresh or incompatible.unexpected_keys:
+                raise RuntimeError(f'Unexpected pretrained load result for {branch_name}: {incompatible}')
+            self.pretrained_load_report['branches'][branch_name] = {
+                'required_feature_keys': len(required), 'loaded_feature_keys': len(matched),
+                'feature_coverage': 1.0,
+                'loaded_feature_numel': sum(target[key].numel() for key in required),
+                'fresh_diffusion_keys': sorted(fresh),
+            }
 
     @torch.inference_mode()
     def sample_unet(self, x,y, timesteps, cond_img,trace):

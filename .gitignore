@@ -19,3 +19,14 @@ outputs/
 # Local environment files
 .env
 .env.*
+
+# Project-local operational state and recoverable cleanup snapshots
+.local/
+runtime/
+runs/
+data/
+.pytest_cache/
+.agents/
+GIT10K/
+*.log
+*.tmp

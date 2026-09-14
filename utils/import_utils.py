@@ -18,7 +18,9 @@ def instantiate_from_config(config, target_key="name", target_params_key="params
     if not isinstance(config, dict):
         config = dict(config)
     params = dict(config.get(target_params_key, dict()))
+    # kwargs 的优先级高于 YAML params，常用于把 model 或 optimizer params 注入进去。
     merge_params = {**params, **kwargs}
+    # config["name"] 是完整导入路径，例如 model.net.net 或 torch.optim.AdamW。
     return get_obj_from_str(config[target_key])(**merge_params)
 
 
@@ -38,6 +40,7 @@ def recurse_instantiate_from_config(config, target_key="name", target_params_key
 
     for k, v in params.items():
         if isinstance(v, dict) or isinstance(v, omegaconf.dictconfig.DictConfig):
+            # 如果某个参数本身也是一个带 name/params 的配置，就先递归实例化它。
             params[k] = recurse_instantiate_from_config(v, target_key, target_params_key)
     merge_params = {**params, **kwargs}
     return get_obj_from_str(config[target_key])(**merge_params)
@@ -56,6 +59,7 @@ def get_obj_from_str(string, reload=False):
     if reload:
         module_imp = importlib.import_module(module)
         importlib.reload(module_imp)
+    # 动态导入模块并取出类/函数对象，后续再由调用方实例化或调用。
     return getattr(importlib.import_module(module, package=None), cls)
 
 
@@ -79,5 +83,6 @@ class ClassInstance:
 
 def fill_args_from_dict(func, args_dict):
     args = inspect.getfullargspec(func).args
+    # 只取目标函数签名中存在的字段，避免 batch 中额外 key 导致调用报错。
     args_dict = {k: v for k, v in args_dict.items() if k in args}
     return partial(func, **args_dict)

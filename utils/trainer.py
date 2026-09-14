@@ -1,353 +1,342 @@
-import glob
+"""Single-process training with epoch-boundary recovery and fixed-final reporting."""
+import functools
+import json
+import math
 import os
-from collections import defaultdict
+import random
+import sys
+import time
+from datetime import datetime, timezone
 from pathlib import Path
 
-import math
 import numpy as np
 import torch
-from tqdm import tqdm
-import wandb
+import torch.nn.functional as F
 from accelerate import Accelerator
 from omegaconf import OmegaConf
-from utils.logger_utils import create_url_shortcut_of_wandb, create_logger_of_wandb
-from utils.train_utils import SmoothedValue, set_random_seed
+from PIL import Image
+from tqdm import tqdm
+
+from model.train_val_forward import modification_train_val_forward
 from utils.import_utils import fill_args_from_dict
-import torch.nn.functional as F
-import matplotlib.pyplot as plt
-
-from model.train_val_forward import simple_train_val_forward
-
-
-
-def has_int_squareroot(num):
-    return (math.sqrt(num) ** 2) == num
-
-
-def exists(x):
-    return x is not None
-
-
-def num_to_groups(num, divisor):
-    groups = num // divisor
-    remainder = num % divisor
-    arr = [divisor] * groups
-    if remainder > 0:
-        arr.append(remainder)
-    return arr
-
-
-def cal_mae(gt, res, thresholding, save_to=None, n=None):
-    res = F.interpolate(res.unsqueeze(0), size=gt.shape, mode='bilinear', align_corners=False)
-    res = (res - res.min()) / (res.max() - res.min() + 1e-8)
-    res = (res > 0.5).float() if thresholding else res
-    res = res.cpu().numpy().squeeze()
-    if save_to is not None:
-        plt.imsave(os.path.join(save_to, n), res, cmap='gray')
-    return np.sum(np.abs(res - gt)) * 1.0 / (gt.shape[0] * gt.shape[1])
+from utils.logger_utils import create_logger
+from utils.train_utils import set_random_seed
 
 
 def normalize_gt_mask(gt):
-    max_value = gt.max()
-    if max_value <= 0:
-        return np.zeros_like(gt, dtype=np.float32)
-    return gt / max_value
+    # GT is loaded from an 8-bit PIL L image. Preserve soft labels as ToTensor does.
+    return np.asarray(gt, dtype=np.float32) / 255.0
 
 
 def tracker_config_from_cfg(cfg):
-    if cfg is None:
-        return None
-    if OmegaConf.is_config(cfg):
-        return OmegaConf.to_container(cfg, resolve=True)
-    return cfg
+    return OmegaConf.to_container(cfg, resolve=True) if OmegaConf.is_config(cfg) else cfg
+
+
+def capture_rng_state():
+    return {
+        'python': random.getstate(),
+        'numpy': np.random.get_state(),
+        'torch': torch.get_rng_state(),
+        'cuda': torch.cuda.get_rng_state_all() if torch.cuda.is_available() else [],
+    }
+
+
+def restore_rng_state(state):
+    random.setstate(state['python'])
+    np.random.set_state(state['numpy'])
+    torch.set_rng_state(state['torch'].cpu())
+    if state['cuda']:
+        torch.cuda.set_rng_state_all([item.cpu() for item in state['cuda']])
 
 
 def run_on_seed(func):
+    @functools.wraps(func)
     def wrapper(*args, **kwargs):
-        seed = np.random.randint(2147483647)  # make a seed with numpy generator
-        set_random_seed(0)
-        res = func(*args, **kwargs)
-        set_random_seed(seed)
-        return res
-
+        state = capture_rng_state()
+        try:
+            set_random_seed(0)
+            return func(*args, **kwargs)
+        finally:
+            restore_rng_state(state)
     return wrapper
 
 
-class Trainer(object):
-    def __init__(
-            self,
-            model,
-            train_loader: torch.utils.data.DataLoader,
-            test_loader: torch.utils.data.DataLoader = None,
-            train_val_forward_fn=simple_train_val_forward,
-            gradient_accumulate_every=1,
-            optimizer=None, scheduler=None,
-            train_num_epoch=100,
-            results_folder='./results',
-            amp=False,
-            fp16=False,
-            split_batches=True,
-            log_with='wandb',
-            cfg=None,
-    ):
-        super().__init__()
-        """
-            Initialize the accelerator.
-        """
-        from accelerate import DistributedDataParallelKwargs
-        ddp_kwargs = DistributedDataParallelKwargs(find_unused_parameters=True)
+def atomic_write(path, content):
+    path = Path(path)
+    temporary = path.with_name(path.name + f'.{os.getpid()}.tmp')
+    with temporary.open('w', encoding='utf-8') as stream:
+        stream.write(content)
+        stream.flush()
+        os.fsync(stream.fileno())
+    os.replace(temporary, path)
 
+
+def atomic_checkpoint(path, payload):
+    path = Path(path)
+    temporary = path.with_name(path.name + f'.{os.getpid()}.tmp')
+    with temporary.open('wb') as stream:
+        torch.save(payload, stream)
+        stream.flush()
+        os.fsync(stream.fileno())
+    os.replace(temporary, path)
+
+
+def finite(value, label):
+    if not math.isfinite(float(value)):
+        raise FloatingPointError(f'Non-finite {label}: {value}')
+    return float(value)
+
+
+class Trainer:
+    def __init__(self, model, train_loader, test_loader=None,
+                 train_val_forward_fn=modification_train_val_forward,
+                 gradient_accumulate_every=1, optimizer=None, scheduler=None,
+                 train_num_epoch=100, results_folder='./results', amp=False,
+                 fp16=False, split_batches=True, log_with=None, cfg=None):
+        if gradient_accumulate_every != 1:
+            raise ValueError('The registered single-GPU protocol requires gradient_accumulate_every=1.')
         self.accelerator = Accelerator(
-            split_batches=split_batches,
-            mixed_precision='fp16' if fp16 else 'no',
-            log_with='wandb' if log_with else None,
-            gradient_accumulation_steps=gradient_accumulate_every,
-            kwargs_handlers=[ddp_kwargs]
+            mixed_precision='fp16' if (fp16 or amp) else 'no',
+            gradient_accumulation_steps=1,
+            log_with='wandb' if log_with and log_with != 'none' else None,
         )
-        project_name = getattr(cfg, "project_name", 'ResidualDiffsuion-v7')
-        self.accelerator.init_trackers(project_name, config=tracker_config_from_cfg(cfg))
-        create_url_shortcut_of_wandb(accelerator=self.accelerator)
-        self.logger = create_logger_of_wandb(accelerator=self.accelerator, rank=not self.accelerator.is_main_process)
-        self.accelerator.native_amp = amp
-        """
-            Initialize the model and parameters.
-        """
-        self.model = model
+        if self.accelerator.num_processes != 1:
+            raise RuntimeError('This trainer requires exactly one process; DDP is not supported.')
+        self.cfg = tracker_config_from_cfg(cfg) or {}
+        self.results_folder = Path(results_folder or './results')
+        self.results_folder.mkdir(parents=True, exist_ok=True)
+        self.logger = create_logger(log_file=str(self.results_folder / 'train.log'))
+        if log_with and log_with != 'none':
+            self.accelerator.init_trackers(self.cfg.get('project_name', 'DcDsDiff'), config=self.cfg)
+        self.model = self.accelerator.prepare(model)
+        unwrapped = self.accelerator.unwrap_model(self.model)
+        network = getattr(unwrapped, 'model', unwrapped)
+        self.model_provenance = {
+            'architecture_version': getattr(network, 'architecture_version', None),
+            'pretrained_load_report': getattr(network, 'pretrained_load_report', None),
+        }
+        self.opt = self.accelerator.prepare(optimizer) if optimizer is not None else None
+        # Keep the epoch scheduler outside Accelerator: exactly one step per completed epoch.
+        self.scheduler = scheduler
+        self.train_loader = self.accelerator.prepare(train_loader) if train_loader is not None else None
+        self.test_loader = self.accelerator.prepare(test_loader) if test_loader is not None else None
         self.train_val_forward_fn = train_val_forward_fn
-        self.train_loader = train_loader
-        self.test_loader = test_loader
-        self.gradient_accumulate_every = gradient_accumulate_every
-        # calculate training steps
-        self.train_num_epoch = train_num_epoch
-        # optimizer
-        self.opt = optimizer
+        self.train_num_epoch = int(train_num_epoch)
+        self.cur_epoch = -1
+        self.next_epoch = 0
+        self.global_step = 0
+        self.best_mae = float('inf')
+        self.best_epoch = None
+        self.epoch_records = []
+        self.save_every = int(self.cfg.get('save_every', 10))
+        self.status_interval = max(1.0, float(self.cfg.get('status_interval_seconds', 60)))
+        self._last_status_time = 0.0
+        self.contract = {key: self.cfg.get(key) for key in (
+            'model', 'cond_uvit', 'diffusion_model', 'optimizer', 'train_dataset', 'test_dataset',
+            'num_epoch', 'batch_size', 'num_workers', 'gradient_accumulate_every', 'seed', 'lr_min',
+            'fp16', 'protocol_id', 'train_val_forward_fn',
+        )}
+        self.contract['train_num_epoch'] = self.train_num_epoch
+        self.contract['mixed_precision'] = self.accelerator.mixed_precision
+        if self.train_loader is not None:
+            atomic_write(self.results_folder / 'resolved_config.yaml', OmegaConf.to_yaml(OmegaConf.create(self.cfg)))
 
-        if self.accelerator.is_main_process:
-            # save results in wandb folder if results_folder is not specified
-            self.results_folder = Path(results_folder if results_folder
-                                       else os.path.join(self.accelerator.get_tracker('wandb', unwrap=True).dir, "../"))
-            self.results_folder.mkdir(exist_ok=True)
-        """
-            Initialize the data loader.
-        """
-        self.cur_epoch = 0
-
-        # prepare model, dataloader, optimizer with accelerator
-        self.model, self.opt, self.scheduler, self.train_loader, self.test_loader \
-            = self.accelerator.prepare(self.model, self.opt, scheduler, self.train_loader, self.test_loader)
-
-    def save(self, epoch, max_to_keep=100):
-        """
-        Delete the old checkpoints to save disk space.
-        """
-        if not self.accelerator.is_local_main_process:
+    def write_status(self, state, force=True, **fields):
+        now = time.monotonic()
+        if not force and now - self._last_status_time < self.status_interval:
             return
-        # ckpt_files = glob.glob(os.path.join(self.results_folder, 'model-[0-9]*.pt'))
-        # # keep the last n-1 checkpoints
-        # ckpt_files = sorted(ckpt_files, key=lambda x: int(x.split('-')[-1].split('.')[0]))
-        # ckpt_files_to_delete = ckpt_files[:-max_to_keep]
-        # for ckpt_file in ckpt_files_to_delete:
-        #     os.remove(ckpt_file)
-        data = {
-            'epoch': self.cur_epoch,
+        self._last_status_time = now
+        record = {
+            'state': state, 'updated_at': datetime.now(timezone.utc).isoformat(),
+            'pid': os.getpid(), 'cuda_visible_devices': os.environ.get('CUDA_VISIBLE_DEVICES'),
+            'epoch': self.cur_epoch, 'next_epoch': self.next_epoch,
+            'global_step': self.global_step, 'total_epochs': self.train_num_epoch,
+            'best_mae': self.best_mae if math.isfinite(self.best_mae) else None,
+            'best_epoch': self.best_epoch,
+            'primary_selection': 'FIXED_FINAL_EPOCH',
+            'best_selection': 'TEST_SELECTED_MAE_DIAGNOSTIC', **self.model_provenance, **fields,
+        }
+        atomic_write(self.results_folder / 'training_status.json', json.dumps(record, indent=2, allow_nan=False) + '\n')
+
+    def _checkpoint_payload(self, selection):
+        return {
+            'checkpoint_format': 2, 'epoch': self.cur_epoch, 'next_epoch': self.next_epoch,
+            'global_step': self.global_step, 'best_mae': self.best_mae,
+            'best_epoch': self.best_epoch, 'selection': selection, 'contract': self.contract,
+            **self.model_provenance,
             'model': self.accelerator.get_state_dict(self.model),
-            # 'opt': self.opt.state_dict(),
-            'scaler': self.accelerator.scaler.state_dict() if exists(self.accelerator.scaler) else None
+            'opt': self.opt.state_dict() if self.opt is not None else None,
+            'scheduler': self.scheduler.state_dict() if self.scheduler is not None else None,
+            'scaler': self.accelerator.scaler.state_dict() if self.accelerator.scaler is not None else None,
+            'rng': capture_rng_state(), 'epoch_records': self.epoch_records,
         }
 
-        save_name = str(self.results_folder / f'model-{epoch}.pt')
-        # last_save_name = str(self.results_folder / f'model-{epoch}-last.pt')
-        #
-        # # if save file exists, rename it to last_save_name
-        # if os.path.exists(save_name):
-        #     os.remove(last_save_name) if os.path.exists(last_save_name) else None
-        #     os.rename(save_name, last_save_name)
+    def save(self, epoch, max_to_keep=None):
+        selection = 'TEST_SELECTED_MAE_DIAGNOSTIC' if epoch == 'best' else (
+            'FIXED_FINAL_EPOCH' if epoch == 'final' else 'EPOCH_BOUNDARY_RECOVERY')
+        atomic_checkpoint(self.results_folder / f'model-{epoch}.pt', self._checkpoint_payload(selection))
 
-        torch.save(data, save_name)
+    def _write_metrics(self):
+        # Full small history is in the committed checkpoint; reconcile after interrupted writes.
+        atomic_write(self.results_folder / 'metrics.jsonl', ''.join(
+            json.dumps(record, allow_nan=False) + '\n' for record in self.epoch_records))
 
-    def load(self, resume_path: str = None, pretrained_path: str = None):
-        accelerator = self.accelerator
-        device = accelerator.device
-
-        if resume_path is not None:
-            data = torch.load(resume_path, map_location=device)
-
-            self.cur_epoch = data['epoch']
-            # self.opt.load_state_dict(data['opt'])
-            if exists(self.accelerator.scaler) and exists(data['scaler']):
+    def load(self, resume_path=None, pretrained_path=None):
+        if bool(resume_path) == bool(pretrained_path):
+            raise ValueError('Specify exactly one of resume_path and pretrained_path.')
+        # These are explicitly selected local project checkpoints, including Python/NumPy RNG state.
+        data = torch.load(resume_path or pretrained_path, map_location='cpu', weights_only=False)
+        if resume_path:
+            required = {'checkpoint_format', 'next_epoch', 'opt', 'scheduler', 'rng', 'best_mae',
+                        'best_epoch', 'global_step', 'contract', 'epoch_records', 'scaler', 'epoch'}
+            if not required <= data.keys() or data['checkpoint_format'] != 2:
+                raise ValueError('Legacy checkpoint cannot resume exactly; use --pretrained for an explicitly new run.')
+            if data['contract'] != self.contract:
+                raise ValueError('Resume configuration differs from the checkpoint training contract.')
+            if any(data.get(key) != value for key, value in self.model_provenance.items()):
+                raise ValueError('Resume architecture or loaded pretrained provenance differs from the checkpoint.')
+            if self.opt is None or data['opt'] is None:
+                raise ValueError('Exact resume requires optimizer state.')
+            if (self.scheduler is None) != (data['scheduler'] is None):
+                raise ValueError('Resume scheduler state does not match the trainer.')
+        self.accelerator.unwrap_model(self.model).load_state_dict(data['model'], strict=True)
+        if resume_path:
+            self.opt.load_state_dict(data['opt'])
+            if self.scheduler is not None:
+                self.scheduler.load_state_dict(data['scheduler'])
+            if self.accelerator.scaler is not None:
+                if data['scaler'] is None:
+                    raise ValueError('Mixed-precision resume requires scaler state.')
                 self.accelerator.scaler.load_state_dict(data['scaler'])
-
-        elif pretrained_path is not None:
-            data = torch.load(pretrained_path, map_location=device)
-        else:
-            raise ValueError('Must specify either milestone or path')
-        if self.scheduler is not None:
-            # step scheduler to the last epoch
-            for _ in range(self.cur_epoch):
-                self.scheduler.step()
-        model = self.accelerator.unwrap_model(self.model)
-        model.load_state_dict(data['model'], strict=False)
+            self.cur_epoch = int(data['epoch'])
+            self.next_epoch = int(data['next_epoch'])
+            if self.next_epoch != self.cur_epoch + 1 or not 0 <= self.next_epoch <= self.train_num_epoch:
+                raise ValueError('Invalid checkpoint epoch boundary.')
+            self.global_step = int(data['global_step'])
+            self.best_mae, self.best_epoch = float(data['best_mae']), data['best_epoch']
+            self.epoch_records = data['epoch_records']
+            if len(self.epoch_records) != self.next_epoch:
+                raise ValueError('Checkpoint metric history does not match completed epochs.')
+            self._write_metrics()
+            restore_rng_state(data['rng'])
+            self.logger.info('Resuming at epoch %s, global step %s', self.next_epoch, self.global_step)
 
     @torch.inference_mode()
     @run_on_seed
-    def val(self, model, test_data_loader, accelerator, thresholding=False, save_to=None):
-        """
-        validation function
-        """
-        global _best_mae
-        if '_best_mae' not in globals():
-            _best_mae = 1e10
-
+    def _evaluate(self, model, test_data_loader, time_ensemble, thresholding=False, save_to=None):
+        model = self.accelerator.unwrap_model(model)
         model.eval()
-        model = accelerator.unwrap_model(model)
-        device = model.device
         maes = []
-        for data in tqdm(test_data_loader, disable=not accelerator.is_main_process):
-            image, gt,trace, name, image_for_post = data['image'], data['gt'],data['trace'], data['name'], data['image_for_post']
-            gt = [np.array(x, np.float32) for x in gt]
-            gt = [normalize_gt_mask(x) for x in gt]
-            image = image.to(device).squeeze(1)
-            trace= trace.to(device).squeeze(1)
-            out = self.train_val_forward_fn(model, image=image, trace=trace,verbose=False)
-            res = out["pred_de"].detach().cpu()
-            maes += [cal_mae(g, r, thresholding, save_to, n) for g, r, n in zip(gt, res, name)]
-        # gather all the results from different processes
-        accelerator.wait_for_everyone()
-        mae = accelerator.gather(torch.tensor(maes).mean().to(device))
-        mae = mae.mean().item()
-        # mae = mae_sum / test_data_loader.dataset.size
-        _best_mae = min(_best_mae, mae)
-        return mae, _best_mae
+        if save_to is not None:
+            Path(save_to).mkdir(parents=True, exist_ok=True)
+        for data in tqdm(test_data_loader, disable=not sys.stderr.isatty(), mininterval=30):
+            gt = [normalize_gt_mask(np.asarray(item, dtype=np.float32)) for item in data['gt']]
+            image = data['image'].to(self.accelerator.device).squeeze(1)
+            trace = data['trace'].to(self.accelerator.device).squeeze(1)
+            options = {'time_ensemble': time_ensemble, 'verbose': False}
+            if time_ensemble:
+                options['gt_sizes'] = [item.shape for item in gt]
+            outputs = self.train_val_forward_fn(model, image=image, trace=trace, **options)
+            for target, prediction, name in zip(gt, outputs['pred_gt'], data['name']):
+                if not time_ensemble:
+                    prediction = F.interpolate(prediction.unsqueeze(0), size=target.shape,
+                                               mode='bilinear', align_corners=False)
+                    prediction = (prediction - prediction.min()) / (prediction.max() - prediction.min() + 1e-8)
+                prediction = prediction.detach().cpu().numpy().reshape(target.shape)
+                if not np.isfinite(prediction).all():
+                    raise FloatingPointError(f'Non-finite prediction: {name}')
+                if thresholding:
+                    prediction = (prediction > 0.5).astype(np.float32)
+                maes.append(finite(np.abs(prediction - target).mean(), 'validation MAE'))
+                if save_to is not None:
+                    # Store the actual probability image with fixed [0,1] scaling.
+                    pixels = np.rint(np.clip(prediction, 0, 1) * 255).astype(np.uint8)
+                    Image.fromarray(pixels).save(Path(save_to) / (Path(name).stem + '.png'))
+            if self.train_loader is not None:
+                self.write_status('VALIDATING', force=False, validation_images=len(maes))
+        if not maes or len(maes) != len(test_data_loader.dataset):
+            raise RuntimeError('Validation did not cover every dataset image exactly once.')
+        mae = finite(np.mean(maes), 'mean validation MAE')
+        return mae, min(self.best_mae, mae)
 
-    @torch.inference_mode()
-    @run_on_seed
     def val_time_ensemble(self, model, test_data_loader, accelerator, thresholding=False, save_to=None):
-        """
-        validation function
-        """
-        global _best_mae
-        if '_best_mae' not in globals():
-            _best_mae = 1e10
+        return self._evaluate(model, test_data_loader, True, thresholding, save_to)
 
-        def cal_mae(gt, res, thresholding, save_to=None, n=None):
-            res = res.cpu().numpy().squeeze()
-            if save_to is not None:
-                plt.imsave(os.path.join(save_to, n), res, cmap='gray')
-            return np.sum(np.abs(res - gt)) * 1.0 / (gt.shape[0] * gt.shape[1])
+    def val(self, model, test_data_loader, accelerator, thresholding=False, save_to=None):
+        return self._evaluate(model, test_data_loader, False, thresholding, save_to)
 
-        model.eval()
-        model = accelerator.unwrap_model(model)
-        device = model.device
-        maes = defaultdict(list)
-        ensemble_maes = []
-        for data in tqdm(test_data_loader, disable=not accelerator.is_main_process):
-            image, gt,de,trace, name, image_for_post = data['image'], data['gt'], data['de'], data['trace'],data['name'], data['image_for_post']
-            gt = [np.array(x, np.float32) for x in gt]
-            gt = [normalize_gt_mask(x) for x in gt]
-            image = image.to(device).squeeze(1)
-            trace = trace.to(device).squeeze(1)
-            ensem_out = self.train_val_forward_fn(model, image=image, trace=trace,time_ensemble=True,
-                                                  gt_sizes=[g.shape for g in gt], verbose=False)
-            ensem_res = ensem_out["pred_gt"]
-
-            ensemble_maes += [cal_mae(g, r, thresholding, save_to, n) for g, r, n in zip(gt, ensem_res, name)]
-
-        # gather all the results from different processes
-        accelerator.wait_for_everyone()
-        ensemble_maes = torch.tensor(ensemble_maes).mean().to(device).mean().item()
-
-        _best_mae = min(_best_mae, ensemble_maes)
-        return ensemble_maes, _best_mae
-
-    @torch.inference_mode()
-    @run_on_seed
-    def val_batch_ensemble(self, model, test_data_loader, accelerator, thresholding=False, save_to=None):
-        """
-        validation function
-        """
-        global _best_mae
-        if '_best_mae' not in globals():
-            _best_mae = 1e10
-
-        model.eval()
-        model = accelerator.unwrap_model(model)
-        device = model.device
-        ensemble_maes = []
-        for data in tqdm(test_data_loader, disable=not accelerator.is_main_process):
-            image, gt, name, image_for_post = data['image'], data['gt'], data['name'], data['image_for_post']
-            gt = [np.array(x, np.float32) for x in gt]
-            gt = [normalize_gt_mask(x) for x in gt]
-            image = image.to(device).squeeze(1)
-            batch_res = []
-            for i in range(5):
-                ensem_out = self.train_val_forward_fn(model, image=image, time_ensemble=True, verbose=False)
-                ensem_res = ensem_out["pred"].detach().cpu()
-                batch_res.append(ensem_res)
-            batch_res = torch.mean(torch.concat(batch_res, dim=1), dim=1, keepdim=True)
-            for g, r, n in zip(gt, batch_res, name):
-                ensemble_maes.append(cal_mae(g, r, thresholding, save_to, n))
-
-        # gather all the results from different processes
-        accelerator.wait_for_everyone()
-        ensemble_maes = accelerator.gather(torch.tensor(ensemble_maes).mean().to(device)).mean().item()
-
-        _best_mae = min(_best_mae, ensemble_maes)
-        return ensemble_maes, _best_mae
+    def val_batch_ensemble(self, *args, **kwargs):
+        raise ValueError('Batch ensemble is outside this reproduction protocol; use time ensemble.')
 
     def train(self):
-        accelerator = self.accelerator
-        for epoch in range(self.cur_epoch, self.train_num_epoch):
-            self.cur_epoch = epoch
-            # Train
-            self.model.train()
-            loss_sm = SmoothedValue(window_size=10)
-            with tqdm(total=len(self.train_loader), disable=not accelerator.is_main_process) as pbar:
-                for data in self.train_loader:
-                    with accelerator.autocast(), accelerator.accumulate(self.model):
+        if self.train_loader is None or self.test_loader is None or self.opt is None:
+            raise ValueError('Training requires train/test loaders and an optimizer.')
+        if len(self.train_loader) == 0 or len(self.test_loader) == 0:
+            raise ValueError('Training and diagnostic datasets must be nonempty.')
+        self.write_status('RUNNING')
+        try:
+            for epoch in range(self.next_epoch, self.train_num_epoch):
+                self.cur_epoch = epoch
+                self.train_loader.set_epoch(epoch)
+                self.model.train()
+                started = time.monotonic()
+                loss_sum, image_count = 0.0, 0
+                lr = finite(self.opt.param_groups[0]['lr'], 'learning rate')
+                for batch_index, data in enumerate(self.train_loader):
+                    self.opt.zero_grad(set_to_none=True)
+                    with self.accelerator.autocast():
                         loss = fill_args_from_dict(self.train_val_forward_fn, data)(model=self.model)
-                        accelerator.backward(loss)
-                        accelerator.clip_grad_norm_(self.model.parameters(), 1.0)
-                        self.opt.step()
-                        self.opt.zero_grad()
-                    loss_sm.update(loss.item())
-                    pbar.set_description(
-                        f'Epoch:{epoch}/{self.train_num_epoch} loss: {loss_sm.avg:.4f}({loss_sm.global_avg:.4f})')
-                    self.accelerator.log({'loss': loss_sm.avg, 'lr': self.opt.param_groups[0]['lr']})
-                    pbar.update()
-
-                    # if loss_sm.count >= 20:
-                    #     break
-            if self.scheduler is not None:
-                self.scheduler.step()
-
-            accelerator.wait_for_everyone()
-            loss_sm_gather = accelerator.gather(torch.tensor([loss_sm.global_avg]).to(accelerator.device))
-            loss_sm_avg = loss_sm_gather.mean().item()
-            self.logger.info(f'Epoch:{epoch}/{self.train_num_epoch} loss: {loss_sm_avg:.4f}')
-
-            # Val
-            self.model.eval()
-            if (epoch + 1) % 1 == 0 or (epoch >= self.train_num_epoch * 0.7):
-                mae, best_mae = self.val_time_ensemble(self.model, self.test_loader, accelerator)
-                self.logger.info(f'Epoch:{epoch}/{self.train_num_epoch} mae: {mae:.4f}({best_mae:.4f})')
-                accelerator.log({'mae': mae, 'best_mae': best_mae})
-                if mae == best_mae:
-                    self.save("best")
-            self.save(self.cur_epoch)
-
-            # Visualize
-            # with torch.inference_mode():
-            #     if accelerator.is_main_process:
-            #         model = self.accelerator.unwrap_model(self.model)
-            #         for tracker in accelerator.trackers:
-            #             if tracker.name == "wandb":
-            #                 out = fill_args_from_dict(self.train_val_forward_fn, data)(model=model,
-            #                                                                            verbose=False)
-            #                 tracker.log(
-            #                     {'pred-img-mask':
-            #                          [wandb.Image(o[0, :, :]) for o in out.values()]
-            #                      })
-
-            accelerator.wait_for_everyone()
-        self.logger.info('training complete')
-        accelerator.end_training()
+                    loss_value = finite(loss.detach().item(), 'training loss')
+                    self.accelerator.backward(loss)
+                    norm = self.accelerator.clip_grad_norm_(self.model.parameters(), 1.0)
+                    finite(norm, 'gradient norm')
+                    self.opt.step()
+                    self.global_step += 1
+                    batch_size = int(data['image'].shape[0])
+                    loss_sum += loss_value * batch_size
+                    image_count += batch_size
+                    self.write_status('RUNNING', force=batch_index == 0, batch=batch_index + 1,
+                                      batches_per_epoch=len(self.train_loader), loss=loss_value, lr=lr)
+                self.opt.zero_grad(set_to_none=True)
+                if self.scheduler is not None:
+                    self.scheduler.step()
+                self.write_status('VALIDATING', training_loss=loss_sum / image_count, lr=lr)
+                mae, _ = self.val_time_ensemble(self.model, self.test_loader, self.accelerator)
+                improved = mae < self.best_mae
+                if improved:
+                    self.best_mae, self.best_epoch = mae, epoch
+                self.next_epoch = epoch + 1
+                record = {
+                    'epoch': epoch, 'completed_epochs': self.next_epoch, 'global_step': self.global_step,
+                    'train_images': image_count, 'train_loss': finite(loss_sum / image_count, 'epoch loss'),
+                    'lr': lr, 'next_lr': finite(self.opt.param_groups[0]['lr'], 'next learning rate'),
+                    'diagnostic_test_mae': mae, 'test_selected_best_mae': self.best_mae,
+                    'test_selected_best_epoch': self.best_epoch,
+                    'elapsed_seconds': time.monotonic() - started,
+                    'primary_selection': 'FIXED_FINAL_EPOCH',
+                }
+                self.epoch_records.append(record)
+                if improved:
+                    self.save('best')
+                self.save('last')
+                if self.save_every > 0 and self.next_epoch < self.train_num_epoch and self.next_epoch % self.save_every == 0:
+                    self.save(epoch)
+                self._write_metrics()
+                self.logger.info('Epoch %d/%d loss=%.6f diagnostic_test_mae=%.6f lr=%.9g',
+                                 epoch, self.train_num_epoch - 1, record['train_loss'], mae, lr)
+                self.accelerator.log(record, step=self.global_step)
+                self.write_status('RUNNING', **{'last_epoch_metrics': record})
+            self.save('final')
+            final_alias = self.results_folder / f'model-{self.train_num_epoch - 1}.pt'
+            temporary_alias = final_alias.with_name(final_alias.name + f'.{os.getpid()}.tmp')
+            if temporary_alias.exists():
+                temporary_alias.unlink()
+            os.link(self.results_folder / 'model-final.pt', temporary_alias)
+            os.replace(temporary_alias, final_alias)
+            self.write_status('COMPLETED', primary_checkpoint=str(self.results_folder / 'model-final.pt'))
+            self.logger.info('Training complete; fixed-final checkpoint: model-final.pt')
+        except BaseException as error:
+            self.write_status('FAILED', error=f'{type(error).__name__}: {error}')
+            raise
+        finally:
+            self.accelerator.end_training()

@@ -105,11 +105,14 @@ class DiceLoss(nn.Module):
 
 
 def structure_loss(pred, mask):
+    # 边界附近 avg_pool(mask) 与 mask 差异更大，因此权重更高，训练会更关注边缘区域。
     weit = 1 + 5 * torch.abs(F.avg_pool2d(mask, kernel_size=31, stride=1, padding=15) - mask)
-    wbce = F.binary_cross_entropy_with_logits(pred, mask, reduce='none')
+    # 第一部分是加权 BCE，用 logits 直接计算，避免先 sigmoid 带来的数值不稳定。
+    wbce = F.binary_cross_entropy_with_logits(pred, mask, reduction='none')
     wbce = (weit * wbce).sum(dim=(2, 3)) / weit.sum(dim=(2, 3))
 
     pred = torch.sigmoid(pred)
+    # 第二部分是加权 IoU，鼓励预测区域与真实 mask 在整体形状上重合。
     inter = ((pred * mask) * weit).sum(dim=(2, 3))
     union = ((pred + mask) * weit).sum(dim=(2, 3))
     wiou = 1 - (inter + 1) / (union - inter + 1)

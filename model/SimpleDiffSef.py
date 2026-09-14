@@ -217,31 +217,37 @@ class CondGaussianDiffusion(GaussianDiffusion):
         self.history = []
 
     def forward(self, img,de, cond_img,trace, seg=None, extra_cond1=None, extra_cond2=None,*args, **kwargs):
+        # 这里的 img 实际是 gt mask，不是 RGB 原图；cond_img 才是 RGB 条件图。
         b, channels, h, w = img.shape
         cond_channels = cond_img.shape[1]
         assert channels == self.channels
         assert h == w == self.image_size
         assert cond_channels == self.cond_channels
 
+        # mask 从 [0,1] 映射到 [-1,1] 后参与扩散；trace 作为条件图也做同样范围转换。
         img = normalize_to_neg_one_to_one(img)
         trace=normalize_to_neg_one_to_one(trace)
         de = de
         seg = normalize_to_neg_one_to_one(seg) if seg is not None else None
         extra_cond1 = default(extra_cond1, torch.zeros((b, self.extra_channels, h, w), device=self.device))
         extra_cond2 = default(extra_cond2, torch.zeros((b, self.extra_channels, h, w), device=self.device))
+        # 每个样本随机取一个连续时间步，表示本次训练要加到什么噪声强度。
         times = torch.zeros((img.shape[0],), device=self.device).float().uniform_(0, 1)
         return self.p_losses(img, de,times, cond_img, trace,seg, extra_cond1,extra_cond2, *args, **kwargs)
 
     def p_losses(self, x_start,y_start, times, cond_img, trace,seg=None, extra_cond1=None,extra_cond2=None, noise=None, *args, **kwargs):
+        # 默认使用与 mask 同形状的高斯噪声；x/y 两路共享同一噪声样本。
         noise = default(noise, lambda: torch.randn_like(x_start))
 
         # noise sample, if seg is not None, sample from seg.
+        # x 是加噪后的 mask，y 是加噪后的 detail，log_snr 是当前时间步对应的信噪比。
         if seg is not None:
             x,y, log_snr = self.q_sample(x_start=seg, y_start=y_start,times=times, noise=noise)
         else:
             x,y, log_snr = self.q_sample(x_start=x_start, y_start=y_start,times=times, noise=noise)
 
         # predict and take gradient step
+        # 主网络在 RGB/trace 条件下，从加噪 x/y 预测干净的 gt/detail。
         gt_pred,de_pred= self.model(torch.cat([x, extra_cond1], dim=1),torch.cat([y, extra_cond2], dim=1), log_snr, cond_img,trace)
 
         if self.pred_objective == 'v':
@@ -254,6 +260,7 @@ class CondGaussianDiffusion(GaussianDiffusion):
 
         elif self.pred_objective == 'x0':
             # Note: x_start in here is from -1 to 1
+            # x0 目标表示直接学习干净 mask；这里把 [-1,1] 还原到 [0,1] 与 logits 损失对齐。
             target = (x_start + 1)/2
             de = y_start
 
@@ -266,6 +273,7 @@ class CondGaussianDiffusion(GaussianDiffusion):
         elif self.loss_type == 'mean(l1, l2)':
             return (F.mse_loss(gt_pred, target) + F.l1_loss(gt_pred, target)) / 2
         else:
+            # mask 用配置指定的结构损失，detail 用 L2+L1 辅助损失，权重为 0.5。
             return self.loss_type(gt_pred, target)+ (F.mse_loss(de_pred, de) + F.l1_loss(de_pred, de)) * 0.5
 
     @torch.no_grad()
@@ -280,11 +288,14 @@ class CondGaussianDiffusion(GaussianDiffusion):
     @torch.no_grad()
     def p_sample_loop(self, shape, cond_img,trace, extra_cond1,extra_cond2, verbose=True):
         self.history = []
+        # 推理从两张随机噪声图开始，分别对应 mask 流和 detail 流。
         img = torch.randn(shape, device=self.device)
         de = torch.randn(shape, device=self.device)
+        # 当前 net.extract_features 不做计算，实际特征提取在 net.forward/sample_unet 内完成。
         conditioning_features = self.model.extract_features(cond_img)
         conditioning_features_trace = self.model.extract_features(trace)
         # steps = torch.linspace(1., 0., self.num_sample_steps + 1, device = self.device)
+        # 采用非线性时间表从强噪声逐步走向 0 噪声。
         steps = torch.sin((torch.linspace(1., 0., self.num_sample_steps + 1, device=self.device)*math.pi)/2)
 
 
@@ -327,6 +338,7 @@ class CondGaussianDiffusion(GaussianDiffusion):
 
     def p_mean_variance(self, x,y, cond, trace,extra_cond1,extra_cond2, time, time_next):
 
+        # 当前时间和下一时间的 log-SNR 决定反向扩散均值与方差。
         log_snr = self.log_snr(time)
         log_snr_next = self.log_snr(time_next)
         c = -expm1(log_snr - log_snr_next)
@@ -337,6 +349,7 @@ class CondGaussianDiffusion(GaussianDiffusion):
         alpha, sigma, alpha_next = map(sqrt, (squared_alpha, squared_sigma, squared_alpha_next))
 
         batch_log_snr = repeat(log_snr, ' -> b', b=x.shape[0])
+        # sample_unet 预测当前噪声状态对应的干净 mask/detail。
         pred,de= self.model.sample_unet(torch.cat([x, extra_cond1], dim=1),torch.cat([y, extra_cond2], dim=1),
                                       batch_log_snr, cond,trace)
 
@@ -350,11 +363,13 @@ class CondGaussianDiffusion(GaussianDiffusion):
         elif self.pred_objective == 'x0':
             # raise NotImplementedError
             # due to we don't know x is normalized or not
+            # 推理阶段将网络输出通过 tanh 压回 [-1,1]，作为 x0/y0 的估计。
             x_start = pred.tanh()
             y_start = de.tanh()
             # x_start = x
 
         x_start.clamp_(-1., 1.)
+        # 保存每步估计，验证时用于 time ensemble。
         self.history.append(x_start) # change to pred when generate cam
         y_start.clamp_(-1., 1.)
         self.history.append(y_start) # change to pred when generate cam

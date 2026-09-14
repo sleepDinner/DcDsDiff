@@ -1,53 +1,52 @@
+"""YAML inheritance with explicit command-line overrides."""
 import argparse
-from random import random
+from pathlib import Path
 
-import numpy as np
-import omegaconf
-import torch
 from omegaconf import OmegaConf
 
-def add_args(parser: argparse.ArgumentParser or argparse.Namespace) -> omegaconf.dictconfig.DictConfig:
-    """
-        Add arguments to the parser
-        1. Read the config file and add the parameters to the parser
-        2. Support using '__base__' to inherit the parameters from the base config file
-        3. Override the parameters in the config file with the command line parameters
-        4. Override the parameters in the config file with '--set' parameters, e.g. --set train.batch_size=4
-    """
+
+def _load_config(path, stack=()):
+    path = Path(path).resolve()
+    if path in stack:
+        raise ValueError(f"Cyclic config inheritance: {path}")
+    config = OmegaConf.load(path)
+    merged = OmegaConf.create()
+    for base in config.pop('__base__', []):
+        # Existing project configs use repository-relative base paths.
+        base_path = Path(base)
+        if not base_path.is_absolute() and not base_path.exists():
+            base_path = path.parent / base_path
+        merged = OmegaConf.merge(merged, _load_config(base_path, (*stack, path)))
+    return OmegaConf.merge(merged, config)
+
+
+def add_args(parser):
+    """Precedence: inherited YAML < child YAML < explicit CLI < --set."""
+    defaults = {}
     if isinstance(parser, argparse.ArgumentParser):
-        parser.add_argument('-c', '--config', type=str, help='config file path', default='./config/DcDsDiff_352x352.yaml')
-        parser.add_argument('--set', nargs='+', type=str, help="override config file settings", default=[])
-        args = parser.parse_args()
+        parser.add_argument('-c', '--config', default='./config/reproduction.yaml')
+        parser.add_argument('--set', nargs='+', default=[])
+        # Suppress defaults during parsing, so absent CLI options preserve YAML.
+        for action in parser._actions:
+            if action.dest != 'help' and action.default != argparse.SUPPRESS:
+                defaults[action.dest] = action.default
+                action.default = argparse.SUPPRESS
+        args = vars(parser.parse_args())
     elif isinstance(parser, argparse.Namespace):
-        args = parser
+        args = vars(parser).copy()
     else:
-        raise TypeError(f'parser must be argparse.ArgumentParser or argparse.Namespace, but got {type(parser)}')
-    # read config file
-    if args.config is not None:
-        config = OmegaConf.load(args.config)
-    else:
-        config = OmegaConf.create()
-
-    __base__ = config.get('__base__', [])
-    config.__base__ = []
-    # load config file and it's base config file
-    while len(__base__) > 0:
-        base_config = OmegaConf.load(__base__.pop(0))
-        config = OmegaConf.merge(base_config, config)
-        __base__ += base_config.get('__base__', [])
-        config.__base__ = []
-    # override config file settings
-    for k, v in args.__dict__.items():
-        cfg_v = config.get(k, None)
-        config[k] = v if v is not None else cfg_v
-    config = OmegaConf.merge(config, OmegaConf.from_dotlist(args.set)) if len(args.set) > 0 else config
-    return config
+        raise TypeError(f'Expected ArgumentParser or Namespace, got {type(parser)}')
+    config_path = args.get('config', defaults.get('config'))
+    config = _load_config(config_path) if config_path else OmegaConf.create()
+    for key, value in defaults.items():
+        if key not in config:
+            config[key] = value
+    for key, value in args.items():
+        if value is not None:
+            config[key] = value
+    config['config'] = str(config_path) if config_path else None
+    return OmegaConf.merge(config, OmegaConf.from_dotlist(args.get('set', [])))
 
 
-def config_pretty(d: omegaconf.dictconfig.DictConfig, indent=0):
-    for key, value in d.items():
-        print('\n' + '\t' * indent + str(key) + ":", end='')
-        if isinstance(value, dict) or isinstance(value, omegaconf.dictconfig.DictConfig):
-            config_pretty(value, indent + 1)
-        else:
-            print('\t' * (indent + 1) + str(value), end='')
+def config_pretty(config, indent=0):
+    print(OmegaConf.to_yaml(config, resolve=True))
