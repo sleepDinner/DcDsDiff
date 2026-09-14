@@ -25,7 +25,7 @@ import torch
 from torch.utils.data import DataLoader
 
 from dataset.data_val import test_dataset
-from tools.benchmark_protocol import load_benchmark, verify_benchmark_files
+from tools.benchmark_protocol import SELECTION_THREE, load_benchmark, verify_benchmark_files
 from tools.evaluate_reproduction import binary_metrics, file_hash
 from tools.manage_experiment import now, read_json, write_json
 from utils.collate_utils import collate
@@ -67,6 +67,33 @@ def aggregate(rows, names):
     return metrics
 
 
+def selection_description(cfg, provenance):
+    if cfg.protocol_id == 'CASIA2-SEL3-ALL8-V1':
+        if list(cfg.test_dataset.Mix.params.datasets) != SELECTION_THREE:
+            raise ValueError('Unexpected three-set checkpoint selection population.')
+        return ('Casiav1/Columbia/NIST16 pooled 1664 images',
+                'Best uses pooled MAE on these three datasets after the registered continuation boundary. '
+                'Their scores are test-selected; the other five datasets are reporting-only after that boundary. '
+                'The parent previously monitored All8; this is not a fresh three-set-only selection history.')
+    if cfg.protocol_id == 'CASIA2-ALL8-V1':
+        return ('All8 pooled 4295 images',
+                'Saved best uses All8 pooled MAE; these scores are test-selected, not held-out estimates.')
+    if cfg.protocol_id == 'GIT10K-PAPER-RECON-V1':
+        return (f'GIT10K reconstructed Mix {provenance["dataset"]["test_count"]} images',
+                'Saved best was selected on GIT10K Mix MAE; All8 is evaluated once and is not used to reselect this checkpoint.')
+    raise ValueError('Unregistered checkpoint selection protocol.')
+
+
+def validate_selection_origin(checkpoint, cfg, provenance):
+    description = selection_description(cfg, provenance)
+    if cfg.protocol_id == 'CASIA2-SEL3-ALL8-V1':
+        continuation = provenance['continuation']
+        if (continuation['selection_datasets'] != SELECTION_THREE or continuation['selection_count'] != 1664
+                or checkpoint['epoch'] < continuation['next_epoch']):
+            raise ValueError('Best checkpoint predates or differs from the three-set selection boundary.')
+    return description
+
+
 @torch.inference_mode()
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
@@ -82,7 +109,7 @@ def main():
         raise SystemExit('Select exactly one free GPU before evaluation.')
     cfg = OmegaConf.load(run / 'resolved_config.yaml')
     spec, snapshot, receipt, manifest = load_benchmark(
-        root, args.spec, require_disjoint_train=cfg.protocol_id == 'CASIA2-ALL8-V1')
+        root, args.spec, require_disjoint_train=cfg.protocol_id in ('CASIA2-ALL8-V1', 'CASIA2-SEL3-ALL8-V1'))
     file_verification = verify_benchmark_files(snapshot, manifest, split='test')
     names = [x['name'] for x in spec['tests']]
     expected = {x['name']: x['count'] for x in spec['tests']}
@@ -98,6 +125,7 @@ def main():
     checkpoint_hash = file_hash(run / 'model-best.pt')
     checkpoint = torch.load(run / 'model-best.pt', map_location='cpu', weights_only=False)
     validate_best_checkpoint(checkpoint, training, cfg)
+    selection_population, selection_note = validate_selection_origin(checkpoint, cfg, provenance)
     checkpoint_path = run / 'model-best.pt'
     selected_epoch = checkpoint['epoch']
     set_random_seed(0)
@@ -148,11 +176,9 @@ def main():
         'suite_id': spec['suite_id'], 'dataset_manifest_sha256': receipt['manifest_sha256'],
         'checkpoint': str(checkpoint_path), 'checkpoint_sha256': checkpoint_hash, 'epoch': selected_epoch,
         'selection': 'SAVED_BEST_TEST_MAE', 'selection_mae': training['best_mae'],
-        'selection_population': (f'All8 pooled {len(metadata)} images' if cfg.protocol_id == 'CASIA2-ALL8-V1'
-                                 else f'GIT10K reconstructed Mix {provenance["dataset"]["test_count"]} images'),
-        'selection_note': ('Saved best uses All8 pooled MAE; these scores are test-selected, not held-out estimates.'
-                           if cfg.protocol_id == 'CASIA2-ALL8-V1'
-                           else 'Saved best was selected on GIT10K Mix MAE; All8 is evaluated once and is not used to reselect this checkpoint.'),
+        'selection_population': selection_population,
+        'selection_note': selection_note,
+        'continuation': provenance.get('continuation'),
         'sampling_seed': 0, 'sampling_steps': 10, 'threshold': .5,
         'aggregation': 'per-image F1/IoU/MAE; macro gives equal dataset weight, pooled gives equal image weight; empty/empty=1',
         'input_file_verification': file_verification,

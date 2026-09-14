@@ -24,3 +24,10 @@ User-authorized scope: audit and clean local project, publish to the existing Gi
 3. [complete] Validate per-GPU/run controller locks, eight-set evaluator and durable original-run follow-up in the dedicated environment.
 4. [complete] Review, publish local to GitHub, pull on server, launch CASIA2 on GPU 1 and queue original-run best evaluation. Both use frozen execution commit cd0df49; original training remains on 20d4428.
 5. [complete] Verified continued live training (CASIA2 step 201 to 603; original step 13243 to 13500), detached controller identities, live original-run follow-up and removal of temporary tests. Startup receipts and ledger are published with final local/GitHub/server checkout agreement. Scientific training and both requested All8 evaluations remain under server control; no final scores are claimed.
+
+## Authorized three-set selection change — 2026-09-14
+
+1. [complete] Stop GPU 1 only; verify controller/children exit and resource locks release. Parent checkpoint completed epoch 2, next_epoch 3; GPU 0 unchanged.
+2. [complete] Implement a new CASIA2 continuation with the same optimization/RNG state, 100 total epochs, three-set pooled MAE selection and final All8 F1 reporting. Reset best across the selection boundary and label historical metrics.
+3. [complete] Validated migration, exact subset membership, real GPU resume/backward, final inference/guards and registration race recovery in the dedicated environment; independent review approved; all temporary tests removed.
+4. [in_progress] Publish, server pull, continue GPU 1 and verify actual training/selection progress, original GPU 0 and its All8 queue; synchronize receipts.

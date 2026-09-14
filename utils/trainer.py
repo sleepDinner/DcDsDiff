@@ -156,6 +156,7 @@ class Trainer:
             'primary_selection': 'FIXED_FINAL_EPOCH',
             'best_selection': 'TEST_SELECTED_MAE_DIAGNOSTIC', **self.model_provenance, **fields,
         }
+        record['diagnostic_datasets'] = self.cfg.get('test_dataset', {}).get('Mix', {}).get('params', {}).get('datasets')
         atomic_write(self.results_folder / 'training_status.json', json.dumps(record, indent=2, allow_nan=False) + '\n')
 
     def _checkpoint_payload(self, selection):
@@ -314,6 +315,7 @@ class Trainer:
                     'test_selected_best_epoch': self.best_epoch,
                     'elapsed_seconds': time.monotonic() - started,
                     'primary_selection': 'FIXED_FINAL_EPOCH',
+                    'diagnostic_datasets': self.cfg.get('test_dataset', {}).get('Mix', {}).get('params', {}).get('datasets'),
                 }
                 self.epoch_records.append(record)
                 if improved:

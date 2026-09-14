@@ -17,7 +17,7 @@
 
 Historical runs are summarized separately in [pre-rebuild audit](docs/history/pre-rebuild-audit.md). They do not fulfill this registered protocol.
 
-## CASIA2-ALL8-V1 — RUNNING
+## CASIA2-ALL8-V1 — STOPPED_FOR_AUTHORIZED_CONTINUATION
 
 - Authorized 2026-09-14: one fresh CASIA2 training arm on GPU 1 and one All8 best evaluation after training. Run ID: `DCDSDIFF-CASIA2-ALL8-20260914-A`; started 2026-09-14 20:39:52 Asia/Shanghai (12:39:52 UTC).
 - Protocol: [CASIA2/All8](docs/casia2_all8_protocol.md); config `config/experiments/casia2_all8.yaml` inherits all non-data model/training parameters from the original baseline.
@@ -28,4 +28,13 @@ Historical runs are summarized separately in [pre-rebuild audit](docs/history/pr
 - Continued progress verified at 20:43:55 Asia/Shanghai: CASIA2 advanced from step 201 to 603 with finite loss; original GIT10K advanced from 13,243 to 13,500 and entered its epoch-8 diagnostic evaluation. Both detached training sessions retain their original identities. The follow-up controller's state timestamp advanced while remaining `WAITING_FOR_TRAINING`.
 - Original GIT10K follow-up: registered at 20:40:08 Asia/Shanghai under `runs/DCDSDIFF-GIT10K-RECON-20260914-A/followups/all8-best`; detached controller PID 3844284 is `WAITING_FOR_TRAINING`. Its frozen evaluation commit is `cd0df49f07a9bf250a62e9ba80e65f079c5b8e0f`. After the original controller completes and exits, it will acquire GPU 0 and evaluate the original GIT10K-MAE-selected `model-best.pt` once on All8. The original controller/trainer PIDs remain 3787713/3787714; all 58 original source hashes match, and its final99 primary result remains unchanged.
 - Engineering: new environment CPU lifecycle/lock guards and actual GPU 1 six-image backward / eight-set sample evaluation passed. The 5,123-image batch sampler covers every sample without padding duplicates (854 batches, last batch 5). Formal launch passed configuration/environment/weight checks and verified all 37,672 data files against the 9,418-sample manifest. Temporary validation code/data/checkpoints and preparation staging were removed; [cleanup receipt](docs/transfer_cleanup_receipt.json).
-- Scientific status: training is running; no formal All8 result exists yet. After 100 epochs the CASIA2 controller will create its All8 report in this run's `evaluation/` directory, using the existing `model-best.pt` directly. Original GIT10K All8 results will be in its separate `followups/all8-best/evaluation/` directory. Neither workflow creates checkpoint aliases.
+- Superseded on user request at 2026-09-14 21:46:25 Asia/Shanghai: controller is INTERRUPTED with no cleanup error; controller/children exited and locks released. Last complete checkpoint is epoch 2 (3 completed epochs), step 2562. Partial epoch 3 is not retained. No formal All8 result exists for A; the authorized continuation below replaces its remaining training and final evaluation.
+
+## CASIA2-SEL3-ALL8-V1 — READY_TO_CONTINUE
+
+- User revision: per-epoch testing uses only Casiav1/Columbia/NIST16 (920/180/564 = 1664 images); final best-checkpoint F1 covers all eight datasets (4295 images).
+- Run: `DCDSDIFF-CASIA2-SEL3-ALL8-20260914-B`; [protocol](docs/casia2_sel3_continuation.md), config `config/experiments/casia2_sel3_all8.yaml`.
+- Parent: A/model-last.pt SHA-256 `845e53184fa8b73ee3f0bc907f243cdc50350b2e7c38bba8aebb1311494b06ee`. Preserve model, optimizer, scheduler, scaler, RNG and step 2562; continue epochs 3–99, 100 total epochs. New best starts with no candidate, is selected by three-set pooled MAE, and cannot reuse the parent's All8-selected best.
+- Parent history retains its original All8 scores with explicit dataset labels. The final report records the selection boundary and prior All8 exposure. No fresh-run or completely held-out-history claim.
+- Dedicated environment validation passed, including actual state restoration/one GPU step, exact subset membership, eight sample inferences and failure/race guards; [receipt](docs/validation_sel3.json). Publication, formal registration and resumed training verification follow.
+- GPU 0 original training and its frozen All8 saved-best follow-up remain active and unchanged.

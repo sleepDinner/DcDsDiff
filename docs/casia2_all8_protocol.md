@@ -1,5 +1,7 @@
 # CASIA2 training and All8 evaluation — 2026-09-14
 
+The GPU 1 All8-per-epoch arm below was subsequently stopped and superseded by the user-authorized [three-set selection continuation](casia2_sel3_continuation.md). Its parent data/history remain preserved. Current GPU 1 best selection uses Casiav1/Columbia/NIST16; final reporting for both experiments remains All8.
+
 The user authorized one additional training experiment on the other free GPU, changing the training dataset to `/data1/data/datasets/CASIA2.0` and using the eight named test roots in [benchmark_all8.json](../config/benchmark_all8.json). The user also requested one evaluation of the original GIT10K run's saved best checkpoint on this same suite after training. The later correction explicitly requires using the existing checkpoint file directly; no alias is created.
 
 ## Training arm: CASIA2-ALL8-V1

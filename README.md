@@ -64,6 +64,8 @@ $PY tools/manage_experiment.py launch --run-id NEW_AUTHORIZED_RUN_ID --gpu 0 \
 
 ## CASIA2 与八数据集扩展
 
+**当前 GPU 1 协议已修改**：每轮仅测试 Casiav1、Columbia、NIST16（1,664 张），仍以逐图平均 MAE 选择 best；训练结束后对全部八集（4,295 张）报告 F1。旧 A 已停止，使用最后完整 epoch-2 状态在 `DCDSDIFF-CASIA2-SEL3-ALL8-20260914-B` 继续至 epoch 99。旧 best 单独保留，新的 best 从变更后的轮次开始选择。启动/恢复说明见 [三集选择与检查点续训](docs/casia2_sel3_continuation.md)。以下 All8-per-epoch 配置与 A 命令保留为历史协议，不要重新启动或恢复 A。
+
 2026-09-14 用户授权的新实验见 [CASIA2/All8 协议](docs/casia2_all8_protocol.md)。训练使用 CASIA2 的 5,123 对 Tp/Gt；测试使用指定八集，共 4,295 张。模型和训练参数继承原基线。数据路径、配对后缀和数量固定在 `config/benchmark_all8.json`，处理数据为 `data/casia2-all8-v1`，完整清单提交到 `manifests/casia2-all8-v1.csv`。
 
 在尚未建立此数据快照的新服务器 checkout 中，先执行以下准备与清单比对；已有快照直接复用，启动器会核验其文件哈希：
@@ -83,7 +85,7 @@ $PY tools/queue_benchmark.py queue --run-id DCDSDIFF-GIT10K-RECON-20260914-A
 $PY tools/queue_benchmark.py status --run-id DCDSDIFF-GIT10K-RECON-20260914-A
 ```
 
-CASIA2 完成 100 epochs 后直接使用已有 `model-best.pt` 输出八集结果；best 沿用逐图 MAE 最小规则，这里其选择集为整个 All8，因此结果标记为 test-selected。原 GIT10K 的 best 仍由原 GIT10K Mix MAE 选择，附加评估不使用 All8 重新挑权重，也不更改原 final99 复现终点。两个评估都直接读取原文件，不创建别名。
+历史 CASIA2 A 的 best 由 All8 MAE 选择；当前续训 B 的 best 由三集 MAE 选择，完成总计 100 epochs 后直接使用已有 `model-best.pt` 输出八集结果。原 GIT10K 的 best 仍由原 GIT10K Mix MAE 选择，附加评估不使用 All8 重新挑权重，也不更改原 final99 复现终点。两个评估都直接读取原文件，不创建别名。
 
 CASIA2 结果在 `runs/<CASIA_RUN_ID>/evaluation`；原实验的附加结果在 `runs/<GIT_RUN_ID>/followups/all8-best/evaluation`。后者有独立 `status.json`、控制器身份及评估代码快照，会等待原控制器完成退出后使用 GPU 0。`queue_benchmark.py resume/stop` 只恢复或停止该附加评估控制器。八集报告保留每集 F1/IoU/MAE、等数据集宏均值及逐图加权均值，并记录实际 checkpoint 哈希、epoch 和选择集。
 

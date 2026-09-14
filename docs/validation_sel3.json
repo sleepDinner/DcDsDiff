@@ -1,0 +1,66 @@
+{
+  "status": "PASS",
+  "captured_at": "2026-09-14T13:57:39.892486+00:00",
+  "kind": "ENGINEERING_ONLY",
+  "formal_epochs_completed": 0,
+  "actual_optimizer_steps": 1,
+  "gpu": 1,
+  "selection_counts": {
+    "Casiav1": 920,
+    "Columbia": 180,
+    "NIST16": 564
+  },
+  "full_final_population": 4295,
+  "smoke_inference_images": 8,
+  "parent_checkpoint_sha256": "845e53184fa8b73ee3f0bc907f243cdc50350b2e7c38bba8aebb1311494b06ee",
+  "preserved_state_exactly_verified": [
+    "model",
+    "opt",
+    "scheduler",
+    "scaler",
+    "rng",
+    "epoch",
+    "next_epoch",
+    "global_step",
+    "architecture_version",
+    "pretrained_load_report"
+  ],
+  "restored_next_epoch": 3,
+  "restored_global_step": 2562,
+  "best_reset": true,
+  "loss": 0.5823732018470764,
+  "step_seconds": 1.6756122149527073,
+  "checks": [
+    "canonical syntax",
+    "exact subset membership",
+    "no unexpected subset or training config",
+    "checkpoint serialization roundtrip",
+    "real Trainer load model/optimizer/scheduler/RNG parity",
+    "historical/current diagnostic labels",
+    "registration failure recovery",
+    "completed-best guards",
+    "real eight-dataset ten-step inference and finite F1/IoU/MAE",
+    "parent checkpoint unchanged"
+  ],
+  "source_sha256": {
+    "dataset/benchmark_subset.py": "7259506e7652319b649679ee49245d14826623b40329e1cc223253999dde47b4",
+    "tools/continue_casia_selection.py": "a49d2cddcc555424595e73a29bdfca14cb2a12526905b6d86ab37c1627ee362b",
+    "tools/benchmark_protocol.py": "5f43b6b6aa3be60d3cee8d3c821a3ffdfea36effd350fd7f177c54062fb34159",
+    "tools/evaluate_benchmarks.py": "cc9520f7033549858dabcff7e7adcc2a91ca0b866b83ca5fc2a47458e98fe46b",
+    "tools/manage_experiment.py": "58ccfcee4dc3cbd8d513a2ca36b0876c2ef18ae00cd3982d16efd609a24d36e5",
+    "utils/trainer.py": "f5c3db61ef451c8cd70c86b768b157bb031350377458d7f9ad8e27adf8c2afb9"
+  },
+  "final_guard_recheck": {
+    "status": "PASS",
+    "captured_at": "2026-09-14T14:00:14.167619+00:00",
+    "checks": [
+      "post-lock superseded marker race rejects parent and closes leases",
+      "pre-publication rename failure blocks parent and is retryable",
+      "final evaluator rejects pre-boundary checkpoint"
+    ],
+    "source_sha256": {
+      "tools/manage_experiment.py": "3f96bf59cd54c9241ebb12fdb2800ec3e903284857b8d0afa317125ba02eda72",
+      "tools/evaluate_benchmarks.py": "4c25b83446e5f6a056abd2c75b2744ecede4390805efd2ad8fc519cb23c0baa2"
+    }
+  }
+}

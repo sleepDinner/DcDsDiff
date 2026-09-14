@@ -1,0 +1,8 @@
+__base__: [config/experiments/casia2_all8.yaml]
+project_name: DcDsDiff-CASIA2-Select3-All8-v1
+protocol_id: CASIA2-SEL3-ALL8-V1
+test_dataset:
+  Mix:
+    name: dataset.benchmark_subset.BenchmarkSubset
+    params:
+      datasets: [Casiav1, Columbia, NIST16]

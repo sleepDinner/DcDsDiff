@@ -159,15 +159,23 @@ def freeze_source(root, source, commit):
 def start(args):
     root = args.project.resolve()
     run = run_path(root, args.run_id)
+    if args.command == 'resume' and (run / 'superseded_by.json').exists():
+        raise SystemExit('This run was superseded; resume the continuation recorded in superseded_by.json.')
     if args.command == 'resume' and args.gpu != read_json(run / 'provenance.json')['gpu']:
         raise SystemExit('Resume must use the GPU registered in this run\'s provenance.')
+    locks = acquire_resources(root, args.run_id, args.gpu)
+    # Recheck after acquisition: a continuation may have registered between
+    # the first marker check and this successful resource reservation.
+    if args.command == 'resume' and (run / 'superseded_by.json').exists():
+        for lock in locks:
+            lock.close()
+        raise SystemExit('This run was superseded; resume its registered continuation.')
     frozen_controller = run / 'source/tools/manage_experiment.py'
     if args.command == 'resume' and frozen_controller.is_file() and '--run-lock-fd' not in frozen_controller.read_text():
         # Keep legacy recovery on its tested controller and inherited global lock.
         # New launchers attribute that lock to its GPU, so the second arm can coexist.
         os.execv(sys.executable, [sys.executable, '-s', str(frozen_controller), 'resume',
                                  '--project', str(root), '--run-id', args.run_id, '--gpu', str(args.gpu)])
-    locks = acquire_resources(root, args.run_id, args.gpu)
     validate_environment(root, root if args.command == 'launch' else run / 'source')
     gpu_info = validate_gpu(args.gpu)
     if args.command == 'launch':
@@ -185,6 +193,8 @@ def start(args):
         sys.path.insert(0, str(root))
         from utils.init_utils import _load_config
         config = _load_config(config_file)
+        if config.protocol_id == 'CASIA2-SEL3-ALL8-V1':
+            raise SystemExit('Register this selection change with tools/continue_casia_selection.py.')
         benchmark = config.get('data_protocol') == 'casia2-all8-v1'
         if benchmark:
             from tools.benchmark_protocol import validate_casia_config

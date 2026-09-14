@@ -1,0 +1,16 @@
+{
+  "status": "TEMPORARY_TEST_ARTIFACTS_REMOVED",
+  "captured_at": "2026-09-14T22:02:39.201074+08:00",
+  "verified_no_active_validation_processes": true,
+  "removed": [
+    "/data1/hl/DcDsDiff-and-GIT10K/runtime/sel3-validation",
+    "/data1/hl/DcDsDiff-and-GIT10K/runtime/sel3-code.tar.gz",
+    "/data1/hl/DcDsDiff-and-GIT10K/runtime/sel3-update.tar.gz"
+  ],
+  "formal_parent_checkpoint_preserved": true,
+  "local_removed": [
+    ".local/validate_sel3.py",
+    ".local/sel3-code.tar.gz",
+    ".local/sel3-update.tar.gz"
+  ]
+}

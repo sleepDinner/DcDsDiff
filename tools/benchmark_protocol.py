@@ -6,6 +6,8 @@ import hashlib
 import json
 from pathlib import Path
 
+SELECTION_THREE = ['Casiav1', 'Columbia', 'NIST16']
+
 
 def small_hash(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
@@ -88,6 +90,7 @@ def validate_casia_config(config, root):
                  'requested_evaluation', 'train_dataset', 'test_dataset'}
     original = OmegaConf.to_container(baseline, resolve=True)
     current = OmegaConf.to_container(config, resolve=True)
+    selection_three = config.protocol_id == 'CASIA2-SEL3-ALL8-V1'
     if {k: v for k, v in current.items() if k not in permitted} != {
             k: v for k, v in original.items() if k not in permitted}:
         raise ValueError('CASIA2 arm may change only registered data/reporting settings.')
@@ -96,13 +99,25 @@ def validate_casia_config(config, root):
         reference = baseline.train_dataset if split == 'train' else baseline.test_dataset.Mix
         params = OmegaConf.to_container(section.params, resolve=True)
         ref_params = OmegaConf.to_container(reference.params, resolve=True)
+        expected_class = reference.name
+        if selection_three and split == 'test':
+            expected_class = 'dataset.benchmark_subset.BenchmarkSubset'
+            if params.pop('datasets', None) != SELECTION_THREE:
+                raise ValueError('The registered selection population is Casiav1/Columbia/NIST16 only.')
         for key, kind in (('image_root', 'f'), ('gt_root', 'm'), ('de_root', 'd'), ('trace_root', 't')):
             if (Path(root) / params.pop(key)).resolve() != snapshot / split / kind:
                 raise ValueError(f'Unexpected CASIA2/All8 {split} {key}')
             ref_params.pop(key)
-        if section.name != reference.name or params != ref_params or section.params[size] != 352:
+        if section.name != expected_class or params != ref_params or section.params[size] != 352:
             raise ValueError('Dataset transforms differ from the baseline.')
-    if config.protocol_id != 'CASIA2-ALL8-V1' or config.requested_evaluation != 'all8_best':
+    if config.protocol_id not in ('CASIA2-ALL8-V1', 'CASIA2-SEL3-ALL8-V1') or config.requested_evaluation != 'all8_best':
         raise ValueError('Unexpected CASIA2 protocol/reporting policy.')
+    if selection_three:
+        from utils.import_utils import instantiate_from_config
+        dataset = instantiate_from_config(config.test_dataset.Mix)
+        expected_names = {row['name'] for row in rows if row['split'] == 'test'
+                          and row['dataset'] in SELECTION_THREE}
+        if len(dataset) != 1664 or {Path(path).stem for path in dataset.images} != expected_names:
+            raise ValueError('Actual three-set selection loader differs from the frozen manifest.')
     verify_benchmark_files(snapshot, rows)
     return spec, snapshot, receipt
