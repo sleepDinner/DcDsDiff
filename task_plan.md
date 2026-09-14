@@ -7,8 +7,8 @@ User-authorized scope: audit and clean local project, publish to the existing Gi
 2. [complete] Freeze a documented reproduction protocol and clean proven obsolete artifacts.
 3. [complete] Repair execution/recovery paths and add scoped environment and experiment management.
 4. [complete] Build new server environment, stage resources and run bounded validation; remove temporary test code.
-5. [in_progress] Review, commit and push; pull identical code on server and launch supervised formal training.
-6. [pending] Verify live training, provenance, durable controller and management instructions.
+5. [complete] Review, commit and push; pull identical code on server and launch supervised formal training.
+6. [complete] Verify live training, provenance, durable controller and management instructions. Startup receipt shows step 1 to 829, a held lock and 58 matching frozen source hashes. Scientific training/evaluation remains RUNNING under server control.
 
 ## Decisions
 - Preserve existing uncommitted work before cleanup.

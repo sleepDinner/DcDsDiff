@@ -1,0 +1,105 @@
+{
+  "kind": "FORMAL_TRAINING_STARTUP_ONLY",
+  "captured_at": "2026-09-14T11:24:30.943803+00:00",
+  "run_id": "DCDSDIFF-GIT10K-RECON-20260914-A",
+  "protocol_id": "GIT10K-PAPER-RECON-V1",
+  "project": "/data1/hl/DcDsDiff-and-GIT10K",
+  "run_directory": "/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-GIT10K-RECON-20260914-A",
+  "execution_commit": "20d44286b9354e0af189e179ba1bd162eac9b11e",
+  "checkout_commit_at_capture": "20d44286b9354e0af189e179ba1bd162eac9b11e",
+  "controller": {
+    "run_id": "DCDSDIFF-GIT10K-RECON-20260914-A",
+    "controller_pid": 3787713,
+    "started_at": "2026-09-14T11:20:01.833788+00:00",
+    "gpu": 0,
+    "status": "TRAINING",
+    "updated_at": "2026-09-14T11:24:01.838094+00:00",
+    "child_pid": 3787714,
+    "command": [
+      "/data0/hl/conda_envs/dcdsdiff/bin/python",
+      "train.py",
+      "--config",
+      "config/reproduction.yaml",
+      "--results_folder",
+      "/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-GIT10K-RECON-20260914-A",
+      "--log_with",
+      "none"
+    ]
+  },
+  "training": {
+    "state": "RUNNING",
+    "updated_at": "2026-09-14T11:24:09.902702+00:00",
+    "pid": 3787714,
+    "cuda_visible_devices": "0",
+    "epoch": 0,
+    "next_epoch": 0,
+    "global_step": 829,
+    "total_epochs": 100,
+    "best_mae": null,
+    "best_epoch": null,
+    "primary_selection": "FIXED_FINAL_EPOCH",
+    "best_selection": "TEST_SELECTED_MAE_DIAGNOSTIC",
+    "architecture_version": "paper-aligned-v1",
+    "batch": 829,
+    "batches_per_epoch": 1500,
+    "loss": 0.3314114809036255,
+    "lr": 0.001
+  },
+  "initial_progress": {
+    "updated_at": "2026-09-14T11:20:09.450752+00:00",
+    "global_step": 1,
+    "loss": 1.7839722633361816
+  },
+  "processes": {
+    "controller": {
+      "pid": 3787713,
+      "cwd": "/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-GIT10K-RECON-20260914-A/source",
+      "executable": "/data0/hl/conda_envs/dcdsdiff/bin/python3.10",
+      "command": [
+        "/data0/hl/conda_envs/dcdsdiff/bin/python",
+        "/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-GIT10K-RECON-20260914-A/source/tools/manage_experiment.py",
+        "_worker",
+        "--project",
+        "/data1/hl/DcDsDiff-and-GIT10K",
+        "--run-id",
+        "DCDSDIFF-GIT10K-RECON-20260914-A",
+        "--gpu",
+        "0",
+        "--lock-fd",
+        "3"
+      ],
+      "environment": {
+        "CUDA_VISIBLE_DEVICES": "0",
+        "PYTHONNOUSERSITE": "1"
+      }
+    },
+    "training": {
+      "pid": 3787714,
+      "cwd": "/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-GIT10K-RECON-20260914-A/source",
+      "executable": "/data0/hl/conda_envs/dcdsdiff/bin/python3.10",
+      "command": [
+        "/data0/hl/conda_envs/dcdsdiff/bin/python",
+        "train.py",
+        "--config",
+        "config/reproduction.yaml",
+        "--results_folder",
+        "/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-GIT10K-RECON-20260914-A",
+        "--log_with",
+        "none"
+      ],
+      "environment": {
+        "CUDA_VISIBLE_DEVICES": "0",
+        "PYTHONNOUSERSITE": "1"
+      }
+    }
+  },
+  "project_lock_held": true,
+  "frozen_source_files_verified": 58,
+  "source_hash_mismatches": [],
+  "gpu_snapshot": [
+    "0, 14108 MiB, 85 %",
+    "1, 13 MiB, 0 %"
+  ],
+  "scientific_result_available": false,
+  "completion_policy": "100 completed epochs, then fixed epoch-99 evaluation covering 1000 test images; controller COMPLETED required."
+}
