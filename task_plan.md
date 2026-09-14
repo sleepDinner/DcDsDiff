@@ -16,3 +16,11 @@ User-authorized scope: audit and clean local project, publish to the existing Gi
 - Record train/test manifests and fixed reporting policy before training; do not select favorable checkpoints after results.
 - Heavy computation uses the new server environment only.
 - Completion of this setup task requires verified experiment startup and durable server control; scientific reproduction completion requires actual final evaluation.
+
+## Authorized CASIA2 / All8 extension — 2026-09-14
+
+1. [complete] Verify GPU 1 is free and audit the requested dataset roots and pairing contracts.
+2. [in_progress] Freeze CASIA2 + All8 inputs and record data-only training protocol / existing-best checkpoint policy.
+3. [in_progress] Validate per-GPU/run controller locks, eight-set evaluator and durable original-run follow-up in the dedicated environment.
+4. [pending] Review, publish local to GitHub, pull on server, launch CASIA2 on GPU 1 and queue original-run best evaluation.
+5. [pending] Verify both live training identities, follow-up registration, three-way Git sync, and deletion of temporary tests.

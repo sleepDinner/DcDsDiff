@@ -1,0 +1,8 @@
+{
+  "status": "COMPLETE_READ_ONLY_AUDIT",
+  "raw_images_hashed": 9418,
+  "casia2_train_all8_identical_rgb_groups": 0,
+  "casia2_train_all8_overlap": [],
+  "git10k_train_all8_identical_rgb_groups": 0,
+  "git10k_train_all8_overlap": []
+}

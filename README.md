@@ -47,7 +47,7 @@ $PY tools/manage_experiment.py stop --run-id YOUR_RUN_ID
 $PY tools/manage_experiment.py resume --run-id YOUR_RUN_ID --gpu 0
 ```
 
-控制器脱离 SSH 会话，持有项目文件锁；每 60 秒更新轻量状态，训练结束后自动运行固定最终评估。`status` 会检查 PID 身份并同时显示训练进度。失败会保存原因并停在原实验，不自动修改科学参数重试。`stop` 只终止本控制器持有的训练进程组；未完成 epoch 在恢复时重跑。
+控制器脱离 SSH 会话，持有 GPU 与 run 文件锁；每 60 秒更新轻量状态，按注册协议自动执行训练后评估。新控制器识别原 GIT10K 控制器持有的旧锁及其 GPU，允许另一张空闲卡并行训练。`status` 会检查 PID 身份并同时显示训练进度。失败会保存原因并停在原实验，不自动修改科学参数重试。`stop` 只终止本控制器持有的训练进程组；恢复使用原注册 GPU，未完成 epoch 在恢复时重跑。
 
 每个 run 保存 `provenance.json`、`source/`、`environment.freeze.txt`、`resolved_config.yaml`、`metrics.jsonl`、`training_status.json` 和 `controller_status.json`。训练每 10 epoch 保存归档，另保留 last、诊断 best 和最终 checkpoint。最终评估产生 `evaluation/{results.json,per_image.csv,report.md}`；仅 `controller_status.json=COMPLETED` 表示训练与固定评估均完成。最终结果需同步回本地后更新台账并提交；大型权重留在服务器。
 
@@ -61,5 +61,23 @@ $PY tools/manage_experiment.py launch --run-id NEW_AUTHORIZED_RUN_ID --gpu 0 \
 ```
 
 其他训练终点、数据集、种子或评估策略需要先登记新协议并适配控制器，不能套用本轮结果标签。重模型验证在服务器环境进行；临时测试脚本和测试 checkpoint 结束后移除，Git 只保留验证结论与小型收据。数据、权重、缓存和恢复备份均已加入 `.gitignore`。
+
+## CASIA2 与八数据集扩展
+
+2026-09-14 用户授权的新实验见 [CASIA2/All8 协议](docs/casia2_all8_protocol.md)。训练使用 CASIA2 的 5,123 对 Tp/Gt；测试使用指定八集，共 4,295 张。模型和训练参数继承原基线。数据路径、配对后缀和数量固定在 `config/benchmark_all8.json`，处理数据为 `data/casia2-all8-v1`，完整清单提交到 `manifests/casia2-all8-v1.csv`。
+
+```bash
+$PY tools/manage_experiment.py launch --run-id DCDSDIFF-CASIA2-ALL8-20260914-A \
+  --gpu 1 --config config/experiments/casia2_all8.yaml
+$PY tools/manage_experiment.py status --run-id DCDSDIFF-CASIA2-ALL8-20260914-A
+
+# 只登记一次原实验结束后的附加评估，不会启动另一轮训练：
+$PY tools/queue_benchmark.py queue --run-id DCDSDIFF-GIT10K-RECON-20260914-A
+$PY tools/queue_benchmark.py status --run-id DCDSDIFF-GIT10K-RECON-20260914-A
+```
+
+CASIA2 完成 100 epochs 后直接使用已有 `model-best.pt` 输出八集结果；best 沿用逐图 MAE 最小规则，这里其选择集为整个 All8，因此结果标记为 test-selected。原 GIT10K 的 best 仍由原 GIT10K Mix MAE 选择，附加评估不使用 All8 重新挑权重，也不更改原 final99 复现终点。两个评估都直接读取原文件，不创建别名。
+
+CASIA2 结果在 `runs/<CASIA_RUN_ID>/evaluation`；原实验的附加结果在 `runs/<GIT_RUN_ID>/followups/all8-best/evaluation`。后者有独立 `status.json`、控制器身份及评估代码快照，会等待原控制器完成退出后使用 GPU 0。`queue_benchmark.py resume/stop` 只恢复或停止该附加评估控制器。八集报告保留每集 F1/IoU/MAE、等数据集宏均值及逐图加权均值，并记录实际 checkpoint 哈希、epoch 和选择集。
 
 作者原始数据入口：[夸克网盘](https://pan.quark.cn/s/0d6b5c9d7344)，提取码 `81hq`。

@@ -1,0 +1,47 @@
+{
+  "status": "PASS",
+  "kind": "GPU_ENGINEERING_ONLY",
+  "actual_optimizer_steps": 1,
+  "formal_epochs_completed": 0,
+  "fixture_completion_status": "simulated to exercise the real final-evaluator CLI; not a scientific checkpoint/result",
+  "gpu": 1,
+  "train_examples": 6,
+  "test_examples": 8,
+  "test_counts": {
+    "Casiav1": 1,
+    "Columbia": 1,
+    "NIST16": 1,
+    "IMD2020": 1,
+    "DSO-1": 1,
+    "wild": 1,
+    "coverage": 1,
+    "Korus": 1
+  },
+  "loss": 1.8081862926483154,
+  "backward_optimizer_seconds": 1.4869638457894325,
+  "peak_allocated_bytes": 11161407488,
+  "evaluation_seconds": 13.02961615845561,
+  "checks": [
+    "actual CASIA2 data backward and finite gradients",
+    "real original-size sample per each of eight datasets",
+    "all f/m/d/t file hashes and corruption rejection",
+    "best identity/completion/selection gates",
+    "actual 10-step benchmark CLI reload and complete per-image/macro/pooled output",
+    "existing model-best.pt used directly"
+  ],
+  "source_sha256": {
+    "tools/evaluate_benchmarks.py": "8861b2bfa1de899823a9fdfe61362de146592599860dc86ccafbac2be384ba10",
+    "tools/benchmark_protocol.py": "e0dc94c8214e7836bc5bbf15a5dd4333d255dfc53fbcdcd2d70ecf4e8d2623f4",
+    "tools/prepare_benchmark_data.py": "422eefeaec70f470daac629f7d178663acd0d01bf9478d58e7f02dd0c7f6f3da"
+  },
+  "final_evaluator_recheck": {
+    "status": "PASS",
+    "test_images": 8,
+    "mae_matches_training_diagnostic_exactly": true,
+    "evaluated_at": "2026-09-14T12:11:52.645512+00:00",
+    "source_sha256": {
+      "tools/evaluate_benchmarks.py": "5238235f4574a290b2b1bbb668a3dff5b5195cd11471b81fd0095f7edc9a2b7f",
+      "tools/benchmark_protocol.py": "5b23000d668274091ccd633c51583b01b1166db3c13cbfcd8743f6c726552d0e"
+    }
+  }
+}

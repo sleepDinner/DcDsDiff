@@ -16,3 +16,12 @@
 - Scientific status: no formal result yet. Running training and successful engineering checks do not establish agreement with paper scores. Final closure requires controller `COMPLETED`, final evaluation receipts, and publication of the small result files; weights remain on the server.
 
 Historical runs are summarized separately in [pre-rebuild audit](docs/history/pre-rebuild-audit.md). They do not fulfill this registered protocol.
+
+## CASIA2-ALL8-V1 — PREPARING
+
+- Authorized 2026-09-14: one fresh CASIA2 training arm on GPU 1 and one All8 best evaluation after training. Run ID reserved: `DCDSDIFF-CASIA2-ALL8-20260914-A`.
+- Protocol: [CASIA2/All8](docs/casia2_all8_protocol.md); config `config/experiments/casia2_all8.yaml` inherits all non-data model/training parameters from the original baseline.
+- Training: 5,123 paired CASIA2 Tp/Gt samples; All8 test count 4,295. Preparation is in progress; no formal CASIA2 run has started yet.
+- Reporting: existing `model-best.pt` minimizes pooled All8 per-image MAE. Eight individual datasets plus macro/pooled summaries; explicitly test-selected. No aliases, checkpoint sweep or extra seed.
+- Original GIT10K follow-up: one external All8 evaluation of its original GIT10K-MAE-selected `model-best.pt`, after the existing controller completes. Its training source and final99 primary result remain unchanged. Registration evidence will be added after the durable follow-up starts.
+- Engineering: new environment CPU lifecycle/lock guards and actual GPU 1 six-image backward / eight-set sample evaluation passed. These temporary fixtures are not scientific results. Data completion, final publication and formal startup remain.

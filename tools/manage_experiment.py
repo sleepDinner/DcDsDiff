@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import argparse
 from datetime import datetime, timezone
-import fcntl
 import hashlib
 import io
 import json
@@ -16,6 +15,9 @@ import subprocess
 import sys
 import tarfile
 import time
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from tools.resource_locks import acquire_resources, inherit_file
 
 
 def now():
@@ -101,16 +103,6 @@ def run_path(root, run_id):
     return path
 
 
-def lock_project(root):
-    (root / 'runtime').mkdir(exist_ok=True)
-    handle = (root / 'runtime' / 'experiment.lock').open('a+')
-    try:
-        fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
-    except BlockingIOError:
-        raise SystemExit('An experiment or its child still holds the project lock.')
-    return handle
-
-
 def validate_gpu(gpu):
     info = output(['nvidia-smi', '-i', str(gpu), '--query-gpu=uuid,memory.used,utilization.gpu',
                    '--format=csv,noheader,nounits'])
@@ -135,20 +127,48 @@ def validate_data_config(config, root):
                 raise SystemExit(f'{key} does not refer to the registered {split} manifest data.')
 
 
-def start(args):
-    root = args.project.resolve()
-    run = run_path(root, args.run_id)
+def validate_environment(root, environment_source):
     if Path(sys.prefix).resolve() != Path('/data0/hl/conda_envs/dcdsdiff').resolve():
         raise SystemExit('Run this controller using /data0/hl/conda_envs/dcdsdiff/bin/python.')
-    lock = lock_project(root)
     environment = read_json(root / 'runtime/bootstrap/environment.ready')
-    environment_source = root if args.command == 'launch' else run / 'source'
     installed = subprocess.check_output([sys.executable, '-m', 'pip', 'freeze'])
     if (environment['status'] != 'READY'
             or sha256(environment_source / 'environment/requirements.txt') != environment['requirements_sha256']
             or sha256(environment_source / 'environment/requirements.lock.txt') != environment['dependency_lock_sha256']
             or hashlib.sha256(installed).hexdigest() != environment['freeze_sha256']):
         raise SystemExit('Environment differs from its verified requirements/lock/freeze receipt.')
+
+
+def freeze_source(root, source, commit):
+    source.mkdir()
+    archive = subprocess.check_output(['git', 'archive', commit], cwd=root)
+    with tarfile.open(fileobj=io.BytesIO(archive)) as tar:
+        for member in tar.getmembers():
+            dest = (source / member.name).resolve()
+            if not dest.is_relative_to(source) or member.issym() or member.islnk():
+                raise RuntimeError('Unexpected archive member')
+        tar.extractall(source)
+    (source / 'data').symlink_to(root / 'data', target_is_directory=True)
+    (source / 'pretrained_weights').mkdir(exist_ok=True)
+    (source / 'pretrained_weights/pvt_v2_b2.pth').symlink_to(root / 'pretrained_weights/pvt_v2_b2.pth')
+    return {p.relative_to(source).as_posix(): sha256(p)
+            for p in source.rglob('*') if p.is_file() and not p.is_symlink()
+            and 'data' not in p.relative_to(source).parts}
+
+
+def start(args):
+    root = args.project.resolve()
+    run = run_path(root, args.run_id)
+    if args.command == 'resume' and args.gpu != read_json(run / 'provenance.json')['gpu']:
+        raise SystemExit('Resume must use the GPU registered in this run\'s provenance.')
+    frozen_controller = run / 'source/tools/manage_experiment.py'
+    if args.command == 'resume' and frozen_controller.is_file() and '--run-lock-fd' not in frozen_controller.read_text():
+        # Keep legacy recovery on its tested controller and inherited global lock.
+        # New launchers attribute that lock to its GPU, so the second arm can coexist.
+        os.execv(sys.executable, [sys.executable, '-s', str(frozen_controller), 'resume',
+                                 '--project', str(root), '--run-id', args.run_id, '--gpu', str(args.gpu)])
+    locks = acquire_resources(root, args.run_id, args.gpu)
+    validate_environment(root, root if args.command == 'launch' else run / 'source')
     gpu_info = validate_gpu(args.gpu)
     if args.command == 'launch':
         if run.exists():
@@ -165,13 +185,22 @@ def start(args):
         sys.path.insert(0, str(root))
         from utils.init_utils import _load_config
         config = _load_config(config_file)
-        validate_data_config(config, root)
+        benchmark = config.get('data_protocol') == 'casia2-all8-v1'
+        if benchmark:
+            from tools.benchmark_protocol import validate_casia_config
+            _, snapshot, receipt = validate_casia_config(config, root)
+            manifest_relative = snapshot.relative_to(root) / 'manifest.csv'
+        else:
+            if config.get('data_protocol') is not None:
+                raise SystemExit('Unregistered data protocol.')
+            validate_data_config(config, root)
+            receipt = read_json(root / 'data/git10k-recon-v1/dataset_receipt.json')
+            if receipt['status'] != 'READY' or receipt['train_count'] != 9000 or receipt['test_count'] != 1000:
+                raise SystemExit('Dataset receipt is not READY for this protocol.')
+            manifest_relative = Path('data/git10k-recon-v1/manifest.csv')
         if config.num_epoch != 100 or config.diffusion_model.params.num_sample_steps != 10:
             raise SystemExit('This controller requires the registered 100-epoch / 10-step protocol.')
-        receipt = read_json(root / 'data/git10k-recon-v1/dataset_receipt.json')
-        if receipt['status'] != 'READY' or receipt['train_count'] != 9000 or receipt['test_count'] != 1000:
-            raise SystemExit('Dataset receipt is not READY for this protocol.')
-        manifest = root / 'data/git10k-recon-v1/manifest.csv'
+        manifest = root / manifest_relative
         if sha256(manifest) != receipt['manifest_sha256']:
             raise SystemExit('Dataset manifest hash mismatch.')
         weights = root / 'pretrained_weights/pvt_v2_b2.pth'
@@ -179,18 +208,7 @@ def start(args):
             raise SystemExit('Pretrained weight checksum differs from audited PVT-B2.')
         run.mkdir(parents=True)
         source = run / 'source'
-        source.mkdir()
-        archive = subprocess.check_output(['git', 'archive', commit], cwd=root)
-        with tarfile.open(fileobj=io.BytesIO(archive)) as tar:
-            for member in tar.getmembers():
-                dest = (source / member.name).resolve()
-                if not dest.is_relative_to(source) or member.issym() or member.islnk():
-                    raise RuntimeError('Unexpected archive member')
-            tar.extractall(source)
-        (source / 'data').symlink_to(root / 'data', target_is_directory=True)
-        # The repo has no binary weights; this explicit link is the only model resource.
-        (source / 'pretrained_weights').mkdir(exist_ok=True)
-        (source / 'pretrained_weights/pvt_v2_b2.pth').symlink_to(weights)
+        source_hashes = freeze_source(root, source, commit)
         (run / 'environment.freeze.txt').write_text(output([sys.executable, '-m', 'pip', 'freeze', '--all']) + '\n')
         provenance = {
             'run_id': args.run_id, 'created_at': now(), 'git_commit': commit,
@@ -198,12 +216,14 @@ def start(args):
             'python': sys.executable, 'gpu': args.gpu, 'gpu_snapshot': gpu_info,
             'config_path': config_relative.as_posix(),
             'config_sha256': sha256(source / config_relative),
-            'source_files_sha256': {p.relative_to(source).as_posix(): sha256(p)
-                                    for p in source.rglob('*') if p.is_file() and not p.is_symlink()
-                                    and 'data' not in p.relative_to(source).parts},
+            'source_files_sha256': source_hashes,
             'dataset_manifest_sha256': receipt['manifest_sha256'],
+            'dataset_manifest_path': manifest_relative.as_posix(),
+            'evaluation_kind': 'all8_best' if benchmark else 'git10k_final',
+            'benchmark_spec': config.get('benchmark_spec'),
             'pretrained_sha256': sha256(weights), 'dataset': receipt,
-            'checkpoint_policy': 'epoch99 final primary; best MAE is test-selected diagnostic only',
+            'checkpoint_policy': ('retain epoch99; requested All8 report uses saved best pooled test MAE'
+                                  if benchmark else 'epoch99 final primary; best MAE is test-selected diagnostic only'),
         }
         write_json(run / 'provenance.json', provenance)
     else:
@@ -219,11 +239,15 @@ def start(args):
         for name, digest in provenance['source_files_sha256'].items():
             if sha256(source / name) != digest:
                 raise SystemExit(f'Frozen source changed: {name}')
-        if sha256(root / 'data/git10k-recon-v1/manifest.csv') != provenance['dataset_manifest_sha256']:
+        if sha256(root / provenance.get('dataset_manifest_path', 'data/git10k-recon-v1/manifest.csv')) != provenance['dataset_manifest_sha256']:
             raise SystemExit('Dataset changed since launch.')
+        if provenance.get('evaluation_kind') == 'all8_best':
+            from tools.benchmark_protocol import load_benchmark, verify_benchmark_files
+            _, snapshot, _, rows = load_benchmark(source, provenance['benchmark_spec'], require_disjoint_train=True)
+            verify_benchmark_files(snapshot, rows)
     command = [sys.executable, str(source / 'tools/manage_experiment.py'), '_worker',
                '--project', str(root), '--run-id', args.run_id, '--gpu', str(args.gpu),
-               '--lock-fd', str(lock.fileno())]
+               '--lock-fd', str(locks[0].fileno()), '--run-lock-fd', str(locks[1].fileno())]
     if args.command == 'resume':
         command.append('--resume-training')
     environment = os.environ.copy()
@@ -232,17 +256,19 @@ def start(args):
                        WANDB_MODE='disabled', TOKENIZERS_PARALLELISM='false')
     with (run / 'controller.log').open('a') as log:
         proc = subprocess.Popen(command, cwd=source, stdin=subprocess.DEVNULL, stdout=log, stderr=log,
-                                start_new_session=True, pass_fds=(lock.fileno(),), env=environment)
+                                start_new_session=True, pass_fds=tuple(lock.fileno() for lock in locks), env=environment)
     write_json(run / 'controller_identity.json', {'pid': proc.pid, 'start_ticks': proc_identity(proc.pid)})
     # The worker and active child inherit the lock; it survives this command and SSH.
-    lock.close()
+    for lock in locks:
+        lock.close()
     print(json.dumps({'run_id': args.run_id, 'controller_pid': proc.pid, 'run_path': str(run)}))
 
 
 def worker(args):
     root = args.project.resolve()
     run = run_path(root, args.run_id)
-    lock = os.fdopen(args.lock_fd, 'a+')
+    locks = [inherit_file(args.lock_fd, root / 'runtime/locks' / f'gpu-{args.gpu}.lock'),
+             inherit_file(args.run_lock_fd, root / 'runtime/locks' / f'run-{args.run_id}.lock')]
     source = run / 'source'
     state = {'run_id': args.run_id, 'controller_pid': os.getpid(), 'started_at': now(),
              'gpu': args.gpu, 'status': 'STARTING'}
@@ -265,6 +291,12 @@ def worker(args):
                   ('EVALUATING', [sys.executable, 'tools/evaluate_reproduction.py',
                     '--config', str(run / 'resolved_config.yaml'), '--checkpoint', str(run / 'model-final.pt'),
                     '--output', str(run / 'evaluation')], 'evaluation.log')]
+        checkpoint = run / 'model-final.pt'
+        if provenance.get('evaluation_kind') == 'all8_best':
+            checkpoint = run / 'model-best.pt'
+            stages[1] = ('EVALUATING', [sys.executable, 'tools/evaluate_benchmarks.py',
+                         '--run', str(run), '--spec', provenance['benchmark_spec'],
+                         '--output', str(run / 'evaluation')], 'evaluation.log')
         for stage, command, logfile in stages:
             if stage == 'TRAINING' and (run / 'training_status.json').exists():
                 training = read_json(run / 'training_status.json')
@@ -273,13 +305,13 @@ def worker(args):
                     continue
             if stage == 'EVALUATING' and (run / 'evaluation/results.json').exists():
                 result = read_json(run / 'evaluation/results.json')
-                if result.get('status') == 'COMPLETED' and result['checkpoint_sha256'] == sha256(run / 'model-final.pt'):
+                if result.get('status') == 'COMPLETED' and result['checkpoint_sha256'] == sha256(checkpoint):
                     continue
-                raise RuntimeError('Existing evaluation does not match final checkpoint.')
+                raise RuntimeError('Existing evaluation does not match the registered checkpoint.')
             with (run / logfile).open('a') as log:
                 print(f'{now()} {stage}: {command}', flush=True)
                 proc = subprocess.Popen(command, cwd=source, stdin=subprocess.DEVNULL,
-                                        stdout=log, stderr=log, pass_fds=(lock.fileno(),),
+                                        stdout=log, stderr=log, pass_fds=tuple(lock.fileno() for lock in locks),
                                         start_new_session=True)
                 update(status=stage, child_pid=proc.pid, command=command)
                 while True:
@@ -294,8 +326,11 @@ def worker(args):
                 terminate_stage(proc, grace_seconds=5)
                 proc = None
         result = read_json(run / 'evaluation/results.json')
+        checkpoint_fields = {'evaluated_checkpoint_sha256': result['checkpoint_sha256']}
+        if provenance.get('evaluation_kind', 'git10k_final') == 'git10k_final':
+            checkpoint_fields['final_checkpoint_sha256'] = result['checkpoint_sha256']
         update(status='COMPLETED', child_pid=None, finished_at=now(), metrics=result['metrics'],
-               final_checkpoint_sha256=result['checkpoint_sha256'])
+               **checkpoint_fields)
     except BaseException as error:
         signal.signal(signal.SIGTERM, signal.SIG_IGN)
         signal.signal(signal.SIGINT, signal.SIG_IGN)
@@ -311,7 +346,8 @@ def worker(args):
                error=str(error), cleanup_error=cleanup_error, finished_at=now())
         raise
     finally:
-        lock.close()
+        for lock in locks:
+            lock.close()
 
 
 def status_or_stop(args):
@@ -343,6 +379,7 @@ def main():
     parser.add_argument('--gpu', type=int, default=0)
     parser.add_argument('--config', default='config/reproduction.yaml')
     parser.add_argument('--lock-fd', type=int)
+    parser.add_argument('--run-lock-fd', type=int)
     parser.add_argument('--resume-training', action='store_true')
     args = parser.parse_args()
     if args.command in ('launch', 'resume'):

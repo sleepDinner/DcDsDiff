@@ -1,0 +1,46 @@
+{
+  "status": "PASS",
+  "kind": "CPU_CONTROL_VALIDATION_ONLY",
+  "python": "/data0/hl/conda_envs/dcdsdiff/bin/python",
+  "checks": [
+    "syntax",
+    "CASIA non-data config parity",
+    "strict mask suffix pairing",
+    "live legacy GPU0 attribution and exclusion",
+    "per-GPU and cross-GPU same-run exclusion",
+    "inherited locks survive parent closure",
+    "manifest drift rejection",
+    "follow-up waits for controller exit and rejects failure",
+    "real follow-up worker dispatch and resource release",
+    "no best.pth alias",
+    "missing inherited locks and wrong resume GPU rejected",
+    "baseline final checksum field retained",
+    "overlap gate rejection",
+    "atomic follow-up registration failure cleanup"
+  ],
+  "controller_lifecycle": [
+    {
+      "case": "git10k_final",
+      "status": "COMPLETED",
+      "locks_released": true
+    },
+    {
+      "case": "all8_best",
+      "status": "COMPLETED",
+      "locks_released": true
+    },
+    {
+      "case": "orphan_failure",
+      "status": "FAILED",
+      "locks_released": true
+    }
+  ],
+  "source_sha256": {
+    "tools/manage_experiment.py": "821517e31acccc3fccaa2c53d51fd86543fb75f8d9e72fdc3f50fa82514f048a",
+    "tools/resource_locks.py": "92bda313742a8967ced4e8c6fb10747bed987bce4c935331b5d632418442c574",
+    "tools/benchmark_protocol.py": "5b23000d668274091ccd633c51583b01b1166db3c13cbfcd8743f6c726552d0e",
+    "tools/prepare_benchmark_data.py": "422eefeaec70f470daac629f7d178663acd0d01bf9478d58e7f02dd0c7f6f3da",
+    "tools/evaluate_benchmarks.py": "5238235f4574a290b2b1bbb668a3dff5b5195cd11471b81fd0095f7edc9a2b7f",
+    "tools/queue_benchmark.py": "bf1f1a3246b22ad0fc7d71484430637c8d01ebb02fe5df0c8675444f63edd365"
+  }
+}
