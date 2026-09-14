@@ -1,0 +1,247 @@
+{
+  "kind": "FORMAL_CONTINUATION_STARTUP_ONLY",
+  "captured_at": "2026-09-14T14:06:27.898137+00:00",
+  "run_id": "DCDSDIFF-CASIA2-SEL3-ALL8-20260914-B",
+  "execution_commit": "01db26c96581818499120240dc01ffaa5e71e3a9",
+  "continuation": {
+    "kind": "USER_AUTHORIZED_SELECTION_CHANGE",
+    "registered_at": "2026-09-14T14:04:24.353127+00:00",
+    "parent_run_id": "DCDSDIFF-CASIA2-ALL8-20260914-A",
+    "parent_commit": "cd0df49f07a9bf250a62e9ba80e65f079c5b8e0f",
+    "parent_checkpoint": "/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-CASIA2-ALL8-20260914-A/model-last.pt",
+    "parent_checkpoint_sha256": "845e53184fa8b73ee3f0bc907f243cdc50350b2e7c38bba8aebb1311494b06ee",
+    "parent_controller_stop": {
+      "run_id": "DCDSDIFF-CASIA2-ALL8-20260914-A",
+      "controller_pid": 3843754,
+      "started_at": "2026-09-14T12:39:52.556274+00:00",
+      "gpu": 1,
+      "status": "INTERRUPTED",
+      "updated_at": "2026-09-14T13:46:25.823985+00:00",
+      "child_pid": null,
+      "command": [
+        "/data0/hl/conda_envs/dcdsdiff/bin/python",
+        "train.py",
+        "--config",
+        "config/experiments/casia2_all8.yaml",
+        "--results_folder",
+        "/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-CASIA2-ALL8-20260914-A",
+        "--log_with",
+        "none"
+      ],
+      "error": "Controller received signal 15",
+      "cleanup_error": null,
+      "finished_at": "2026-09-14T13:46:25.823957+00:00"
+    },
+    "parent_epoch": 2,
+    "next_epoch": 3,
+    "global_step": 2562,
+    "preserved": [
+      "model",
+      "opt",
+      "scheduler",
+      "scaler",
+      "rng",
+      "epoch",
+      "next_epoch",
+      "global_step"
+    ],
+    "best_reset": true,
+    "previous_selection_datasets": [
+      "Casiav1",
+      "Columbia",
+      "NIST16",
+      "IMD2020",
+      "DSO-1",
+      "wild",
+      "coverage",
+      "Korus"
+    ],
+    "selection_datasets": [
+      "Casiav1",
+      "Columbia",
+      "NIST16"
+    ],
+    "selection_count": 1664,
+    "total_training_epochs": 100,
+    "imported_checkpoint_sha256": "c1ea062dede92e8e7c92d5f5fdd24a9641c15d2c44ce56d038c2d9a018ca7db2"
+  },
+  "parent_frozen_files_verified": 75,
+  "new_controller": {
+    "state": {
+      "run_id": "DCDSDIFF-CASIA2-SEL3-ALL8-20260914-B",
+      "controller_pid": 3903032,
+      "started_at": "2026-09-14T14:04:57.880468+00:00",
+      "gpu": 1,
+      "status": "TRAINING",
+      "updated_at": "2026-09-14T14:05:57.882146+00:00",
+      "child_pid": 3903033,
+      "command": [
+        "/data0/hl/conda_envs/dcdsdiff/bin/python",
+        "train.py",
+        "--config",
+        "config/experiments/casia2_sel3_all8.yaml",
+        "--results_folder",
+        "/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-CASIA2-SEL3-ALL8-20260914-B",
+        "--log_with",
+        "none",
+        "--resume",
+        "/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-CASIA2-SEL3-ALL8-20260914-B/model-last.pt"
+      ]
+    },
+    "identity": {
+      "pid": 3903032,
+      "start_ticks": "2699441603"
+    },
+    "frozen_files_verified": 82
+  },
+  "training": {
+    "state": "RUNNING",
+    "updated_at": "2026-09-14T14:07:05.315837+00:00",
+    "pid": 3903033,
+    "cuda_visible_devices": "1",
+    "epoch": 3,
+    "next_epoch": 3,
+    "global_step": 2980,
+    "total_epochs": 100,
+    "best_mae": null,
+    "best_epoch": null,
+    "primary_selection": "FIXED_FINAL_EPOCH",
+    "best_selection": "TEST_SELECTED_MAE_DIAGNOSTIC",
+    "architecture_version": "paper-aligned-v1",
+    "batch": 418,
+    "batches_per_epoch": 854,
+    "loss": 0.2603137195110321,
+    "lr": 0.0009977832013192385,
+    "diagnostic_datasets": [
+      "Casiav1",
+      "Columbia",
+      "NIST16"
+    ]
+  },
+  "new_processes": {
+    "controller": {
+      "pid": 3903032,
+      "cwd": "/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-CASIA2-SEL3-ALL8-20260914-B/source",
+      "exe": "/data0/hl/conda_envs/dcdsdiff/bin/python3.10",
+      "ppid": 1,
+      "session": 3903032,
+      "environment": {
+        "CUDA_VISIBLE_DEVICES": "1",
+        "PYTHONNOUSERSITE": "1"
+      }
+    },
+    "trainer": {
+      "pid": 3903033,
+      "cwd": "/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-CASIA2-SEL3-ALL8-20260914-B/source",
+      "exe": "/data0/hl/conda_envs/dcdsdiff/bin/python3.10",
+      "ppid": 3903032,
+      "session": 3903033,
+      "environment": {
+        "CUDA_VISIBLE_DEVICES": "1",
+        "PYTHONNOUSERSITE": "1"
+      }
+    }
+  },
+  "selection_counts": {
+    "Casiav1": 920,
+    "Columbia": 180,
+    "NIST16": 564
+  },
+  "total_final_test_images": 4295,
+  "old_history_datasets": [
+    [
+      "Casiav1",
+      "Columbia",
+      "NIST16",
+      "IMD2020",
+      "DSO-1",
+      "wild",
+      "coverage",
+      "Korus"
+    ],
+    [
+      "Casiav1",
+      "Columbia",
+      "NIST16",
+      "IMD2020",
+      "DSO-1",
+      "wild",
+      "coverage",
+      "Korus"
+    ],
+    [
+      "Casiav1",
+      "Columbia",
+      "NIST16",
+      "IMD2020",
+      "DSO-1",
+      "wild",
+      "coverage",
+      "Korus"
+    ]
+  ],
+  "old_best_not_imported": true,
+  "gpu0": {
+    "state": {
+      "run_id": "DCDSDIFF-GIT10K-RECON-20260914-A",
+      "controller_pid": 3787713,
+      "started_at": "2026-09-14T11:20:01.833788+00:00",
+      "gpu": 0,
+      "status": "TRAINING",
+      "updated_at": "2026-09-14T14:06:02.045937+00:00",
+      "child_pid": 3787714,
+      "command": [
+        "/data0/hl/conda_envs/dcdsdiff/bin/python",
+        "train.py",
+        "--config",
+        "config/reproduction.yaml",
+        "--results_folder",
+        "/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-GIT10K-RECON-20260914-A",
+        "--log_with",
+        "none"
+      ]
+    },
+    "identity": {
+      "pid": 3787713,
+      "start_ticks": "2698451998"
+    },
+    "frozen_files_verified": 58
+  },
+  "gpu0_all8_followup": {
+    "state": {
+      "training_run_id": "DCDSDIFF-GIT10K-RECON-20260914-A",
+      "controller_pid": 3844284,
+      "started_at": "2026-09-14T12:40:08.294922+00:00",
+      "status": "WAITING_FOR_TRAINING",
+      "updated_at": "2026-09-14T14:06:13.172172+00:00",
+      "dependency": "TRAINING"
+    },
+    "identity": {
+      "pid": 3844284,
+      "start_ticks": "2698932643"
+    },
+    "frozen_files_verified": 75
+  },
+  "locks_held": {
+    "runtime/experiment.lock": true,
+    "runtime/locks/gpu-1.lock": true,
+    "runtime/locks/run-DCDSDIFF-CASIA2-SEL3-ALL8-20260914-B.lock": true,
+    "runtime/locks/followup-DCDSDIFF-GIT10K-RECON-20260914-A.lock": true
+  },
+  "parent_checkpoint_unchanged": true,
+  "imported_checkpoint_hash_matches": true,
+  "formal_preflight": "full 9418-sample / 37672-file integrity checks completed during registration and ordinary resume",
+  "gpu_snapshot": [
+    "0, 14352 MiB, 90 %",
+    "1, 14200 MiB, 85 %"
+  ],
+  "scientific_final_results_available": false,
+  "initial_progress": {
+    "updated_at": "2026-09-14T14:06:05.296301+00:00",
+    "epoch": 3,
+    "global_step": 2770,
+    "batch": 208,
+    "loss": 0.4633912444114685
+  },
+  "continued_progress_verified_at": "2026-09-14T14:07:48.909737+00:00"
+}
