@@ -1,0 +1,431 @@
+{
+  "kind": "FORMAL_STARTUP_AND_DURABLE_FOLLOWUP_REGISTRATION_ONLY",
+  "captured_at": "2026-09-14T12:41:10.577044+00:00",
+  "project": "/data1/hl/DcDsDiff-and-GIT10K",
+  "checkout_commit_at_capture": "cd0df49f07a9bf250a62e9ba80e65f079c5b8e0f",
+  "casia2": {
+    "run_id": "DCDSDIFF-CASIA2-ALL8-20260914-A",
+    "run_directory": "/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-CASIA2-ALL8-20260914-A",
+    "execution_commit": "cd0df49f07a9bf250a62e9ba80e65f079c5b8e0f",
+    "gpu": 1,
+    "dataset_manifest_sha256": "b5d7c329a957bb62e39d22bbef79f4b3d3bb071487fc97212ca2e99455c1bd8b",
+    "controller": {
+      "run_id": "DCDSDIFF-CASIA2-ALL8-20260914-A",
+      "controller_pid": 3843754,
+      "started_at": "2026-09-14T12:39:52.556274+00:00",
+      "gpu": 1,
+      "status": "TRAINING",
+      "updated_at": "2026-09-14T12:43:52.560637+00:00",
+      "child_pid": 3843758,
+      "command": [
+        "/data0/hl/conda_envs/dcdsdiff/bin/python",
+        "train.py",
+        "--config",
+        "config/experiments/casia2_all8.yaml",
+        "--results_folder",
+        "/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-CASIA2-ALL8-20260914-A",
+        "--log_with",
+        "none"
+      ]
+    },
+    "training": {
+      "state": "RUNNING",
+      "updated_at": "2026-09-14T12:43:01.866612+00:00",
+      "pid": 3843758,
+      "cuda_visible_devices": "1",
+      "epoch": 0,
+      "next_epoch": 0,
+      "global_step": 603,
+      "total_epochs": 100,
+      "best_mae": null,
+      "best_epoch": null,
+      "primary_selection": "FIXED_FINAL_EPOCH",
+      "best_selection": "TEST_SELECTED_MAE_DIAGNOSTIC",
+      "architecture_version": "paper-aligned-v1",
+      "pretrained_load_report": {
+        "path": "/data1/hl/DcDsDiff-and-GIT10K/pretrained_weights/pvt_v2_b2.pth",
+        "sha256": "80711cd1b37ffba12bec6c7a2a7c54efe2315ed635e6d2055fd51c3e909ede4d",
+        "branches": {
+          "backbone": {
+            "required_feature_keys": 332,
+            "loaded_feature_keys": 332,
+            "feature_coverage": 1.0,
+            "loaded_feature_numel": 24849856,
+            "fresh_diffusion_keys": [
+              "patch_embed1.mask_proj.bias",
+              "patch_embed1.mask_proj.weight",
+              "time_embed.0.0.bias",
+              "time_embed.0.0.weight",
+              "time_embed.0.2.bias",
+              "time_embed.0.2.weight",
+              "time_embed.1.0.bias",
+              "time_embed.1.0.weight",
+              "time_embed.1.2.bias",
+              "time_embed.1.2.weight",
+              "time_embed.2.0.bias",
+              "time_embed.2.0.weight",
+              "time_embed.2.2.bias",
+              "time_embed.2.2.weight",
+              "time_embed.3.0.bias",
+              "time_embed.3.0.weight",
+              "time_embed.3.2.bias",
+              "time_embed.3.2.weight"
+            ]
+          },
+          "backbone_t": {
+            "required_feature_keys": 332,
+            "loaded_feature_keys": 332,
+            "feature_coverage": 1.0,
+            "loaded_feature_numel": 24849856,
+            "fresh_diffusion_keys": [
+              "patch_embed1.mask_proj.bias",
+              "patch_embed1.mask_proj.weight",
+              "time_embed.0.0.bias",
+              "time_embed.0.0.weight",
+              "time_embed.0.2.bias",
+              "time_embed.0.2.weight",
+              "time_embed.1.0.bias",
+              "time_embed.1.0.weight",
+              "time_embed.1.2.bias",
+              "time_embed.1.2.weight",
+              "time_embed.2.0.bias",
+              "time_embed.2.0.weight",
+              "time_embed.2.2.bias",
+              "time_embed.2.2.weight",
+              "time_embed.3.0.bias",
+              "time_embed.3.0.weight",
+              "time_embed.3.2.bias",
+              "time_embed.3.2.weight"
+            ]
+          }
+        }
+      },
+      "batch": 603,
+      "batches_per_epoch": 854,
+      "loss": 0.5032825469970703,
+      "lr": 0.001
+    },
+    "controller_identity": {
+      "pid": 3843754,
+      "start_ticks": "2698931071"
+    },
+    "processes": {
+      "controller": {
+        "pid": 3843754,
+        "start_ticks": "2698931071",
+        "cwd": "/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-CASIA2-ALL8-20260914-A/source",
+        "executable": "/data0/hl/conda_envs/dcdsdiff/bin/python3.10",
+        "command": [
+          "/data0/hl/conda_envs/dcdsdiff/bin/python",
+          "/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-CASIA2-ALL8-20260914-A/source/tools/manage_experiment.py",
+          "_worker",
+          "--project",
+          "/data1/hl/DcDsDiff-and-GIT10K",
+          "--run-id",
+          "DCDSDIFF-CASIA2-ALL8-20260914-A",
+          "--gpu",
+          "1",
+          "--lock-fd",
+          "3",
+          "--run-lock-fd",
+          "4"
+        ],
+        "environment": {
+          "CUDA_VISIBLE_DEVICES": "1",
+          "PYTHONNOUSERSITE": "1"
+        },
+        "parent_pid": 1,
+        "session_id": 3843754
+      },
+      "training": {
+        "pid": 3843758,
+        "start_ticks": "2698931076",
+        "cwd": "/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-CASIA2-ALL8-20260914-A/source",
+        "executable": "/data0/hl/conda_envs/dcdsdiff/bin/python3.10",
+        "command": [
+          "/data0/hl/conda_envs/dcdsdiff/bin/python",
+          "train.py",
+          "--config",
+          "config/experiments/casia2_all8.yaml",
+          "--results_folder",
+          "/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-CASIA2-ALL8-20260914-A",
+          "--log_with",
+          "none"
+        ],
+        "environment": {
+          "CUDA_VISIBLE_DEVICES": "1",
+          "PYTHONNOUSERSITE": "1"
+        },
+        "parent_pid": 3843754,
+        "session_id": 3843758
+      }
+    },
+    "frozen_source_verification": {
+      "verified_files": 75,
+      "mismatches": []
+    },
+    "best_pth_alias_exists": false,
+    "initial_progress": {
+      "updated_at": "2026-09-14T12:41:01.445881+00:00",
+      "global_step": 201,
+      "epoch": 0,
+      "loss": 0.4779733419418335
+    }
+  },
+  "original_git10k": {
+    "run_id": "DCDSDIFF-GIT10K-RECON-20260914-A",
+    "run_directory": "/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-GIT10K-RECON-20260914-A",
+    "execution_commit": "20d44286b9354e0af189e179ba1bd162eac9b11e",
+    "gpu": 0,
+    "dataset_manifest_sha256": "d865abb3144ae843ba44a9d9d8e3bef547acdccaaad5936a64bd82e99b72d189",
+    "controller": {
+      "run_id": "DCDSDIFF-GIT10K-RECON-20260914-A",
+      "controller_pid": 3787713,
+      "started_at": "2026-09-14T11:20:01.833788+00:00",
+      "gpu": 0,
+      "status": "TRAINING",
+      "updated_at": "2026-09-14T12:43:01.916814+00:00",
+      "child_pid": 3787714,
+      "command": [
+        "/data0/hl/conda_envs/dcdsdiff/bin/python",
+        "train.py",
+        "--config",
+        "config/reproduction.yaml",
+        "--results_folder",
+        "/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-GIT10K-RECON-20260914-A",
+        "--log_with",
+        "none"
+      ]
+    },
+    "training": {
+      "state": "VALIDATING",
+      "updated_at": "2026-09-14T12:42:54.911333+00:00",
+      "pid": 3787714,
+      "cuda_visible_devices": "0",
+      "epoch": 8,
+      "next_epoch": 8,
+      "global_step": 13500,
+      "total_epochs": 100,
+      "best_mae": 0.08910195598867722,
+      "best_epoch": 2,
+      "primary_selection": "FIXED_FINAL_EPOCH",
+      "best_selection": "TEST_SELECTED_MAE_DIAGNOSTIC",
+      "architecture_version": "paper-aligned-v1",
+      "pretrained_load_report": {
+        "path": "/data1/hl/DcDsDiff-and-GIT10K/pretrained_weights/pvt_v2_b2.pth",
+        "sha256": "80711cd1b37ffba12bec6c7a2a7c54efe2315ed635e6d2055fd51c3e909ede4d",
+        "branches": {
+          "backbone": {
+            "required_feature_keys": 332,
+            "loaded_feature_keys": 332,
+            "feature_coverage": 1.0,
+            "loaded_feature_numel": 24849856,
+            "fresh_diffusion_keys": [
+              "patch_embed1.mask_proj.bias",
+              "patch_embed1.mask_proj.weight",
+              "time_embed.0.0.bias",
+              "time_embed.0.0.weight",
+              "time_embed.0.2.bias",
+              "time_embed.0.2.weight",
+              "time_embed.1.0.bias",
+              "time_embed.1.0.weight",
+              "time_embed.1.2.bias",
+              "time_embed.1.2.weight",
+              "time_embed.2.0.bias",
+              "time_embed.2.0.weight",
+              "time_embed.2.2.bias",
+              "time_embed.2.2.weight",
+              "time_embed.3.0.bias",
+              "time_embed.3.0.weight",
+              "time_embed.3.2.bias",
+              "time_embed.3.2.weight"
+            ]
+          },
+          "backbone_t": {
+            "required_feature_keys": 332,
+            "loaded_feature_keys": 332,
+            "feature_coverage": 1.0,
+            "loaded_feature_numel": 24849856,
+            "fresh_diffusion_keys": [
+              "patch_embed1.mask_proj.bias",
+              "patch_embed1.mask_proj.weight",
+              "time_embed.0.0.bias",
+              "time_embed.0.0.weight",
+              "time_embed.0.2.bias",
+              "time_embed.0.2.weight",
+              "time_embed.1.0.bias",
+              "time_embed.1.0.weight",
+              "time_embed.1.2.bias",
+              "time_embed.1.2.weight",
+              "time_embed.2.0.bias",
+              "time_embed.2.0.weight",
+              "time_embed.2.2.bias",
+              "time_embed.2.2.weight",
+              "time_embed.3.0.bias",
+              "time_embed.3.0.weight",
+              "time_embed.3.2.bias",
+              "time_embed.3.2.weight"
+            ]
+          }
+        }
+      },
+      "validation_images": 522
+    },
+    "controller_identity": {
+      "pid": 3787713,
+      "start_ticks": "2698451998"
+    },
+    "processes": {
+      "controller": {
+        "pid": 3787713,
+        "start_ticks": "2698451998",
+        "cwd": "/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-GIT10K-RECON-20260914-A/source",
+        "executable": "/data0/hl/conda_envs/dcdsdiff/bin/python3.10",
+        "command": [
+          "/data0/hl/conda_envs/dcdsdiff/bin/python",
+          "/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-GIT10K-RECON-20260914-A/source/tools/manage_experiment.py",
+          "_worker",
+          "--project",
+          "/data1/hl/DcDsDiff-and-GIT10K",
+          "--run-id",
+          "DCDSDIFF-GIT10K-RECON-20260914-A",
+          "--gpu",
+          "0",
+          "--lock-fd",
+          "3"
+        ],
+        "environment": {
+          "CUDA_VISIBLE_DEVICES": "0",
+          "PYTHONNOUSERSITE": "1"
+        },
+        "parent_pid": 1,
+        "session_id": 3787713
+      },
+      "training": {
+        "pid": 3787714,
+        "start_ticks": "2698452004",
+        "cwd": "/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-GIT10K-RECON-20260914-A/source",
+        "executable": "/data0/hl/conda_envs/dcdsdiff/bin/python3.10",
+        "command": [
+          "/data0/hl/conda_envs/dcdsdiff/bin/python",
+          "train.py",
+          "--config",
+          "config/reproduction.yaml",
+          "--results_folder",
+          "/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-GIT10K-RECON-20260914-A",
+          "--log_with",
+          "none"
+        ],
+        "environment": {
+          "CUDA_VISIBLE_DEVICES": "0",
+          "PYTHONNOUSERSITE": "1"
+        },
+        "parent_pid": 3787713,
+        "session_id": 3787714
+      }
+    },
+    "frozen_source_verification": {
+      "verified_files": 58,
+      "mismatches": []
+    },
+    "best_pth_alias_exists": false,
+    "initial_progress": {
+      "updated_at": "2026-09-14T12:40:39.567657+00:00",
+      "global_step": 13243,
+      "epoch": 8,
+      "loss": 0.06934040039777756
+    }
+  },
+  "original_followup": {
+    "job": "/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-GIT10K-RECON-20260914-A/followups/all8-best",
+    "status": {
+      "training_run_id": "DCDSDIFF-GIT10K-RECON-20260914-A",
+      "controller_pid": 3844284,
+      "started_at": "2026-09-14T12:40:08.294922+00:00",
+      "status": "WAITING_FOR_TRAINING",
+      "updated_at": "2026-09-14T12:43:08.472699+00:00",
+      "dependency": "TRAINING"
+    },
+    "provenance": {
+      "created_at": "2026-09-14T12:40:08.222208+00:00",
+      "training_run_id": "DCDSDIFF-GIT10K-RECON-20260914-A",
+      "training_commit": "20d44286b9354e0af189e179ba1bd162eac9b11e",
+      "evaluation_commit": "cd0df49f07a9bf250a62e9ba80e65f079c5b8e0f",
+      "gpu": 0,
+      "suite_id": "ALL8-20260914-V1",
+      "dataset_manifest_sha256": "b5d7c329a957bb62e39d22bbef79f4b3d3bb071487fc97212ca2e99455c1bd8b",
+      "checkpoint": "model-best.pt",
+      "policy": "wait for existing train/final-eval controller completion; evaluate saved best once"
+    },
+    "controller_identity": {
+      "pid": 3844284,
+      "start_ticks": "2698932643"
+    },
+    "process": {
+      "pid": 3844284,
+      "start_ticks": "2698932643",
+      "cwd": "/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-GIT10K-RECON-20260914-A/followups/all8-best/source",
+      "executable": "/data0/hl/conda_envs/dcdsdiff/bin/python3.10",
+      "command": [
+        "/data0/hl/conda_envs/dcdsdiff/bin/python",
+        "/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-GIT10K-RECON-20260914-A/followups/all8-best/source/tools/queue_benchmark.py",
+        "_worker",
+        "--project",
+        "/data1/hl/DcDsDiff-and-GIT10K",
+        "--run-id",
+        "DCDSDIFF-GIT10K-RECON-20260914-A",
+        "--lock-fd",
+        "3"
+      ],
+      "environment": {
+        "CUDA_VISIBLE_DEVICES": null,
+        "PYTHONNOUSERSITE": "1"
+      },
+      "parent_pid": 1,
+      "session_id": 3844284
+    },
+    "source_verification": {
+      "verified_files": 75,
+      "mismatches": []
+    },
+    "initial_status": {
+      "training_run_id": "DCDSDIFF-GIT10K-RECON-20260914-A",
+      "controller_pid": 3844284,
+      "started_at": "2026-09-14T12:40:08.294922+00:00",
+      "status": "WAITING_FOR_TRAINING",
+      "updated_at": "2026-09-14T12:41:08.356306+00:00",
+      "dependency": "TRAINING"
+    }
+  },
+  "locks_held": {
+    "original_legacy": true,
+    "casia_gpu_1": true,
+    "casia_run": true,
+    "original_followup": true
+  },
+  "launch_preflight": {
+    "status": "PASS",
+    "config_non_data_parity": true,
+    "environment_and_weight_receipts": true,
+    "sample_membership_and_file_hash_check_completed_before_launch": true,
+    "samples": 9418,
+    "files": 37672
+  },
+  "gpu_snapshot": [
+    "0, GPU-e482f429-0e26-8837-1b60-2695807328e4, 14352 MiB, 0 %",
+    "1, GPU-564e676f-d700-aff5-e749-5284262af05c, 14108 MiB, 83 %"
+  ],
+  "gpu_processes": [
+    "GPU-e482f429-0e26-8837-1b60-2695807328e4, 3787714, 14332 MiB",
+    "GPU-564e676f-d700-aff5-e749-5284262af05c, 3843758, 14088 MiB"
+  ],
+  "scientific_results_available": false,
+  "checkpoint_policy": "Use existing model-best.pt directly; no aliases.",
+  "temporary_artifacts_absent": [
+    "runtime/transfer-validation",
+    "runtime/transfer-code.tar.gz",
+    "runtime/locks/run-VALIDATION-GPU0.lock",
+    "runtime/transfer-staging"
+  ],
+  "continued_progress_verified_at": "2026-09-14T12:43:55.267015+00:00"
+}

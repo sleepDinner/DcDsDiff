@@ -22,5 +22,5 @@ User-authorized scope: audit and clean local project, publish to the existing Gi
 1. [complete] Verify GPU 1 is free and audit the requested dataset roots and pairing contracts.
 2. [complete] Freeze CASIA2 + All8 inputs and record data-only training protocol / existing-best checkpoint policy.
 3. [complete] Validate per-GPU/run controller locks, eight-set evaluator and durable original-run follow-up in the dedicated environment.
-4. [in_progress] Review, publish local to GitHub, pull on server, launch CASIA2 on GPU 1 and queue original-run best evaluation.
-5. [pending] Verify both live training identities, follow-up registration, three-way Git sync, and deletion of temporary tests.
+4. [complete] Review, publish local to GitHub, pull on server, launch CASIA2 on GPU 1 and queue original-run best evaluation. Both use frozen execution commit cd0df49; original training remains on 20d4428.
+5. [complete] Verified continued live training (CASIA2 step 201 to 603; original step 13243 to 13500), detached controller identities, live original-run follow-up and removal of temporary tests. Startup receipts and ledger are published with final local/GitHub/server checkout agreement. Scientific training and both requested All8 evaluations remain under server control; no final scores are claimed.
