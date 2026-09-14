@@ -1,0 +1,19 @@
+__base__: [config/reproduction.yaml]
+project_name: DcDsDiff-CASIA2-All8-v1
+protocol_id: CASIA2-ALL8-V1
+benchmark_spec: config/benchmark_all8.json
+data_protocol: casia2-all8-v1
+requested_evaluation: all8_best
+train_dataset:
+  params:
+    image_root: data/casia2-all8-v1/train/f/
+    gt_root: data/casia2-all8-v1/train/m/
+    de_root: data/casia2-all8-v1/train/d/
+    trace_root: data/casia2-all8-v1/train/t/
+test_dataset:
+  Mix:
+    params:
+      image_root: data/casia2-all8-v1/test/f/
+      gt_root: data/casia2-all8-v1/test/m/
+      de_root: data/casia2-all8-v1/test/d/
+      trace_root: data/casia2-all8-v1/test/t/

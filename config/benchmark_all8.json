@@ -1,0 +1,23 @@
+{
+  "suite_id": "ALL8-20260914-V1",
+  "snapshot": "data/casia2-all8-v1",
+  "manifest": "manifests/casia2-all8-v1.csv",
+  "train": {
+    "name": "CASIA2",
+    "root": "/data1/data/datasets/CASIA2.0",
+    "images": "Tp",
+    "masks": "Gt",
+    "mask_suffix": "_gt",
+    "count": 5123
+  },
+  "tests": [
+    {"name": "Casiav1", "root": "/data0/zh/VM-UNet/data/isic17/CAISA 1", "mask_suffix": "_gt", "count": 920},
+    {"name": "Columbia", "root": "/data0/zh/VM-UNet/data/isic17/Columbia", "mask_suffix": "_gt", "count": 180},
+    {"name": "NIST16", "root": "/data0/zh/VM-UNet/data/isic17/NIST16", "mask_suffix": "", "count": 564},
+    {"name": "IMD2020", "root": "/data0/zh/VM-UNet/data/isic17/IMD2020", "mask_suffix": "_mask", "count": 2010},
+    {"name": "DSO-1", "root": "/data0/zh/VM-UNet/data/isic17/DSO", "mask_suffix": "_gt", "count": 100},
+    {"name": "wild", "root": "/data0/lzb/data/wild/label_in_wild", "mask_suffix": "", "count": 201},
+    {"name": "coverage", "root": "/data0/zh/VM-UNet/data/isic17/COVERAGE", "mask_suffix": "", "count": 100},
+    {"name": "Korus", "root": "/data0/lzb-change-vmunet/FinalTest_Korus", "mask_suffix": "", "count": 220}
+  ]
+}
