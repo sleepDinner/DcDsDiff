@@ -38,3 +38,11 @@ cache/
 artifacts/
 .envs/
 pretrained_weights/
+
+# The historical runs/ rule also matches curated report directories.
+!analysis_reports/runs/
+analysis_reports/runs/*
+!analysis_reports/runs/*/
+analysis_reports/runs/*/*
+!analysis_reports/runs/*/report.md
+!analysis_reports/runs/*/report.json

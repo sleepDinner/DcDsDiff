@@ -1,0 +1,146 @@
+{
+  "automatic_stages": [
+    "reference_20_epochs",
+    "training_only_calibration",
+    "main_100_epochs_all8_each_epoch",
+    "report_and_github_publish"
+  ],
+  "branch": "feature/tect-diff",
+  "config_hash": "a4f51026de58c24351b69ea9b60cf3db83ef22e1c1b12bc6db5c410ae6ef6a12",
+  "controller": {
+    "cmdline": "/data0/hl/conda_envs/dcdsdiff/bin/python -s /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-20260915-A/source/scripts/tect_diff/controller.py supervise --run-dir /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-20260915-A ",
+    "pid": 447738,
+    "start_ticks": "2705999106"
+  },
+  "data_counts": {
+    "calibration_count": 2048,
+    "excluded_train_count": 17,
+    "reference_count": 11964,
+    "test_counts": {
+      "Casiav1": 920,
+      "Columbia": 180,
+      "DSO-1": 100,
+      "IMD2020": 2010,
+      "Korus": 220,
+      "NIST16": 564,
+      "coverage": 100,
+      "wild": 201
+    },
+    "train_count": 48612
+  },
+  "environment": "/data0/hl/conda_envs/dcdsdiff",
+  "execution_commit": "4b4b785103f10ec9d9281cc8af095e3f91609433",
+  "frozen_source_files_verified": 125,
+  "gpus": [
+    0,
+    1
+  ],
+  "locks": {
+    "gpu-0": "HELD",
+    "gpu-1": "HELD",
+    "run-TECT-DIFF-FULL-R512-S42-20260915-A": "HELD"
+  },
+  "log_paths": [
+    "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-20260915-A/controller.log",
+    "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-20260915-A/preflight.log",
+    "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-20260915-A/reference.log",
+    "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-20260915-A/calibration.log",
+    "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-20260915-A/main.log"
+  ],
+  "manifest_hash_definition": "canonical JSON SHA256",
+  "manifest_hashes": {
+    "calibration": "a22183506365f042e141c16b09a8c9e369c3f7886864c2a1d5326a4ada5e38c5",
+    "reference": "0a501e3f0570b245ac594941fcbf2328d1bed195835825de8b7a758f62a13f79",
+    "test_Casiav1": "a51508ac9da6618b685c807415674a78cd99b0681af7d4dae59b9947d187bc73",
+    "test_Columbia": "dfcd1d818b0ec1250023b94e1b92c7292fb3ed107a47cbcf19d2050742594307",
+    "test_DSO-1": "5265d478ca803e135518f2f9f5b0ecfadaaedf5a54dda022db310e92ee985fd6",
+    "test_IMD2020": "5a74e0978c0ac97160eff982abc03ade617844dec53355671ace86b8a05eb766",
+    "test_Korus": "22af2a4ce976c31a2881a87090878ecfbf9e08dc25a6baba3c9bbd1bfe38c222",
+    "test_NIST16": "33c9b85a5facdc76722fc64a36f557dff457ad72f45530250e970e1c9e649a2f",
+    "test_coverage": "e37249f77cd4de583a77a4d2887ffcb5fc0623fe31174535ab3b4c42dafa1783",
+    "test_wild": "25a688eb600bc1dd9720c18c8eaff6fb6877549b3a041a691f3d17b14021fcb3",
+    "train": "ba5c7de4a3988f1abe6fa34dd3d2424abd2712fde4754a2adab6aa9637ea74cc"
+  },
+  "preflight": {
+    "checkpoint_roundtrip": [
+      {
+        "cpu_optimizer_restore": true,
+        "model_sha256": "a53ff4f0498a651bea72674083254abc90d06077e9c7845d7c24c63a10814c8b",
+        "next_epoch": 1,
+        "optimizer_sha256": "57e7ee2d3e08bcb30cd218ed0a9687d82eec61f01dba2c68cfd1ff4b4157dec1",
+        "optimizer_step": 1,
+        "rng_restored": true,
+        "scaler_restored": true,
+        "scheduler_restored": true,
+        "serialized_bytes": 318066356,
+        "status": "PASS",
+        "storage": "BytesIO only; no diagnostic weights saved"
+      },
+      {
+        "cpu_optimizer_restore": true,
+        "model_sha256": "544f4ec0bd76597e60dc31c7095a43fc3b279c298214bbfa47a20b60c0168e48",
+        "next_epoch": 1,
+        "optimizer_sha256": "57e7ee2d3e08bcb30cd218ed0a9687d82eec61f01dba2c68cfd1ff4b4157dec1",
+        "optimizer_step": 1,
+        "rng_restored": true,
+        "scaler_restored": true,
+        "scheduler_restored": true,
+        "serialized_bytes": 318066356,
+        "status": "PASS",
+        "storage": "BytesIO only; no diagnostic weights saved"
+      }
+    ],
+    "rank_peak_bytes": [
+      5424218624,
+      5424218624
+    ],
+    "status": "COMPLETED"
+  },
+  "progress_by_rank": [
+    {
+      "amp_skipped": false,
+      "elapsed_seconds": 101.23246616125107,
+      "epoch": 0,
+      "gradient_norm": 1.435651183128357,
+      "loss": 0.3522321581840515,
+      "micro_batch": 2200,
+      "micro_batches_per_epoch": 2991,
+      "optimizer_step": 550,
+      "peak_memory_bytes": 970049536,
+      "pid": 448690,
+      "rank": 0,
+      "stage": "REFERENCE_TRAINING",
+      "updated_at": "2026-09-15T08:21:00Z"
+    },
+    {
+      "amp_skipped": false,
+      "elapsed_seconds": 101.2233277335763,
+      "epoch": 0,
+      "gradient_norm": 1.435651183128357,
+      "loss": 0.4341198801994324,
+      "micro_batch": 2200,
+      "micro_batches_per_epoch": 2991,
+      "optimizer_step": 550,
+      "peak_memory_bytes": 970049536,
+      "pid": 448691,
+      "rank": 1,
+      "stage": "REFERENCE_TRAINING",
+      "updated_at": "2026-09-15T08:21:00Z"
+    }
+  ],
+  "progress_path": "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-20260915-A/progress.json",
+  "reference_source_mode": "authentic",
+  "report_path": "/data1/hl/DcDsDiff-and-GIT10K/analysis_reports/runs/TECT-DIFF-FULL-R512-S42-20260915-A/report.md",
+  "repository": "git@github.com:sleepDinner/DcDsDiff.git",
+  "resolution": 512,
+  "run_dir": "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-20260915-A",
+  "run_id": "TECT-DIFF-FULL-R512-S42-20260915-A",
+  "state_path": "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-20260915-A/controller_status.json",
+  "status": "RUNNING_NOT_COMPLETE",
+  "verified_at": "2026-09-15T08:21:00Z",
+  "worker_launcher": {
+    "cmdline": "/data0/hl/conda_envs/dcdsdiff/bin/python -s -m torch.distributed.run --standalone --nnodes=1 --nproc-per-node=2 /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-20260915-A/source/scripts/tect_diff/worker.py --run-dir /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-20260915-A --stage reference ",
+    "pid": 448648,
+    "start_ticks": "2706006245"
+  }
+}

@@ -1,0 +1,412 @@
+{
+  "completed_at": "2026-09-15T08:18:27Z",
+  "config_hash": "a4f51026de58c24351b69ea9b60cf3db83ef22e1c1b12bc6db5c410ae6ef6a12",
+  "elapsed_seconds": 7.298845633864403,
+  "no_diagnostic_weights_saved": true,
+  "protocol_id": "TECT-DIFF-FULL-R512-S42",
+  "ranks": [
+    {
+      "accumulation_steps": 2,
+      "checkpoint_roundtrip": {
+        "cpu_optimizer_restore": true,
+        "model_sha256": "a53ff4f0498a651bea72674083254abc90d06077e9c7845d7c24c63a10814c8b",
+        "next_epoch": 1,
+        "optimizer_sha256": "57e7ee2d3e08bcb30cd218ed0a9687d82eec61f01dba2c68cfd1ff4b4157dec1",
+        "optimizer_step": 1,
+        "rng_restored": true,
+        "scaler_restored": true,
+        "scheduler_restored": true,
+        "serialized_bytes": 318066356,
+        "status": "PASS",
+        "storage": "BytesIO only; no diagnostic weights saved"
+      },
+      "completed_at": "2026-09-15T08:18:27Z",
+      "control_numerics": {
+        "extreme_evidence_finite": true,
+        "final_zero_noise_identity": true,
+        "gamma_zero_identity": true,
+        "prefix_one_disabled": true
+      },
+      "diagnostic_effective_global_batch": 8,
+      "diagnostic_optimizer_steps": 1,
+      "elapsed_seconds": 7.291840296238661,
+      "finite_loss": 3.040210485458374,
+      "formal_optimizer_steps": 0,
+      "gradients": {
+        "controller": {
+          "gradient_tensors": 1,
+          "nonzero_tensors": 1,
+          "norm": 0.005288808639013193
+        },
+        "hf_pvt": {
+          "gradient_tensors": 106,
+          "nonzero_tensors": 106,
+          "norm": 0.008683539215338043
+        },
+        "image_task": {
+          "gradient_tensors": 12,
+          "nonzero_tensors": 12,
+          "norm": 0.0938580427422823
+        },
+        "image_to_mask": {
+          "gradient_tensors": 4,
+          "nonzero_tensors": 4,
+          "norm": 0.000605704691638481
+        },
+        "mask": {
+          "gradient_tensors": 16,
+          "nonzero_tensors": 16,
+          "norm": 0.19972633274812737
+        },
+        "mask_to_image": {
+          "gradient_tensors": 4,
+          "nonzero_tensors": 4,
+          "norm": 0.03254641500466737
+        },
+        "rgb_pvt": {
+          "gradient_tensors": 106,
+          "nonzero_tensors": 106,
+          "norm": 0.007037149909437052
+        }
+      },
+      "limitation": "Trained calibration and its actual pixel evidence are checked once in main_probe after stages A/B",
+      "micro_batch": 2,
+      "network_shapes": {
+        "F_joint": [
+          2,
+          2,
+          256,
+          128,
+          128
+        ],
+        "gamma": 0.10000000149011612,
+        "image_epsilon": [
+          2,
+          2,
+          3,
+          512,
+          512
+        ],
+        "image_loss": 1.2630385160446167,
+        "joint_ref_mse": 0.15297868847846985,
+        "mask_logits": [
+          2,
+          1,
+          512,
+          512
+        ],
+        "mask_loss": 1.7771719694137573,
+        "raw_response_shape": [
+          2,
+          4,
+          2,
+          9,
+          512,
+          512
+        ],
+        "reference_features": [
+          2,
+          2,
+          256,
+          128,
+          128
+        ]
+      },
+      "noise": {
+        "different_mask_seed": true,
+        "different_replica_seeds": true,
+        "image_mask_correlation": -0.0018992768600583076,
+        "noise_seed_rule": "SHA256(seed | stable sample id | independent purpose)",
+        "replica_correlation": 0.0003735868085641414
+      },
+      "partial_window_padding_shape": [
+        1,
+        256,
+        9,
+        11
+      ],
+      "peak_allocated_bytes": 5424218624,
+      "peak_reserved_bytes": 6050283520,
+      "pretrained_load_report": {
+        "branches": {
+          "backbone": {
+            "feature_coverage": 1.0,
+            "fresh_diffusion_keys": [
+              "patch_embed1.mask_proj.bias",
+              "patch_embed1.mask_proj.weight",
+              "time_embed.0.0.bias",
+              "time_embed.0.0.weight",
+              "time_embed.0.2.bias",
+              "time_embed.0.2.weight",
+              "time_embed.1.0.bias",
+              "time_embed.1.0.weight",
+              "time_embed.1.2.bias",
+              "time_embed.1.2.weight",
+              "time_embed.2.0.bias",
+              "time_embed.2.0.weight",
+              "time_embed.2.2.bias",
+              "time_embed.2.2.weight",
+              "time_embed.3.0.bias",
+              "time_embed.3.0.weight",
+              "time_embed.3.2.bias",
+              "time_embed.3.2.weight"
+            ],
+            "loaded_feature_keys": 332,
+            "loaded_feature_numel": 24849856,
+            "required_feature_keys": 332
+          },
+          "backbone_t": {
+            "feature_coverage": 1.0,
+            "fresh_diffusion_keys": [
+              "patch_embed1.mask_proj.bias",
+              "patch_embed1.mask_proj.weight",
+              "time_embed.0.0.bias",
+              "time_embed.0.0.weight",
+              "time_embed.0.2.bias",
+              "time_embed.0.2.weight",
+              "time_embed.1.0.bias",
+              "time_embed.1.0.weight",
+              "time_embed.1.2.bias",
+              "time_embed.1.2.weight",
+              "time_embed.2.0.bias",
+              "time_embed.2.0.weight",
+              "time_embed.2.2.bias",
+              "time_embed.2.2.weight",
+              "time_embed.3.0.bias",
+              "time_embed.3.0.weight",
+              "time_embed.3.2.bias",
+              "time_embed.3.2.weight"
+            ],
+            "loaded_feature_keys": 332,
+            "loaded_feature_numel": 24849856,
+            "required_feature_keys": 332
+          }
+        },
+        "path": "/data1/hl/DcDsDiff-and-GIT10K/pretrained_weights/pvt_v2_b2.pth",
+        "sha256": "80711cd1b37ffba12bec6c7a2a7c54efe2315ed635e6d2055fd51c3e909ede4d"
+      },
+      "rank": 0,
+      "reference_mask_isolation": true,
+      "reference_parameters_and_buffers_unchanged": true,
+      "resolution": 512,
+      "sample_shape": [
+        1,
+        1,
+        512,
+        512
+      ],
+      "sampling_steps": 10,
+      "scope": "Disposable untrained reference and fixed synthetic controller evidence; no Stage A/B artifact or scientific score",
+      "status": "PASS",
+      "synthetic_engineering_only": true,
+      "training_ids": [
+        "FinalTrainData:Au_ani_00001",
+        "FinalTrainData:Au_ani_00002"
+      ],
+      "training_peak_allocated_bytes": 5424218624
+    },
+    {
+      "accumulation_steps": 2,
+      "checkpoint_roundtrip": {
+        "cpu_optimizer_restore": true,
+        "model_sha256": "544f4ec0bd76597e60dc31c7095a43fc3b279c298214bbfa47a20b60c0168e48",
+        "next_epoch": 1,
+        "optimizer_sha256": "57e7ee2d3e08bcb30cd218ed0a9687d82eec61f01dba2c68cfd1ff4b4157dec1",
+        "optimizer_step": 1,
+        "rng_restored": true,
+        "scaler_restored": true,
+        "scheduler_restored": true,
+        "serialized_bytes": 318066356,
+        "status": "PASS",
+        "storage": "BytesIO only; no diagnostic weights saved"
+      },
+      "completed_at": "2026-09-15T08:18:27Z",
+      "control_numerics": {
+        "extreme_evidence_finite": true,
+        "final_zero_noise_identity": true,
+        "gamma_zero_identity": true,
+        "prefix_one_disabled": true
+      },
+      "diagnostic_effective_global_batch": 8,
+      "diagnostic_optimizer_steps": 1,
+      "elapsed_seconds": 7.0619244165718555,
+      "finite_loss": 3.0469157695770264,
+      "formal_optimizer_steps": 0,
+      "gradients": {
+        "controller": {
+          "gradient_tensors": 1,
+          "nonzero_tensors": 1,
+          "norm": 0.005288808639013193
+        },
+        "hf_pvt": {
+          "gradient_tensors": 106,
+          "nonzero_tensors": 106,
+          "norm": 0.008683539215338043
+        },
+        "image_task": {
+          "gradient_tensors": 12,
+          "nonzero_tensors": 12,
+          "norm": 0.0938580427422823
+        },
+        "image_to_mask": {
+          "gradient_tensors": 4,
+          "nonzero_tensors": 4,
+          "norm": 0.000605704691638481
+        },
+        "mask": {
+          "gradient_tensors": 16,
+          "nonzero_tensors": 16,
+          "norm": 0.19972633274812737
+        },
+        "mask_to_image": {
+          "gradient_tensors": 4,
+          "nonzero_tensors": 4,
+          "norm": 0.03254641500466737
+        },
+        "rgb_pvt": {
+          "gradient_tensors": 106,
+          "nonzero_tensors": 106,
+          "norm": 0.007037149909437052
+        }
+      },
+      "limitation": "Trained calibration and its actual pixel evidence are checked once in main_probe after stages A/B",
+      "micro_batch": 2,
+      "network_shapes": {
+        "F_joint": [
+          2,
+          2,
+          256,
+          128,
+          128
+        ],
+        "gamma": 0.10000000149011612,
+        "image_epsilon": [
+          2,
+          2,
+          3,
+          512,
+          512
+        ],
+        "image_loss": 1.2686798572540283,
+        "joint_ref_mse": 0.1551746428012848,
+        "mask_logits": [
+          2,
+          1,
+          512,
+          512
+        ],
+        "mask_loss": 1.778235912322998,
+        "raw_response_shape": [
+          2,
+          4,
+          2,
+          9,
+          512,
+          512
+        ],
+        "reference_features": [
+          2,
+          2,
+          256,
+          128,
+          128
+        ]
+      },
+      "noise": {
+        "different_mask_seed": true,
+        "different_replica_seeds": true,
+        "image_mask_correlation": 0.004385821055620909,
+        "noise_seed_rule": "SHA256(seed | stable sample id | independent purpose)",
+        "replica_correlation": -0.0008099933038465679
+      },
+      "partial_window_padding_shape": [
+        1,
+        256,
+        9,
+        11
+      ],
+      "peak_allocated_bytes": 5424218624,
+      "peak_reserved_bytes": 6050283520,
+      "pretrained_load_report": {
+        "branches": {
+          "backbone": {
+            "feature_coverage": 1.0,
+            "fresh_diffusion_keys": [
+              "patch_embed1.mask_proj.bias",
+              "patch_embed1.mask_proj.weight",
+              "time_embed.0.0.bias",
+              "time_embed.0.0.weight",
+              "time_embed.0.2.bias",
+              "time_embed.0.2.weight",
+              "time_embed.1.0.bias",
+              "time_embed.1.0.weight",
+              "time_embed.1.2.bias",
+              "time_embed.1.2.weight",
+              "time_embed.2.0.bias",
+              "time_embed.2.0.weight",
+              "time_embed.2.2.bias",
+              "time_embed.2.2.weight",
+              "time_embed.3.0.bias",
+              "time_embed.3.0.weight",
+              "time_embed.3.2.bias",
+              "time_embed.3.2.weight"
+            ],
+            "loaded_feature_keys": 332,
+            "loaded_feature_numel": 24849856,
+            "required_feature_keys": 332
+          },
+          "backbone_t": {
+            "feature_coverage": 1.0,
+            "fresh_diffusion_keys": [
+              "patch_embed1.mask_proj.bias",
+              "patch_embed1.mask_proj.weight",
+              "time_embed.0.0.bias",
+              "time_embed.0.0.weight",
+              "time_embed.0.2.bias",
+              "time_embed.0.2.weight",
+              "time_embed.1.0.bias",
+              "time_embed.1.0.weight",
+              "time_embed.1.2.bias",
+              "time_embed.1.2.weight",
+              "time_embed.2.0.bias",
+              "time_embed.2.0.weight",
+              "time_embed.2.2.bias",
+              "time_embed.2.2.weight",
+              "time_embed.3.0.bias",
+              "time_embed.3.0.weight",
+              "time_embed.3.2.bias",
+              "time_embed.3.2.weight"
+            ],
+            "loaded_feature_keys": 332,
+            "loaded_feature_numel": 24849856,
+            "required_feature_keys": 332
+          }
+        },
+        "path": "/data1/hl/DcDsDiff-and-GIT10K/pretrained_weights/pvt_v2_b2.pth",
+        "sha256": "80711cd1b37ffba12bec6c7a2a7c54efe2315ed635e6d2055fd51c3e909ede4d"
+      },
+      "rank": 1,
+      "reference_mask_isolation": true,
+      "reference_parameters_and_buffers_unchanged": true,
+      "resolution": 512,
+      "sample_shape": [
+        1,
+        1,
+        512,
+        512
+      ],
+      "sampling_steps": 10,
+      "scope": "Disposable untrained reference and fixed synthetic controller evidence; no Stage A/B artifact or scientific score",
+      "status": "PASS",
+      "synthetic_engineering_only": true,
+      "training_ids": [
+        "FinalTrainData:Au_ani_00003",
+        "FinalTrainData:Au_ani_00004"
+      ],
+      "training_peak_allocated_bytes": 5424218624
+    }
+  ],
+  "same_resolution_real_artifact_probe_required": true,
+  "status": "COMPLETED",
+  "synthetic_engineering_only": true
+}

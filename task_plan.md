@@ -6,9 +6,9 @@ The complete user-supplied TECT_Diff_Codex_Prompt.md defines this new experiment
 
 1. [complete] Verify local/server/user GitHub, pinned scientific sources, environment and legal reference sources. Data decoding audits all 52924 pairs; 17 invalid training coordinate pairs are isolated, existing All8 PIL-L semantics retained.
 2. [complete] Implement isolated TECT model, training-only fitted calibration, DDP pipeline, recovery and automatic report publication.
-3. [in_progress] Review and bounded mathematics/data/gradient/sampling/DDP checks; publish and sync identical source commit. CPU mathematics, attention/gradient, data and source-role tests passed.
-4. [pending] Validate full 512 path, freeze run configuration, launch durable GPU0+GPU1 pipeline and verify actual finite progress.
-5. [pending] Publish startup evidence and leave server controller responsible for A -> B -> C -> final reports and GitHub sync.
+3. [complete] Reviewed implementation, published execution commit 4b4b785103f10ec9d9281cc8af095e3f91609433 and verified local/GitHub/server agreement. CPU math/data and dual-rank full512 backward/sampling/in-memory checkpoint recovery passed.
+4. [complete] Launched TECT-DIFF-FULL-R512-S42-20260915-A with immutable125-file snapshot, held GPU0/GPU1/run locks and detached controller447738. Real reference training advanced step1 ->550, losses finite and no AMP skip; input remains512.
+5. [complete] Startup evidence and server-generated report published; server controller owns A20 -> training-only calibration -> C100/All8 each epoch -> terminal reports/GitHub. Trained-artifact full-path probe runs automatically after calibration. Scientific experiment is RUNNING, not complete; this status does not mark the experiment endpoint achieved.
 
 No additional seed, baseline or ablation training is authorized. Historical results and frozen sources remain protected.
 
