@@ -210,6 +210,7 @@ def generate(run_dir, target_root=None):
     reference_health = optional_json(run / 'reference_health.json')
     final_reference_health = optional_json(run / 'reference_final_health.json')
     operational_hold = optional_json(run / 'operational_hold.json')
+    continuation = optional_json(run / 'reference_continuation.json')
     calibration = optional_json(run / "calibration_receipt.json")
     main = optional_json(run / "main_receipt.json")
     diagnostics = summarize_diagnostics(run)
@@ -230,6 +231,7 @@ def generate(run_dir, target_root=None):
         "reference": reference, "calibration": calibration, "best": best, "final": final,
         "reference_health": reference_health, "reference_final_health": final_reference_health,
         "operational_hold": operational_hold,
+        "reference_continuation": continuation,
         "costs": {**state.get("stage_costs", {}), **main.get("costs", {})}, "progress": progress,
         "pretrained_load_report": main.get("pretrained_load_report", {}),
         "stage_budgets": {"reference_epochs": config["reference"]["epochs"],
@@ -241,7 +243,7 @@ def generate(run_dir, target_root=None):
         "checkpoints_local": "Not downloaded; server-authoritative weights only.",
         "source_snapshot": str(run / "source"),
     }
-    row = dict(run_id=run.name, group_id=config["group_id"], parent_run=config.get("parent_run", ""),
+    row = dict(run_id=run.name, group_id=config["group_id"], parent_run=continuation.get("parent_run", config.get("parent_run", "")),
                status=report["status"], stage=report["stage"], commit=report["commit"],
                config_hash=report["config_hash"], resolution=config["resolution"], seed=config["seed"],
                reference_source_mode=report["reference_source_mode"], reference_hash=reference.get("sha256", ""),
@@ -267,6 +269,7 @@ def generate(run_dir, target_root=None):
              "## Phase receipts and costs", "", "```json",
              json.dumps({"reference": reference, "reference_health": reference_health,
                          "reference_final_health": final_reference_health,
+                         "reference_continuation": continuation,
                          "operational_hold": operational_hold, "calibration": calibration, "costs": report["costs"]},
                         indent=2, ensure_ascii=False), "```", "", "## Mechanisms and limitations", "",
              "参考参数与训练内统计冻结；Image loss 必须非零启用。梯度/异常存在仅说明工程路径可运行，不代表方法有效。",

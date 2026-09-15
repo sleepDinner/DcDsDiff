@@ -144,7 +144,11 @@ class Worker:
     def optimizer_update(self, model, optimizer, scaler):
         scaler.unscale_(optimizer)
         parameters = [p for p in model.parameters() if p.requires_grad and p.grad is not None]
-        finite = torch.tensor(int(all(torch.isfinite(p.grad).all() for p in parameters)), device=self.device)
+        # Keep flags on device until the single all-rank decision. Python all()
+        # would synchronize once per parameter through Tensor.__bool__.
+        checks = [torch.isfinite(p.grad).all() for p in parameters]
+        finite = (torch.stack(checks).all().to(dtype=torch.int64) if checks
+                  else torch.ones((), device=self.device, dtype=torch.int64))
         dist.all_reduce(finite, op=dist.ReduceOp.MIN)
         if not finite.item():
             raise FloatingPointError('Non-finite gradient; no optimizer update made')
@@ -208,13 +212,12 @@ class Worker:
                     zero_mse = noise.square().flatten(1).mean(1)
                     energy = predicted.float().square().flatten(1).mean(1)
                     cross = (predicted.float()*noise).flatten(1).mean(1)
-                    for k in range(4):
-                        selected = scale_ids == k
-                        sums[k, 0] += loss_per_image.detach()[selected].double().sum()
-                        sums[k, 1] += zero_mse[selected].double().sum()
-                        sums[k, 2] += energy[selected].double().sum()
-                        sums[k, 3] += cross[selected].double().sum()
-                        sums[k, 4] += selected.sum()
+                    # The registered micro-batch has distinct scale IDs, so each
+                    # row receives the same FP64 per-image addition as before.
+                    # Avoid dynamic boolean indexing and its device-host syncs.
+                    moments = torch.stack((loss_per_image.detach(), zero_mse, energy, cross,
+                                           torch.ones_like(loss_per_image)), dim=1).double()
+                    sums.index_add_(0, scale_ids, moments)
                 if synchronize:
                     norm, skipped = self.optimizer_update(reference, optimizer, scaler)
                     step += int(not skipped)

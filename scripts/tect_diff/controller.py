@@ -174,7 +174,7 @@ def _spawn(run, root, config):
             "log": str(run / "controller.log"), "state": str(run / "controller_status.json")}
 
 
-def launch(config_file, run_id):
+def launch(config_file, run_id, reference_parent=None):
     if not RUN_PATTERN.fullmatch(run_id):
         raise ValueError("Invalid run ID")
     config = read_json(config_file)
@@ -223,6 +223,10 @@ def launch(config_file, run_id):
                       "repository": settings["publish_url"], "config_hash": json_hash(config),
                       "source_hashes": hashes, "created_at": timestamp(), "environment": config["environment"],
                       "gpus": config["gpus"], "config_source": str(Path(config_file).resolve())}
+        if reference_parent:
+            provenance['reference_parent'] = str(Path(reference_parent).resolve(strict=True))
+            atomic_json(run / 'operational_hold.json', {
+                'active': True, 'reason': 'Reference state import has not completed'})
         atomic_json(run / "provenance.json", provenance)
         env = runtime_environment(root, run_id)
         package_list = subprocess.check_output([str(Path(config["environment"]) / "bin/python"), "-s", "-m", "pip", "list", "--format=json"],
@@ -230,6 +234,9 @@ def launch(config_file, run_id):
         atomic_json(run / "environment.packages.json", json.loads(package_list))
         atomic_json(run / "controller_status.json", {"status": "REGISTERED", "stage": "PREPARING", "run_id": run_id,
                                                        "updated_at": timestamp(), "commit": commit})
+        if reference_parent:
+            from scripts.tect_diff.reference_continuation import import_reference_state
+            import_reference_state(run, reference_parent)
         return _spawn(run, root, config)
 
 
@@ -264,6 +271,7 @@ def resume(run_dir):
     run, root, config, provenance = read_run(run_dir)
     check_operational_hold(run)
     with acquire_file(root / "runtime/locks" / f"tect-registration-{run.name}.lock"):
+        check_operational_hold(run)
         current = status(run)
         if current["controller_alive"] or current["worker_alive"]:
             return current
@@ -514,11 +522,12 @@ def main():
     parser.add_argument("--config")
     parser.add_argument("--run-id")
     parser.add_argument("--run-dir")
+    parser.add_argument("--reference-parent", help="Stopped same-config reference run; state-preserving source-version continuation")
     args = parser.parse_args()
     if args.command == "launch":
         if not args.config or not args.run_id:
             parser.error("launch requires --config and --run-id")
-        result = launch(args.config, args.run_id)
+        result = launch(args.config, args.run_id, args.reference_parent)
     else:
         run_dir = args.run_dir or (str(SOURCE / "runs" / args.run_id) if args.run_id else None)
         if run_dir is None:

@@ -1,0 +1,103 @@
+{
+  "status": "ENGINEERING_VALIDATED_FORMAL_CONTINUATION_PENDING",
+  "at": "2026-09-15T09:51:13Z",
+  "selection_protocol": "test_selected",
+  "scope": "64 authentic training-role images, resident input; four isolated 40-update sequences; no formal updates/checkpoints retained",
+  "limitation": "Resident-input update benchmark excludes disk loading and epoch/report/checkpoint costs.",
+  "parent_run": "TECT-DIFF-FULL-R512-S42-REFNORM-V2-20260915-B",
+  "checkpoint_epoch": 1,
+  "checkpoint_optimizer_step": 1496,
+  "rank_summary": [
+    {
+      "rank": 0,
+      "original_window_means_s": [
+        0.14809165883343667,
+        0.17049009911715984
+      ],
+      "optimized_window_means_s": [
+        0.14599999121855944,
+        0.1460555747617036
+      ],
+      "mean_original_s": 0.15929087897529826,
+      "mean_optimized_s": 0.14602778299013153,
+      "resident_input_speed_ratio": 1.0908258395326254,
+      "model_hash": "1b0960f8ac20de91600a87104b9487876fa3f76a96ffffd1da247122704b0887",
+      "optimizer_hash": "dfeae4cb8e8ab16f8d80a143fcfbbd8fac24ff17153a750d6038e83f36c1b7f6",
+      "cuda_rng_hash": "14ff3ce1d66ab6ba0a6dda5d8439e6dc45db39b253c4c0514b1aa2e9fbf772d3",
+      "max_allocated_bytes": 1087402496
+    },
+    {
+      "rank": 1,
+      "original_window_means_s": [
+        0.1480943070491776,
+        0.17049262253567576
+      ],
+      "optimized_window_means_s": [
+        0.14604401937685907,
+        0.14605561504140496
+      ],
+      "mean_original_s": 0.15929346479242668,
+      "mean_optimized_s": 0.14604981720913202,
+      "resident_input_speed_ratio": 1.090678974040281,
+      "model_hash": "1b0960f8ac20de91600a87104b9487876fa3f76a96ffffd1da247122704b0887",
+      "optimizer_hash": "dfeae4cb8e8ab16f8d80a143fcfbbd8fac24ff17153a750d6038e83f36c1b7f6",
+      "cuda_rng_hash": "302870a44a6b7a751dcacdc50da799d6a3887fa4a35e0ad8eefc1713e0218b22",
+      "max_allocated_bytes": 1087402496
+    }
+  ],
+  "parity": {
+    "cuda_rng_hash": true,
+    "gradient_norms": true,
+    "losses": true,
+    "model_hash": true,
+    "moment_sums": true,
+    "optimizer_state_hash": true
+  },
+  "continuation_validation": {
+    "at": "2026-09-15T09:55:23Z",
+    "count": 14,
+    "passed": [
+      "exact tensor numpy RNG recursive equality",
+      "optimizer scalar changes rejected",
+      "live controller rejected",
+      "held parent rejected",
+      "main stage state rejected",
+      "invalid epoch boundary rejected",
+      "missing rank RNG rejected",
+      "wrong parent source rejected",
+      "model source modification rejected",
+      "full import state and parent hash preserved",
+      "source boundary and next epoch recorded",
+      "parent blocked child released",
+      "parent resume held after transfer",
+      "duplicate import rejected"
+    ],
+    "scope": "CPU synthetic small state importer tests; no model training and no GPU launch",
+    "status": "PASS",
+    "temporary_runs_removed": [
+      "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-IMPORT-VALIDATION-PARENT-20260915",
+      "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-IMPORT-VALIDATION-CHILD-20260915"
+    ]
+  },
+  "affinity_trial": {
+    "before_images_per_second": 84.68345177362156,
+    "after_images_per_second": 85.7648421873173,
+    "adopted": false,
+    "reason": "Change too small to establish useful speedup; reverted"
+  },
+  "invalid_diagnostic_excluded": "The first trial reused mutable optimizer scalar state; it was rejected. All reported valid trials deep-copy optimizer state before each sequence. No diagnostic checkpoints were saved.",
+  "optimizer_validation": {
+    "at": "2026-09-15T09:58:05Z",
+    "checks": [
+      "finite update",
+      "nonfinite rejected before optimizer: nan",
+      "nonfinite rejected before optimizer: inf",
+      "nonfinite rejected before optimizer: -inf",
+      "empty gradients retain old semantics",
+      "FP64 moments exact for both ranks and tail batch"
+    ],
+    "count": 6,
+    "scope": "CPU actual candidate optimizer AST and tail statistics; dual-GPU full-update parity recorded separately",
+    "status": "PASS"
+  }
+}

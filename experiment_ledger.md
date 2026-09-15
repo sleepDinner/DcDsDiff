@@ -67,5 +67,12 @@ Historical runs are summarized separately in [pre-rebuild audit](docs/history/pr
 - Execute fresh reference epochs0–19, training-only calibration, then main epochs0–99 with all registered mechanisms and selection_protocol=test_selected. Original A stays stopped; no old reference or diagnostic training checkpoint is reused.
 - A 30-minute task covers the reference stage and first three complete main epochs, stops the new run on confirmed abnormalities, performs bounded versioned repairs, and pauses itself after recording healthy early training. Server training/checkpoint/report control remains autonomous.
 - Registration before launch: run not yet dispatched; actual launch/source/process/data evidence will be appended after server verification.
+- B实际于2026-09-15 17:38 Asia/Shanghai启动，执行源码`100d46edb1f73dd59fa0d57277e07c2925c53278`；143个冻结文件校验、512双卡preflight通过。参考epoch0–1完成、step1496，健康检查通过。随后按用户追加资源优化要求暂停做有界对照，已退出并释放锁；此处是工程暂停，不是参考退化。
+
+## 2026-09-15 measured performance continuation
+
+- Registered C: `TECT-DIFF-FULL-R512-S42-REFNORM-V2-PERF-20260915-C`; [protocol and state transfer](configs/tect_diff/PERFORMANCE_CONTINUATION.md). Same configuration hash `0b0358aa4908b852bb53113467184483fbb11d4be517eb58548ba80757052f88`; inherit B's complete reference epoch1/step1496, continue epoch2–19, then calibration and main0–99.
+- Versioned synchronization/statistics scheduling changes passed two-rank bounded parity for model/optimizer/RNG/loss/gradient/health moments. CPU affinity did not demonstrate a useful improvement and was reverted. No scientific parameters or reference/main budgets are changed; this is one continued scientific arm.
+- The 30-minute `tect-v2` early-supervision task follows C after launch. Actual transfer, startup and end-to-end throughput evidence will be appended after verification; selection_protocol=test_selected.
 
 - [TECT-Diff TECT-DIFF-FULL-R512-S42-REFNORM-V2-20260915-B](analysis_reports/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-20260915-B/report.md); test_selected All8 F1; fixed final reported separately.
