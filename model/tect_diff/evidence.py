@@ -196,13 +196,17 @@ def _edge_valid(height: int, width: int, border: int, device) -> Tensor:
 
 def _knn(query_content: Tensor, candidate_content: Tensor, query_position: Tensor,
          candidate_position: Tensor, height: int, width: int, config: EvidenceConfig,
-         query_valid: Tensor | None = None) -> dict[str, Tensor]:
+         query_valid: Tensor | None = None,
+         spatial_exclusion: Tensor | None = None) -> dict[str, Tensor]:
     """Blocked content KNN; all positions are independent of labels/responses."""
     count = query_content.shape[0]
     candidate_count = candidate_content.shape[0]
     k = min(config.neighbors, candidate_count)
     if k == 0:
         raise ValueError("The fixed spatial grid contains no reference candidates")
+    if spatial_exclusion is not None and (spatial_exclusion.shape != (count, candidate_count) or
+            spatial_exclusion.dtype != torch.bool or spatial_exclusion.device != query_content.device):
+        raise ValueError("Spatial exclusion cache does not match this query/candidate grid")
     chunks = {key: [] for key in ("indices", "weights", "match_distance", "availability")}
     radius2 = (max(height, width) / config.exclusion_divisor) ** 2
     with _fp32(query_content.device):
@@ -212,8 +216,12 @@ def _knn(query_content: Tensor, candidate_content: Tensor, query_position: Tenso
             qc = query_content[start:stop]
             distances = ((qc.square().sum(-1, keepdim=True) + candidate_norm -
                           2.0 * qc @ candidate_content.T) / qc.shape[-1]).clamp_min(0)
-            spatial2 = (query_position[start:stop, None] - candidate_position[None]).square().sum(-1)
-            distances.masked_fill_(spatial2 < radius2, float("inf"))
+            if spatial_exclusion is None:
+                spatial2 = (query_position[start:stop, None] - candidate_position[None]).square().sum(-1)
+                excluded = spatial2 < radius2
+            else:
+                excluded = spatial_exclusion[start:stop]
+            distances.masked_fill_(excluded, float("inf"))
             nearest, indices = distances.topk(k, largest=False, sorted=True)
             present = torch.isfinite(nearest)
             safe = torch.where(present, nearest, torch.zeros_like(nearest))
@@ -497,6 +505,8 @@ class FixedTrajectoryEvidence(nn.Module):
                 raise ValueError(f"Calibration scale/precision {key} must be positive")
             self.register_buffer(key, value.detach().clone().float().to(device=device))
         self._frozen_hash = tensor_tree_hash(self.state_dict())
+        # Derived geometry only: no fitted values, RNG, or persistent buffers.
+        self._geometry_cache = None
         self.train(False)
 
     def train(self, mode: bool = True):
@@ -507,6 +517,37 @@ class FixedTrajectoryEvidence(nn.Module):
         if current != self._frozen_hash or self.training or any(p.requires_grad for p in self.parameters()):
             raise RuntimeError("Frozen trajectory calibration changed during main training")
         return current
+
+    def _apply(self, fn, recurse=True):
+        # A module device/dtype move must not retain tensors on its old device.
+        self._geometry_cache = None
+        return super()._apply(fn, recurse=recurse)
+
+    @torch.no_grad()
+    def _geometry(self, height: int, width: int, device) -> dict:
+        device = torch.device(device)
+        key = (height, width, device, self.config.candidate_limit, self.config.invalid_border,
+               self.config.exclusion_divisor, self.config.query_chunk)
+        if self._geometry_cache is not None and self._geometry_cache[0] == key:
+            return self._geometry_cache[1]
+        # Retain only one geometry. At 512 and 1024 candidates the boolean mask
+        # occupies 256 MiB, replacing repeated coordinate arithmetic per image.
+        self._geometry_cache = None
+        with _fp32(device):
+            candidates = _grid_candidates(height, width, self.config, device)
+            positions = _positions(height, width, device)
+            edge = _edge_valid(height, width, self.config.invalid_border, device)
+            candidate_positions = positions[candidates]
+            excluded = torch.empty((height * width, len(candidates)), dtype=torch.bool, device=device)
+            radius2 = (max(height, width) / self.config.exclusion_divisor) ** 2
+            for start in range(0, height * width, self.config.query_chunk):
+                stop = min(start + self.config.query_chunk, height * width)
+                spatial2 = (positions[start:stop, None] - candidate_positions[None]).square().sum(-1)
+                excluded[start:stop] = spatial2 < radius2
+        geometry = {"candidates": candidates, "positions": positions, "edge": edge,
+                    "spatial_exclusion": excluded}
+        self._geometry_cache = (key, geometry)
+        return geometry
 
     @staticmethod
     def measure(epsilon_ref: Tensor, epsilon_noise: Tensor) -> Tensor:
@@ -520,14 +561,13 @@ class FixedTrajectoryEvidence(nn.Module):
         with _fp32(image_obs.device):
             raw = content_descriptor(image_obs)
             content = (raw - self.content_center[None, :, None, None]) / self.content_std[None, :, None, None]
-            candidates = _grid_candidates(height, width, self.config, image_obs.device)
-            positions = _positions(height, width, image_obs.device)
-            edge = _edge_valid(height, width, self.config.invalid_border, image_obs.device)
+            geometry = self._geometry(height, width, image_obs.device)
+            candidates, positions, edge = (geometry[key] for key in ("candidates", "positions", "edge"))
             matches = []
             for b in range(batch):
                 flat = content[b].flatten(1).T
                 matches.append(_knn(flat, flat[candidates], positions, positions[candidates],
-                                    height, width, self.config, edge))
+                                    height, width, self.config, edge, geometry["spatial_exclusion"]))
             context = {key: torch.stack([entry[key] for entry in matches]) for key in matches[0]}
             context.update({"content": content, "candidates": candidates,
                             "height": height, "width": width, "batch": batch,
@@ -551,11 +591,11 @@ class FixedTrajectoryEvidence(nn.Module):
                     flat = residual[replica, b].flatten(1).T
                     candidate_values = flat[context["candidates"]]
                     target = result[replica, b].flatten(1).T
-                    for start in range(0, height * width, self.config.query_chunk):
-                        stop = min(start + self.config.query_chunk, height * width)
-                        indices = context["indices"][b, start:stop]
-                        weights = context["weights"][b, start:stop]
-                        target[start:stop] -= (candidate_values[indices] * weights[..., None]).sum(1)
+                    # Queries are independent. Keep the same per-query neighbor
+                    # reduction, trading temporary memory for fewer launches.
+                    indices = context["indices"][b]
+                    weights = context["weights"][b]
+                    target -= (candidate_values[indices] * weights[..., None]).sum(1)
             return result
 
     def begin(self, context: Mapping) -> dict:

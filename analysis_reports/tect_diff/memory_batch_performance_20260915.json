@@ -1,0 +1,1155 @@
+{
+  "at": "2026-09-15T14:07:11.294618+00:00",
+  "config_hash": "63e53b3e50df4d4798d9310cb4ca2065efee1fbaea4fd2ba485fb88a37116275",
+  "constraints": "One authorized fresh main restart; healthy fitting reused; A/B/C/D held. No All8 images used in tuning.",
+  "evaluation": {
+    "batchnorm_running_stats_unchanged": true,
+    "bn_dropout_eval_verified": true,
+    "calibration_sha256": "bb349a143385b25798fe0a9c7c43904ba08c26f38ed7a6aee991add7ed16f59c",
+    "candidate_evidence_sha256": "11cdc9079d41693951f504a2831eb675ef891f381b8cf0a6b176f9de140f0781",
+    "candidate_worker_sha256": "f05cc607c0c57eeeaf2933c56da54f81afc34b10284fb073b44db0caed143dee",
+    "cpu_metrics_identical_array_prior_proof": {
+      "helper_sha256": "602826a22fcecd49d5d7e2defdd753d6d454edcbd7dcc1f40cf4c362992329c4",
+      "passed": true,
+      "receipt_sha256": "ec15f4fbc4cc305d1f6c1dfa33a031e60bb1095777e426c10ecabb14c3fb4886"
+    },
+    "deployment_policy_requires_versioned_new_run": true,
+    "fp32_proof_sha256": "b3500f4a5387a9f67b8b9399f0a5514dd42369f00ce7be693554dcba09cca707",
+    "global_count": 64,
+    "global_id_coverage_exact": true,
+    "global_ids": [
+      "FinalTrainData:Au_arc_10102",
+      "FinalTrainData:Au_ani_30613",
+      "FinalTrainData:Tp_D_CNN_M_N_sec10107_sec10101_10299",
+      "FinalTrainData:Tp_D_NRN_M_N_ind00055_cha00036_11779",
+      "FinalTrainData:Au_arc_30481",
+      "FinalTrainData:Au_art_30290",
+      "FinalTrainData:Tp_S_CNN_M_N_txt00006_txt00006_10839",
+      "FinalTrainData:Tp_S_NNN_S_N_ani00081_ani00081_00819",
+      "FinalTrainData:Au_cha_30264",
+      "FinalTrainData:Au_nat_00031",
+      "FinalTrainData:Tp_S_NRN_S_N_arc00001_arc00001_11184",
+      "FinalTrainData:Tp_S_NNN_S_N_nat10164_nat10164_12094",
+      "FinalTrainData:Au_nat_30668",
+      "FinalTrainData:Au_pla_30590",
+      "FinalTrainData:Fan_Fake_IMG_0012526_IMG_0013055",
+      "FinalTrainData:Fan_Fake_IMG_0013543_IMG_0008669",
+      "FinalTrainData:Au_sec_30509",
+      "FinalTrainData:Au_pla_20034",
+      "FinalTrainData:Fan_Fake_IMG_0015947_IMG_0011501",
+      "FinalTrainData:Fan_Fake_IMG_0004589_IMG_0006279",
+      "FinalTrainData:Fan_Real_IMG_0001571",
+      "FinalTrainData:Fan_Real_IMG_0007770",
+      "FinalTrainData:Fan_Fake_IMG_0000180_IMG_0014212",
+      "FinalTrainData:Fan_Fake_IMG_0003597_IMG_0010094",
+      "FinalTrainData:Fan_Real_IMG_0001257",
+      "FinalTrainData:Fan_Real_IMG_0000303",
+      "FinalTrainData:Fan_Fake_IMG_0006930_IMG_0004948",
+      "FinalTrainData:Fan_Fake_IMG_0010431_IMG_0005025",
+      "FinalTrainData:Fan_Real_IMG_0004199",
+      "FinalTrainData:Fan_Real_IMG_0008303",
+      "FinalTrainData:Fan_Fake_IMG_0013774_IMG_0010697",
+      "FinalTrainData:Fan_Fake_IMG_0003225_IMG_0001386",
+      "FinalTrainData:Fan_Real_IMG_0012282",
+      "FinalTrainData:Fan_Real_IMG_0016336",
+      "FinalTrainData:Fan_Fake_IMG_0003871_IMG_0004359",
+      "FinalTrainData:Fan_Fake_IMG_0015640_IMG_0002948",
+      "FinalTrainData:Fan_Real_IMG_0005772",
+      "FinalTrainData:Fan_Real_IMG_0001355",
+      "FinalTrainData:Fan_Fake_IMG_0009571_IMG_0004341",
+      "FinalTrainData:Fan_Fake_IMG_0000245_IMG_0003717",
+      "FinalTrainData:Fan_Real_IMG_0007716",
+      "FinalTrainData:Fan_Real_IMG_0000761",
+      "FinalTrainData:Fan_Fake_IMG_0002798_IMG_0009763",
+      "FinalTrainData:Fan_Fake_IMG_0005178_IMG_0007133",
+      "FinalTrainData:Fan_Real_IMG_0003729",
+      "FinalTrainData:Fan_Real_IMG_0006646",
+      "FinalTrainData:Fan_Fake_IMG_0007925_IMG_0002032",
+      "FinalTrainData:Fan_Fake_IMG_0010743_IMG_0011775",
+      "FinalTrainData:Fan_Real_IMG_0009699",
+      "FinalTrainData:Fan_Real_IMG_0012643",
+      "FinalTrainData:Fan_Fake_IMG_0013366_IMG_0003438",
+      "FinalTrainData:Fan_Fake_IMG_0015879_IMG_0010717",
+      "FinalTrainData:Fan_Real_IMG_0015538",
+      "FinalTrainData:Fan_Real_IMG_0015077",
+      "FinalTrainData:Fan_Fake_IMG_0012019_IMG_0002282",
+      "FinalTrainData:Fan_Fake_IMG_0006548_IMG_0003999",
+      "FinalTrainData:Fan_Real_IMG_0007731",
+      "FinalTrainData:Fan_Real_IMG_0010848",
+      "FinalTrainData:Fan_Fake_IMG_0001318_IMG_0007186",
+      "FinalTrainData:Fan_Fake_IMG_0014024_IMG_0003806",
+      "FinalTrainData:Fan_Real_IMG_0000675",
+      "FinalTrainData:Fan_Real_IMG_0015328",
+      "FinalTrainData:Fan_Fake_IMG_0012452_IMG_0006470",
+      "FinalTrainData:Fan_Fake_IMG_0015414_IMG_0013337"
+    ],
+    "limits": [
+      "Fresh main weights; trained reference/calibration; registered training images only.",
+      "BF16 epsilon is a predeclared engineering guard, not a theorem for 10-step self-conditioned sampling.",
+      "Binary masks and metrics may change under the new declared evaluation batch; all differences are reported.",
+      "End-to-end timing includes registered native-image/HFVG loader, metric thread startup, inference, original-size restore and CPU metric completion.",
+      "Two bounded passes with native image area <=4194304 pixels do not guarantee whole-All8 throughput or universal numerical behavior."
+    ],
+    "memory_allocator_cap_bytes": 22548578304,
+    "metric_pipeline_sha256": "602826a22fcecd49d5d7e2defdd753d6d454edcbd7dcc1f40cf4c362992329c4",
+    "mode": "bf16-throughput",
+    "model_rng_unchanged": true,
+    "no_ddp_padding": true,
+    "no_weights_or_predictions_saved": true,
+    "numerical_policy": {
+      "id": "BF16_BATCH_EXECUTION_V1",
+      "probability_abs_guard": 0.0078125,
+      "same_mathematical_rules_and_id_noise": true,
+      "strict_micro1_equivalence": false,
+      "tolerance_basis": "one torch.finfo(bfloat16).eps; predeclared engineering guard, not a 10-step analytical error bound"
+    },
+    "old_strict_receipt_sha256": "ec15f4fbc4cc305d1f6c1dfa33a031e60bb1095777e426c10ecabb14c3fb4886",
+    "per_id_initial_noise_crossbatch_exact": true,
+    "reference_sha256": "800f50c392a275fde3ec249c6f52275c6db79813e6f8b7e8b534f9ddb52a523f",
+    "scientific_result": false,
+    "selected_end_to_end_speedup": 2.0366080931422625,
+    "selected_eval_micro_batch": 8,
+    "selected_metric_workers": 4,
+    "semantic_fp32_control_passed": true,
+    "source": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/source",
+    "status": "COMPLETED",
+    "strict_micro1_equivalence": false,
+    "training_images_only": true,
+    "variants": {
+      "batch16_workers0": {
+        "binary_disagreement_count": 4966,
+        "binary_disagreement_count_definition": "Sum across two measured passes; each unique ID contributes twice.",
+        "binary_disagreement_fraction": 7.409976544126604e-05,
+        "eligible": true,
+        "end_to_end_images_per_second": 5.7741656978054845,
+        "first_pass_unique_id_binary_disagreement_count": 2483,
+        "first_pass_unique_id_binary_disagreement_fraction": 7.409976544126604e-05,
+        "first_pass_unique_id_valid_pixels": 33508878,
+        "macro_signed_metric_delta": {
+          "boundary_f1": 1.9818168549765364e-05,
+          "iou": -1.9706768838756488e-07,
+          "mae": -1.9203669344948146e-06,
+          "pixel_f1": -2.804997167872463e-07
+        },
+        "max_abs_probability_delta": 0.006805539131164551,
+        "max_per_image_abs_metric_delta": {
+          "boundary_f1": 0.003845857623330798,
+          "iou": 2.1362798957591522e-05,
+          "mae": 3.066704248388952e-05,
+          "pixel_f1": 2.265633719550353e-05
+        },
+        "mean_abs_probability_delta": 0.00035694165297593184,
+        "metric_queue_limit": 8,
+        "metric_workers": 0,
+        "micro_batch": 16,
+        "p99_abs_probability_delta_by_rank_and_pass": [
+          0.0012701153755187988,
+          0.0012701153755187988,
+          0.0013066530227661133,
+          0.0013066530227661133
+        ],
+        "peak_allocated_bytes_by_rank": [
+          11341825536,
+          11341825536
+        ],
+        "probability_exact": false,
+        "speedup_vs_batch1_workers0": 1.699714664606151,
+        "state_unchanged": true,
+        "status": "COMPLETED",
+        "valid_pixels_counted": 67017756
+      },
+      "batch16_workers4": {
+        "binary_disagreement_count": 4966,
+        "binary_disagreement_count_definition": "Sum across two measured passes; each unique ID contributes twice.",
+        "binary_disagreement_fraction": 7.409976544126604e-05,
+        "eligible": true,
+        "end_to_end_images_per_second": 5.9224049601407245,
+        "first_pass_unique_id_binary_disagreement_count": 2483,
+        "first_pass_unique_id_binary_disagreement_fraction": 7.409976544126604e-05,
+        "first_pass_unique_id_valid_pixels": 33508878,
+        "macro_signed_metric_delta": {
+          "boundary_f1": 1.9818168549765364e-05,
+          "iou": -1.9706768838756488e-07,
+          "mae": -1.9203669344948146e-06,
+          "pixel_f1": -2.804997167872463e-07
+        },
+        "max_abs_probability_delta": 0.006805539131164551,
+        "max_per_image_abs_metric_delta": {
+          "boundary_f1": 0.003845857623330798,
+          "iou": 2.1362798957591522e-05,
+          "mae": 3.066704248388952e-05,
+          "pixel_f1": 2.265633719550353e-05
+        },
+        "mean_abs_probability_delta": 0.00035694165297593184,
+        "metric_queue_limit": 8,
+        "metric_workers": 4,
+        "micro_batch": 16,
+        "p99_abs_probability_delta_by_rank_and_pass": [
+          0.0012701153755187988,
+          0.0012701153755187988,
+          0.0013066530227661133,
+          0.0013066530227661133
+        ],
+        "peak_allocated_bytes_by_rank": [
+          11341825536,
+          11341825536
+        ],
+        "probability_exact": false,
+        "speedup_vs_batch1_workers0": 1.7433511761384346,
+        "state_unchanged": true,
+        "status": "COMPLETED",
+        "valid_pixels_counted": 67017756
+      },
+      "batch1_workers0": {
+        "binary_disagreement_count": 0,
+        "binary_disagreement_count_definition": "Sum across two measured passes; each unique ID contributes twice.",
+        "binary_disagreement_fraction": 0.0,
+        "eligible": true,
+        "end_to_end_images_per_second": 3.3971382479914323,
+        "first_pass_unique_id_binary_disagreement_count": 0,
+        "first_pass_unique_id_binary_disagreement_fraction": 0.0,
+        "first_pass_unique_id_valid_pixels": 33508878,
+        "macro_signed_metric_delta": {
+          "boundary_f1": 0.0,
+          "iou": 0.0,
+          "mae": 0.0,
+          "pixel_f1": 0.0
+        },
+        "max_abs_probability_delta": 0.0,
+        "max_per_image_abs_metric_delta": {
+          "boundary_f1": 0.0,
+          "iou": 0.0,
+          "mae": 0.0,
+          "pixel_f1": 0.0
+        },
+        "mean_abs_probability_delta": 0.0,
+        "metric_queue_limit": 8,
+        "metric_workers": 0,
+        "micro_batch": 1,
+        "p99_abs_probability_delta_by_rank_and_pass": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "peak_allocated_bytes_by_rank": [
+          1414066688,
+          1414066688
+        ],
+        "probability_exact": true,
+        "speedup_vs_batch1_workers0": 1.0,
+        "state_unchanged": true,
+        "status": "COMPLETED",
+        "valid_pixels_counted": 67017756
+      },
+      "batch1_workers4": {
+        "binary_disagreement_count": 0,
+        "binary_disagreement_count_definition": "Sum across two measured passes; each unique ID contributes twice.",
+        "binary_disagreement_fraction": 0.0,
+        "eligible": true,
+        "end_to_end_images_per_second": 3.630246561782225,
+        "first_pass_unique_id_binary_disagreement_count": 0,
+        "first_pass_unique_id_binary_disagreement_fraction": 0.0,
+        "first_pass_unique_id_valid_pixels": 33508878,
+        "macro_signed_metric_delta": {
+          "boundary_f1": 0.0,
+          "iou": 0.0,
+          "mae": 0.0,
+          "pixel_f1": 0.0
+        },
+        "max_abs_probability_delta": 0.0,
+        "max_per_image_abs_metric_delta": {
+          "boundary_f1": 0.0,
+          "iou": 0.0,
+          "mae": 0.0,
+          "pixel_f1": 0.0
+        },
+        "mean_abs_probability_delta": 0.0,
+        "metric_queue_limit": 8,
+        "metric_workers": 4,
+        "micro_batch": 1,
+        "p99_abs_probability_delta_by_rank_and_pass": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "peak_allocated_bytes_by_rank": [
+          1413018112,
+          1413018112
+        ],
+        "probability_exact": true,
+        "speedup_vs_batch1_workers0": 1.0686190248302725,
+        "state_unchanged": true,
+        "status": "COMPLETED",
+        "valid_pixels_counted": 67017756
+      },
+      "batch32_workers0": {
+        "binary_disagreement_count": 4950,
+        "binary_disagreement_count_definition": "Sum across two measured passes; each unique ID contributes twice.",
+        "binary_disagreement_fraction": 7.386102274149555e-05,
+        "eligible": true,
+        "end_to_end_images_per_second": 2.6968178057295336,
+        "first_pass_unique_id_binary_disagreement_count": 2475,
+        "first_pass_unique_id_binary_disagreement_fraction": 7.386102274149555e-05,
+        "first_pass_unique_id_valid_pixels": 33508878,
+        "macro_signed_metric_delta": {
+          "boundary_f1": -7.011575005461652e-05,
+          "iou": 3.9210979187830675e-07,
+          "mae": -2.512483197410556e-06,
+          "pixel_f1": 3.1548817998941684e-07
+        },
+        "max_abs_probability_delta": 0.005828499794006348,
+        "max_per_image_abs_metric_delta": {
+          "boundary_f1": 0.0034070959631682385,
+          "iou": 2.8005392681662578e-05,
+          "mae": 3.3467363592332156e-05,
+          "pixel_f1": 2.711925552056904e-05
+        },
+        "mean_abs_probability_delta": 0.00035398358774950704,
+        "metric_queue_limit": 8,
+        "metric_workers": 0,
+        "micro_batch": 32,
+        "p99_abs_probability_delta_by_rank_and_pass": [
+          0.0012633204460144043,
+          0.0012633204460144043,
+          0.0012742877006530762,
+          0.0012742877006530762
+        ],
+        "peak_allocated_bytes_by_rank": [
+          21934712320,
+          21934712320
+        ],
+        "probability_exact": false,
+        "speedup_vs_batch1_workers0": 0.7938498844796896,
+        "state_unchanged": true,
+        "status": "COMPLETED",
+        "valid_pixels_counted": 67017756
+      },
+      "batch32_workers4": {
+        "binary_disagreement_count": 4950,
+        "binary_disagreement_count_definition": "Sum across two measured passes; each unique ID contributes twice.",
+        "binary_disagreement_fraction": 7.386102274149555e-05,
+        "eligible": true,
+        "end_to_end_images_per_second": 2.7846267387686288,
+        "first_pass_unique_id_binary_disagreement_count": 2475,
+        "first_pass_unique_id_binary_disagreement_fraction": 7.386102274149555e-05,
+        "first_pass_unique_id_valid_pixels": 33508878,
+        "macro_signed_metric_delta": {
+          "boundary_f1": -7.011575005461652e-05,
+          "iou": 3.9210979187830675e-07,
+          "mae": -2.512483197410556e-06,
+          "pixel_f1": 3.1548817998941684e-07
+        },
+        "max_abs_probability_delta": 0.005828499794006348,
+        "max_per_image_abs_metric_delta": {
+          "boundary_f1": 0.0034070959631682385,
+          "iou": 2.8005392681662578e-05,
+          "mae": 3.3467363592332156e-05,
+          "pixel_f1": 2.711925552056904e-05
+        },
+        "mean_abs_probability_delta": 0.00035398358774950704,
+        "metric_queue_limit": 8,
+        "metric_workers": 4,
+        "micro_batch": 32,
+        "p99_abs_probability_delta_by_rank_and_pass": [
+          0.0012633204460144043,
+          0.0012633204460144043,
+          0.0012742877006530762,
+          0.0012742877006530762
+        ],
+        "peak_allocated_bytes_by_rank": [
+          21935580672,
+          21934728704
+        ],
+        "probability_exact": false,
+        "speedup_vs_batch1_workers0": 0.819697797231257,
+        "state_unchanged": true,
+        "status": "COMPLETED",
+        "valid_pixels_counted": 67017756
+      },
+      "batch8_workers0": {
+        "binary_disagreement_count": 5040,
+        "binary_disagreement_count_definition": "Sum across two measured passes; each unique ID contributes twice.",
+        "binary_disagreement_fraction": 7.520395042770456e-05,
+        "eligible": true,
+        "end_to_end_images_per_second": 6.223545393629628,
+        "first_pass_unique_id_binary_disagreement_count": 2520,
+        "first_pass_unique_id_binary_disagreement_fraction": 7.520395042770456e-05,
+        "first_pass_unique_id_valid_pixels": 33508878,
+        "macro_signed_metric_delta": {
+          "boundary_f1": 1.8572509017259126e-05,
+          "iou": 5.676277489671386e-07,
+          "mae": -3.7307831078498e-06,
+          "pixel_f1": 1.980629548842786e-07
+        },
+        "max_abs_probability_delta": 0.007109403610229492,
+        "max_per_image_abs_metric_delta": {
+          "boundary_f1": 0.003700950795189284,
+          "iou": 3.45228609227588e-05,
+          "mae": 4.6361632272673425e-05,
+          "pixel_f1": 3.343034862968164e-05
+        },
+        "mean_abs_probability_delta": 0.00035573402261078246,
+        "metric_queue_limit": 8,
+        "metric_workers": 0,
+        "micro_batch": 8,
+        "p99_abs_probability_delta_by_rank_and_pass": [
+          0.0012817978858947754,
+          0.0012817978858947754,
+          0.0012830495834350586,
+          0.0012830495834350586
+        ],
+        "peak_allocated_bytes_by_rank": [
+          6041208320,
+          6041208320
+        ],
+        "probability_exact": false,
+        "speedup_vs_batch1_workers0": 1.831996503913056,
+        "state_unchanged": true,
+        "status": "COMPLETED",
+        "valid_pixels_counted": 67017756
+      },
+      "batch8_workers4": {
+        "binary_disagreement_count": 5040,
+        "binary_disagreement_count_definition": "Sum across two measured passes; each unique ID contributes twice.",
+        "binary_disagreement_fraction": 7.520395042770456e-05,
+        "eligible": true,
+        "end_to_end_images_per_second": 6.918639249382478,
+        "first_pass_unique_id_binary_disagreement_count": 2520,
+        "first_pass_unique_id_binary_disagreement_fraction": 7.520395042770456e-05,
+        "first_pass_unique_id_valid_pixels": 33508878,
+        "macro_signed_metric_delta": {
+          "boundary_f1": 1.8572509017259126e-05,
+          "iou": 5.676277489671386e-07,
+          "mae": -3.7307831078498e-06,
+          "pixel_f1": 1.980629548842786e-07
+        },
+        "max_abs_probability_delta": 0.007109403610229492,
+        "max_per_image_abs_metric_delta": {
+          "boundary_f1": 0.003700950795189284,
+          "iou": 3.45228609227588e-05,
+          "mae": 4.6361632272673425e-05,
+          "pixel_f1": 3.343034862968164e-05
+        },
+        "mean_abs_probability_delta": 0.00035573402261078246,
+        "metric_queue_limit": 8,
+        "metric_workers": 4,
+        "micro_batch": 8,
+        "p99_abs_probability_delta_by_rank_and_pass": [
+          0.0012817978858947754,
+          0.0012817978858947754,
+          0.0012830495834350586,
+          0.0012830495834350586
+        ],
+        "peak_allocated_bytes_by_rank": [
+          6041208320,
+          6041208320
+        ],
+        "probability_exact": false,
+        "speedup_vs_batch1_workers0": 2.0366080931422625,
+        "state_unchanged": true,
+        "status": "COMPLETED",
+        "valid_pixels_counted": 67017756
+      }
+    }
+  },
+  "evaluation_memory_headroom": {
+    "context_scratch_allowance_bytes": 2147483648,
+    "estimated_total_bytes": 9249661280,
+    "limitation": "Conservative arithmetic allowance, not a measured formal evaluation peak.",
+    "optimizer_and_bucket_allowance_multiplier": 2,
+    "optimizer_state_bytes_per_rank": 530484656,
+    "passed": true,
+    "physical_gpu_bytes": 25757220864,
+    "selected_evaluation_peak_bytes": 6041208320
+  },
+  "forward_evidence_validation": {
+    "all_global_ids_exact": true,
+    "candidate_evidence_sha256": "11cdc9079d41693951f504a2831eb675ef891f381b8cf0a6b176f9de140f0781",
+    "forward_original_repeat_bitwise": true,
+    "global_count": 16,
+    "limits": "Forward-only evidence isolation; no full training/backward equivalence or performance conclusion.",
+    "reference_calibration_rng_unchanged": true,
+    "scientific_result": false,
+    "status": "COMPLETED",
+    "variants": {
+      "geometry_full_queries": {
+        "all_forward_outputs_bitwise_equal": true
+      },
+      "geometry_only": {
+        "all_forward_outputs_bitwise_equal": true
+      }
+    }
+  },
+  "fp32_batch_control": {
+    "batchnorm_running_stats_unchanged": true,
+    "bn_dropout_eval_verified": true,
+    "calibration_sha256": "bb349a143385b25798fe0a9c7c43904ba08c26f38ed7a6aee991add7ed16f59c",
+    "candidate_evidence_sha256": "11cdc9079d41693951f504a2831eb675ef891f381b8cf0a6b176f9de140f0781",
+    "candidate_worker_sha256": "f05cc607c0c57eeeaf2933c56da54f81afc34b10284fb073b44db0caed143dee",
+    "cpu_metrics_identical_array_prior_proof": {
+      "helper_sha256": "602826a22fcecd49d5d7e2defdd753d6d454edcbd7dcc1f40cf4c362992329c4",
+      "passed": true,
+      "receipt_sha256": "ec15f4fbc4cc305d1f6c1dfa33a031e60bb1095777e426c10ecabb14c3fb4886"
+    },
+    "formal_precision_changed": false,
+    "fp32_flags": {
+      "autocast_enabled": false,
+      "cudnn_tf32": false,
+      "matmul_tf32": false
+    },
+    "fp32_proof_sha256": null,
+    "global_count": 16,
+    "global_id_coverage_exact": true,
+    "global_ids": [
+      "FinalTrainData:Au_arc_10102",
+      "FinalTrainData:Au_cha_30591",
+      "FinalTrainData:Tp_D_CNN_M_N_sec10107_sec10101_10299",
+      "FinalTrainData:Tp_S_NNN_S_N_art20011_art20011_02339",
+      "FinalTrainData:Au_nat_20073",
+      "FinalTrainData:Fan_Real_IMG_0001502",
+      "FinalTrainData:Fan_Fake_IMG_0015494_IMG_0014822",
+      "FinalTrainData:Fan_Fake_IMG_0011404_IMG_0010689",
+      "FinalTrainData:Fan_Real_IMG_0012981",
+      "FinalTrainData:Fan_Real_IMG_0004110",
+      "FinalTrainData:Fan_Fake_IMG_0009646_IMG_0011521",
+      "FinalTrainData:Fan_Fake_IMG_0008362_IMG_0011112",
+      "FinalTrainData:Fan_Real_IMG_0009864",
+      "FinalTrainData:Fan_Real_IMG_0015328",
+      "FinalTrainData:Fan_Fake_IMG_0012958_IMG_0005929",
+      "FinalTrainData:Fan_Fake_IMG_0015414_IMG_0013337"
+    ],
+    "limits": [
+      "Fresh main weights; trained reference/calibration; registered training images only.",
+      "BF16 epsilon is a predeclared engineering guard, not a theorem for 10-step self-conditioned sampling.",
+      "Binary masks and metrics may change under the new declared evaluation batch; all differences are reported.",
+      "End-to-end timing includes registered native-image/HFVG loader, metric thread startup, inference, original-size restore and CPU metric completion.",
+      "Two bounded passes with native image area <=4194304 pixels do not guarantee whole-All8 throughput or universal numerical behavior."
+    ],
+    "memory_allocator_cap_bytes": 22548578304,
+    "metric_pipeline_sha256": "602826a22fcecd49d5d7e2defdd753d6d454edcbd7dcc1f40cf4c362992329c4",
+    "mode": "fp32-control",
+    "model_rng_unchanged": true,
+    "no_ddp_padding": true,
+    "no_weights_or_predictions_saved": true,
+    "numerical_policy": {
+      "id": "BF16_BATCH_EXECUTION_V1",
+      "probability_abs_guard": 0.0078125,
+      "same_mathematical_rules_and_id_noise": true,
+      "strict_micro1_equivalence": false,
+      "tolerance_basis": "one torch.finfo(bfloat16).eps; predeclared engineering guard, not a 10-step analytical error bound"
+    },
+    "old_strict_receipt_sha256": "ec15f4fbc4cc305d1f6c1dfa33a031e60bb1095777e426c10ecabb14c3fb4886",
+    "per_id_initial_noise_crossbatch_exact": true,
+    "reference_sha256": "800f50c392a275fde3ec249c6f52275c6db79813e6f8b7e8b534f9ddb52a523f",
+    "scientific_result": false,
+    "semantic_batch_independence_passed": true,
+    "semantic_probability_abs_guard": 1e-05,
+    "source": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/source",
+    "status": "COMPLETED",
+    "training_images_only": true,
+    "variants": {
+      "batch1_workers0": {
+        "binary_disagreement_count": 0,
+        "binary_disagreement_count_definition": "Sum across two measured passes; each unique ID contributes twice.",
+        "binary_disagreement_fraction": 0.0,
+        "eligible": true,
+        "end_to_end_images_per_second": 2.877253015587188,
+        "first_pass_unique_id_binary_disagreement_count": 0,
+        "first_pass_unique_id_binary_disagreement_fraction": 0.0,
+        "first_pass_unique_id_valid_pixels": 13065738,
+        "macro_signed_metric_delta": {
+          "boundary_f1": 0.0,
+          "iou": 0.0,
+          "mae": 0.0,
+          "pixel_f1": 0.0
+        },
+        "max_abs_probability_delta": 0.0,
+        "max_per_image_abs_metric_delta": {
+          "boundary_f1": 0.0,
+          "iou": 0.0,
+          "mae": 0.0,
+          "pixel_f1": 0.0
+        },
+        "mean_abs_probability_delta": 0.0,
+        "metric_queue_limit": 8,
+        "metric_workers": 0,
+        "micro_batch": 1,
+        "p99_abs_probability_delta_by_rank_and_pass": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "peak_allocated_bytes_by_rank": [
+          1386187776,
+          1384090112
+        ],
+        "probability_exact": true,
+        "state_unchanged": true,
+        "status": "COMPLETED",
+        "valid_pixels_counted": 26131476
+      },
+      "batch8_workers0": {
+        "binary_disagreement_count": 0,
+        "binary_disagreement_count_definition": "Sum across two measured passes; each unique ID contributes twice.",
+        "binary_disagreement_fraction": 0.0,
+        "eligible": true,
+        "end_to_end_images_per_second": 1.9837336518618314,
+        "first_pass_unique_id_binary_disagreement_count": 0,
+        "first_pass_unique_id_binary_disagreement_fraction": 0.0,
+        "first_pass_unique_id_valid_pixels": 13065738,
+        "macro_signed_metric_delta": {
+          "boundary_f1": 0.0,
+          "iou": 0.0,
+          "mae": -3.2416878521790427e-09,
+          "pixel_f1": 0.0
+        },
+        "max_abs_probability_delta": 4.172325134277344e-07,
+        "max_per_image_abs_metric_delta": {
+          "boundary_f1": 0.0,
+          "iou": 0.0,
+          "mae": 1.4078382237769915e-08,
+          "pixel_f1": 0.0
+        },
+        "mean_abs_probability_delta": 4.1620503118774106e-08,
+        "metric_queue_limit": 8,
+        "metric_workers": 0,
+        "micro_batch": 8,
+        "p99_abs_probability_delta_by_rank_and_pass": [
+          1.7881393432617188e-07,
+          1.7881393432617188e-07,
+          1.7881393432617188e-07,
+          1.7881393432617188e-07
+        ],
+        "peak_allocated_bytes_by_rank": [
+          6875827200,
+          6875827200
+        ],
+        "probability_exact": false,
+        "state_unchanged": true,
+        "status": "COMPLETED",
+        "valid_pixels_counted": 26131476
+      }
+    }
+  },
+  "initial_strict_evaluation": {
+    "baseline_micro1_workers0_end_to_end_images_per_second": 2.87730110097546,
+    "batch_variants": {
+      "1": {
+        "binary_disagreements": 0,
+        "binary_metrics_exact": true,
+        "eligible": true,
+        "images_per_second": 4.155614916700969,
+        "max_abs_probability_diff": 0.0,
+        "max_mae_delta": 0.0,
+        "model_rng_unchanged": true,
+        "peak_allocated_bytes_by_rank": [
+          1413018112,
+          1413018112
+        ],
+        "probability_exact": true,
+        "status": "COMPLETED"
+      },
+      "2": {
+        "binary_disagreements": 1982,
+        "binary_metrics_exact": false,
+        "eligible": false,
+        "images_per_second": 6.4091427668373155,
+        "max_abs_probability_diff": 0.0067345499992370605,
+        "max_mae_delta": 2.073629960930301e-05,
+        "model_rng_unchanged": true,
+        "peak_allocated_bytes_by_rank": [
+          2062762496,
+          2062762496
+        ],
+        "probability_exact": false,
+        "status": "COMPLETED"
+      },
+      "4": {
+        "binary_disagreements": 1820,
+        "binary_metrics_exact": false,
+        "eligible": false,
+        "images_per_second": 7.998074190596829,
+        "max_abs_probability_diff": 0.005390763282775879,
+        "max_mae_delta": 1.5454820656013446e-05,
+        "model_rng_unchanged": true,
+        "peak_allocated_bytes_by_rank": [
+          3409796608,
+          3409796608
+        ],
+        "probability_exact": false,
+        "status": "COMPLETED"
+      },
+      "8": {
+        "binary_disagreements": 1914,
+        "binary_metrics_exact": false,
+        "eligible": false,
+        "images_per_second": 8.819427734476253,
+        "max_abs_probability_diff": 0.005820810794830322,
+        "max_mae_delta": 1.5626749269248563e-05,
+        "model_rng_unchanged": true,
+        "peak_allocated_bytes_by_rank": [
+          6040159744,
+          6040159744
+        ],
+        "probability_exact": false,
+        "status": "COMPLETED"
+      }
+    },
+    "candidate_evidence_sha256": "11cdc9079d41693951f504a2831eb675ef891f381b8cf0a6b176f9de140f0781",
+    "global_count": 16,
+    "global_id_coverage_exact": true,
+    "limits": [
+      "Fresh main weights and 16 bounded training images only; no formal quality estimate.",
+      "Batch inference parity is bounded numerical evidence, not universal trained-model equality.",
+      "Inference batching timing uses preloaded inputs and includes native-size GPU restore and D2H.",
+      "End-to-end queue timing includes actual registered loader, pool startup, sampling, and metric completion."
+    ],
+    "metric_pipeline_sha256": "602826a22fcecd49d5d7e2defdd753d6d454edcbd7dcc1f40cf4c362992329c4",
+    "metric_queues": {
+      "0": {
+        "cpu_only_images_per_second": 13.647991392097031,
+        "end_to_end_images_per_second": 2.87730110097546,
+        "metric_rows_exact": true
+      },
+      "4": {
+        "cpu_only_images_per_second": 19.067080453135304,
+        "end_to_end_images_per_second": 2.8279448135542626,
+        "metric_rows_exact": true
+      }
+    },
+    "metric_worker4_end_to_end_speedup": 0.982846325188398,
+    "model_rng_unchanged": true,
+    "no_ddp_padding": true,
+    "no_weights_or_predictions_saved": true,
+    "probability_atol": 1e-05,
+    "provisional_inference_micro_batch": 1,
+    "scientific_result": false,
+    "selected_end_to_end_speedup_vs_micro1_workers0": 1.0,
+    "selected_eval_micro_batch": 1,
+    "selected_geometry_variant": "geometry_full_queries",
+    "selected_inference_speedup_vs_micro1": 1.0,
+    "selected_metric_workers": 0,
+    "source": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/source",
+    "status": "COMPLETED",
+    "training_images_only": true
+  },
+  "launch_gate": {
+    "accepted_geometry_variant": "geometry_full_queries",
+    "accumulation_steps": 1,
+    "all_rank_gradients_synchronized": true,
+    "at": "2026-09-15T14:07:11.294618+00:00",
+    "calibration_sha256": "bb349a143385b25798fe0a9c7c43904ba08c26f38ed7a6aee991add7ed16f59c",
+    "candidate_evaluation_pipeline_sha256": "602826a22fcecd49d5d7e2defdd753d6d454edcbd7dcc1f40cf4c362992329c4",
+    "candidate_model_sha256": "11cdc9079d41693951f504a2831eb675ef891f381b8cf0a6b176f9de140f0781",
+    "candidate_worker_sha256": "f05cc607c0c57eeeaf2933c56da54f81afc34b10284fb073b44db0caed143dee",
+    "config_hash": "63e53b3e50df4d4798d9310cb4ca2065efee1fbaea4fd2ba485fb88a37116275",
+    "cross_run_bitwise_training_equivalence": false,
+    "evaluation_memory_headroom": {
+      "context_scratch_allowance_bytes": 2147483648,
+      "estimated_total_bytes": 9249661280,
+      "limitation": "Conservative arithmetic allowance, not a measured formal evaluation peak.",
+      "optimizer_and_bucket_allowance_multiplier": 2,
+      "optimizer_state_bytes_per_rank": 530484656,
+      "passed": true,
+      "physical_gpu_bytes": 25757220864,
+      "selected_evaluation_peak_bytes": 6041208320
+    },
+    "evaluation_validation": {
+      "binary_disagreement_count": 2520,
+      "finite": true,
+      "fp32_batch_control_max_abs": 4.172325134277344e-07,
+      "fp32_batch_control_passed": true,
+      "full_id_coverage": true,
+      "identical_array_cpu_metrics_exact": true,
+      "max_boundary_f1_abs_difference": 0.003700950795189284,
+      "max_iou_abs_difference": 3.45228609227588e-05,
+      "max_mae_abs_difference": 4.6361632272673425e-05,
+      "max_pixel_f1_abs_difference": 3.343034862968164e-05,
+      "max_probability_abs_error": 0.007109403610229492,
+      "metric_queue_limit": 8,
+      "metric_workers": 4,
+      "micro_batch": 8,
+      "model_rng_unchanged": true,
+      "numerical_policy": "BF16_BATCH_EXECUTION_V1",
+      "passed": true,
+      "unique_valid_pixels": 33508878
+    },
+    "evidence_forward_validation": {
+      "all_global_ids_exact": true,
+      "candidate_evidence_sha256": "11cdc9079d41693951f504a2831eb675ef891f381b8cf0a6b176f9de140f0781",
+      "forward_original_repeat_bitwise": true,
+      "global_count": 16,
+      "limits": "Forward-only evidence isolation; no full training/backward equivalence or performance conclusion.",
+      "reference_calibration_rng_unchanged": true,
+      "scientific_result": false,
+      "status": "COMPLETED",
+      "variants": {
+        "geometry_full_queries": {
+          "all_forward_outputs_bitwise_equal": true
+        },
+        "geometry_only": {
+          "all_forward_outputs_bitwise_equal": true
+        }
+      }
+    },
+    "evidence_forward_validation_path": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/evidence-forward-proof/aggregate.json",
+    "evidence_forward_validation_sha256": "28849319d020f8fb5b112b20d2ca2a8588e6f7e55850d90a80352743943ccfda",
+    "full_gradient_coverage": true,
+    "global_batch": 12,
+    "measured_speedup": 1.589831301767125,
+    "measured_speedup_vs_micro4": 1.1067724531912888,
+    "measurement_receipts": {
+      "bf16-throughput/aggregate.json": {
+        "server_path": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/bf16-throughput/aggregate.json",
+        "sha256": "f3a48b51c19e375d5bf2aaa04bb8db6f1f80c6e3db2f183b1503ec197fef779b"
+      },
+      "cpu_validation_final.json": {
+        "server_path": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/cpu_validation_final.json",
+        "sha256": "0a37533b0b3b92c4cacb79cbd9bae096ffaeece0f4b5600a9dfbae4461cf3c49"
+      },
+      "equivalence/aggregate.json": {
+        "server_path": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/equivalence/aggregate.json",
+        "sha256": "5819f9d16a9d833c06c54304c71fa8f75140cf08b9daccbbf46d0f4c1695bd05"
+      },
+      "evaluation/aggregate.json": {
+        "server_path": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/evaluation/aggregate.json",
+        "sha256": "ec15f4fbc4cc305d1f6c1dfa33a031e60bb1095777e426c10ecabb14c3fb4886"
+      },
+      "fp32-control/aggregate.json": {
+        "server_path": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/fp32-control/aggregate.json",
+        "sha256": "b3500f4a5387a9f67b8b9399f0a5514dd42369f00ce7be693554dcba09cca707"
+      },
+      "micro4/aggregate.json": {
+        "server_path": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/micro4/aggregate.json",
+        "sha256": "7b61ad79d41eeddf33a9ff2a2769fd652de27e6158c2dadf4a89184cd515f219"
+      },
+      "micro6/aggregate.json": {
+        "server_path": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/micro6/aggregate.json",
+        "sha256": "f6b9be8ed0ab953df53078d512358b14e86272e946550a91900bf92baaeeda82"
+      }
+    },
+    "micro6_no_oom": true,
+    "micro_batch": 6,
+    "parent_config_hash": "0b0358aa4908b852bb53113467184483fbb11d4be517eb58548ba80757052f88",
+    "parent_run": "TECT-DIFF-FULL-R512-S42-REFNORM-V2-AMPFIX-20260915-D",
+    "parent_source_commit": "84fcf47e5721317d99fe186feec08d365fc3f72c",
+    "passed": true,
+    "probe_finite": true,
+    "reference_sha256": "800f50c392a275fde3ec249c6f52275c6db79813e6f8b7e8b534f9ddb52a523f",
+    "scientific_result": false,
+    "training_benchmark_path": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/micro6/aggregate.json",
+    "training_benchmark_sha256": "f6b9be8ed0ab953df53078d512358b14e86272e946550a91900bf92baaeeda82"
+  },
+  "limits": [
+    "Finite-window training workload differs with microbatch and random prefix/self-condition grouping.",
+    "The original source itself is not bitwise repeatable across complete backward training runs.",
+    "Evidence-only forward outputs are bitwise equal on the bounded CUDA sample.",
+    "Evaluation estimates use 64 training images and do not prove full-epoch speed or trained-model quality.",
+    "BF16 batching is a versioned numerical execution change; probabilities and thresholded scores can differ.",
+    "The predeclared BF16 one-epsilon acceptance budget is empirical, not an analytical error bound."
+  ],
+  "micro4": {
+    "arms": {
+      "geometry_full_queries": {
+        "eligible_for_engineering_continuation": false,
+        "fixed_initial_rng_reference_calibration_scaler_scheduler_parity": null,
+        "full_state_parity_by_rank": null,
+        "images_per_second": 9.081833997455364,
+        "loss_max_abs_difference_by_rank": null,
+        "mean_visible_prefix_per_image": 2.984375,
+        "measured_updates": 32,
+        "peak_allocated_bytes_by_rank": [
+          12530718720,
+          12527621632
+        ],
+        "speedup_vs_original": 1.4364572385073149,
+        "speedup_vs_original_micro2": 1.4364572385073149,
+        "speedup_vs_same_candidate_micro2": 1.3398930952396018,
+        "synchronized_update_seconds_mean": 0.8808793468633667,
+        "synchronized_update_seconds_median": 0.8931396268308163
+      }
+    },
+    "candidate_evidence_sha256": "11cdc9079d41693951f504a2831eb675ef891f381b8cf0a6b176f9de140f0781",
+    "config_hash": "0b0358aa4908b852bb53113467184483fbb11d4be517eb58548ba80757052f88",
+    "forward_validation": {
+      "passed": true,
+      "sha256": "28849319d020f8fb5b112b20d2ca2a8588e6f7e55850d90a80352743943ccfda",
+      "source": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/evidence-forward-proof/aggregate.json"
+    },
+    "initialization": "fresh seed42/ImageNet; no parent main state",
+    "measurement_scope": "Real epoch1 registered loader, H2D, forward/backward, production optimizer/guards, per-update CUDA synchronization; excludes between-update receipt IO/barriers and all hash overhead. Loader is warmed; first-start latency is excluded.",
+    "micro4_gate": {
+      "accepted_geometry_variant": "geometry_full_queries",
+      "accumulation_steps": 1,
+      "all_rank_gradients_synchronized": true,
+      "full_gradient_coverage": true,
+      "global_batch": 8,
+      "measured_speedup": 1.4364572385073149,
+      "micro4_no_oom": true,
+      "micro_batch": 4,
+      "parent_config_hash": "0b0358aa4908b852bb53113467184483fbb11d4be517eb58548ba80757052f88",
+      "parent_run": "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-AMPFIX-20260915-D",
+      "parent_source_commit": "84fcf47e5721317d99fe186feec08d365fc3f72c",
+      "passed": true,
+      "probe_finite": true
+    },
+    "micro4_warning": "Different microbatch affects BatchNorm/RNG and sampled prefix/self-condition workload. Finite-window throughput is descriptive; it is not identical-state equivalence or a matched-workload causal speedup.",
+    "mode": "micro4",
+    "no_weights_saved": true,
+    "repeatability_control_by_rank": [
+      {
+        "first_update_gradient_max_abs": 0.00027829408645629883,
+        "full_training_state_bitwise_equal": false,
+        "interpretation": "Observed same-source floating-point repeatability envelope; descriptive, not an acceptance tolerance.",
+        "source_dir": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/equivalence.attempt2",
+        "source_receipt_sha256": "231ede53441cb7b6f4482cdb360b38250f7c1631497d335a15ec9134e5db4d57"
+      },
+      {
+        "first_update_gradient_max_abs": 0.00027829408645629883,
+        "full_training_state_bitwise_equal": false,
+        "interpretation": "Observed same-source floating-point repeatability envelope; descriptive, not an acceptance tolerance.",
+        "source_dir": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/equivalence.attempt2",
+        "source_receipt_sha256": "3c9c4e8a14ff20e10b0dcdab9374f80e852fad22ad1a172ccb33defae71fd145"
+      }
+    ],
+    "scientific_result": false,
+    "source": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/source",
+    "status": "COMPLETED"
+  },
+  "micro6": {
+    "accepted_geometry_variant": "geometry_full_queries",
+    "accumulation_steps": 1,
+    "all_rank_gradients_synchronized": true,
+    "baseline_mean_prefix": {
+      "micro2": 2.96875,
+      "micro4": 2.984375
+    },
+    "calibration_sha256": "bb349a143385b25798fe0a9c7c43904ba08c26f38ed7a6aee991add7ed16f59c",
+    "candidate_evidence_sha256": "11cdc9079d41693951f504a2831eb675ef891f381b8cf0a6b176f9de140f0781",
+    "candidate_worker_sha256": "f05cc607c0c57eeeaf2933c56da54f81afc34b10284fb073b44db0caed143dee",
+    "comparison_basis": "Images/s; global batch12 vs prior8; update counts, BatchNorm and random-prefix/self-condition workloads differ.",
+    "cuda_allocated_after_update_zero_grad_bytes_by_rank": [
+      1451638272,
+      1452673024
+    ],
+    "final_parameter_and_optimizer_hashes_agree": true,
+    "forward_validation": {
+      "passed": true,
+      "sha256": "28849319d020f8fb5b112b20d2ca2a8588e6f7e55850d90a80352743943ccfda",
+      "source": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/evidence-forward-proof/aggregate.json"
+    },
+    "full_gradient_coverage": true,
+    "global_batch": 12,
+    "images_per_second": 10.051523692839723,
+    "initialization": "fresh seed42/ImageNet; no parent main-state reuse",
+    "learning_rate": 0.0001,
+    "learning_rate_scaling": "none",
+    "limitations": [
+      "Bounded warmed actual-loader measurements, not an identical-trajectory comparison or whole-epoch guarantee.",
+      "Global12 is an explicitly authorized new scientific setting; LR remains1e-4 without automatic scaling.",
+      "Timing excludes between-update receipt IO/barriers and final state hashing; CPU host regions overlap asynchronous GPU work.",
+      "Self-condition decisions are not exposed by the model; mean visible prefix is reported instead."
+    ],
+    "loader_wait_seconds_by_rank": [
+      0.00509677454829216,
+      0.0055984072387218475
+    ],
+    "mean_visible_prefix_per_image": 2.859375,
+    "measured_global_images": 384,
+    "measured_updates": 32,
+    "memory_allocator_cap_bytes": 22548578304,
+    "micro4_baseline_sha256": "7b61ad79d41eeddf33a9ff2a2769fd652de27e6158c2dadf4a89184cd515f219",
+    "micro_batch": 6,
+    "mode": "micro6",
+    "no_oom": true,
+    "no_weights_saved": true,
+    "optimizer_cuda_state_tensor_bytes_by_rank": [
+      530484656,
+      530484656
+    ],
+    "original_baseline_sha256": "5819f9d16a9d833c06c54304c71fa8f75140cf08b9daccbbf46d0f4c1695bd05",
+    "parent_config_hash": "0b0358aa4908b852bb53113467184483fbb11d4be517eb58548ba80757052f88",
+    "parent_run": "TECT-DIFF-FULL-R512-S42-REFNORM-V2-AMPFIX-20260915-D",
+    "parent_source_commit": "84fcf47e5721317d99fe186feec08d365fc3f72c",
+    "passed": true,
+    "peak_allocated_bytes_by_rank": [
+      17996424704,
+      17996023808
+    ],
+    "peak_reserved_bytes_by_rank": [
+      19998441472,
+      20061356032
+    ],
+    "probe_finite": true,
+    "reference_sha256": "800f50c392a275fde3ec249c6f52275c6db79813e6f8b7e8b534f9ddb52a523f",
+    "scientific_result": false,
+    "speedup_vs_micro4_global8": 1.1067724531912888,
+    "speedup_vs_original_micro2_global8": 1.589831301767125,
+    "status": "COMPLETED",
+    "synchronized_update_seconds_mean": 1.1938488498562947,
+    "synchronized_update_seconds_median": 1.191537719219923,
+    "warmup_updates": 4,
+    "within_memory_cap": true
+  },
+  "native_cpu_validation": {
+    "at": "2026-09-15T14:06:48Z",
+    "copied_from": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/source",
+    "cuda_visible_devices": "",
+    "donor_files_unchanged": true,
+    "elapsed_seconds": 6.375040128827095,
+    "environment": "/data0/hl/conda_envs/dcdsdiff",
+    "error": null,
+    "evaluation_numerical_policy": "BF16_BATCH_EXECUTION_V1",
+    "exit_code": 0,
+    "log": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/cpu_validation_final.log",
+    "log_sha256": "1d5bf09c4b2d1ec2f4a0d6e1837cb801e299ef72b6a4d663a8ea65b2f5c0aeb3",
+    "native_fcntl": true,
+    "overlay_sha256": {
+      "model/tect_diff/evidence.py": "11cdc9079d41693951f504a2831eb675ef891f381b8cf0a6b176f9de140f0781",
+      "scripts/tect_diff/batch_restart.py": "20b057b5252f7a261adae2a25223f654018cf8da4abff35e6d089944a5b696e3",
+      "scripts/tect_diff/controller.py": "e58df5cf9eb693b9b7a2d5a57a77757cbff93cec72cd421814050b03979c6fe8",
+      "scripts/tect_diff/evaluation_pipeline.py": "602826a22fcecd49d5d7e2defdd753d6d454edcbd7dcc1f40cf4c362992329c4",
+      "scripts/tect_diff/report.py": "097e293c864bb11e36b5dc807104a4c1e86bc786619302c89099b36c28f0a94a",
+      "scripts/tect_diff/test_batch_restart.py": "b5ba2a3cf52e6fcf16416419ebe893a00b19c551246b358c814d9f979d00775d",
+      "scripts/tect_diff/test_evaluation_pipeline.py": "6e2ddab24d840d96a8a21812bb5a2d31813fabecd4229d49552ecc230d56ec05",
+      "scripts/tect_diff/test_evidence_geometry_cache.py": "b4cda223a538f5e55dfc6df7bcdd2e330a43a7d5ae0ed709899bf70b6780c9c7",
+      "scripts/tect_diff/worker.py": "f05cc607c0c57eeeaf2933c56da54f81afc34b10284fb073b44db0caed143dee"
+    },
+    "preserved_memb4_34_receipts": {
+      "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/cpu_validation_bf16_memb4_34_20260915T134115Z.json": "824b9f3565429c0a9a4c9fac7f899163f50f0c857c8522bbc2bfe6f85f399d06",
+      "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/cpu_validation_bf16_memb4_34_20260915T134115Z.log": "d453af302eac36f163acea747ef3337f86adcecfa61e4ef04347eab102740e58"
+    },
+    "registered_training_batch": "micro6/accumulation1/global12",
+    "source": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/cpu-validation-source",
+    "status": "PASS",
+    "summary": {
+      "cuda_available": false,
+      "cuda_visible_devices": "",
+      "errors": 0,
+      "failures": 0,
+      "passed": true,
+      "skipped": 0,
+      "tests": 36,
+      "torch": "2.1.2+cu121"
+    },
+    "test_modules": [
+      "scripts.tect_diff.test_batch_restart",
+      "scripts.tect_diff.test_artifact_continuation",
+      "scripts.tect_diff.test_evidence_geometry_cache",
+      "scripts.tect_diff.test_evaluation_pipeline"
+    ]
+  },
+  "run_id": "TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E",
+  "selection_protocol": "test_selected",
+  "status": "BENCHMARKS_PASSED_PENDING_FORMAL_LAUNCH",
+  "training": {
+    "arms": {
+      "geometry_full_queries": {
+        "eligible_for_engineering_continuation": true,
+        "fixed_initial_rng_reference_calibration_scaler_scheduler_parity": true,
+        "full_state_parity_by_rank": [
+          false,
+          false
+        ],
+        "images_per_second": 6.778028806717104,
+        "loss_max_abs_difference_by_rank": [
+          0.010352849960327148,
+          0.003016352653503418
+        ],
+        "mean_visible_prefix_per_image": 2.96875,
+        "measured_updates": 16,
+        "peak_allocated_bytes_by_rank": [
+          7386910720,
+          7382741504
+        ],
+        "speedup_vs_original": 1.0720685430880927,
+        "speedup_vs_original_micro2": 1.0720685430880927,
+        "speedup_vs_same_candidate_micro2": 1.0,
+        "synchronized_update_seconds_mean": 1.1802841546013951,
+        "synchronized_update_seconds_median": 1.1894231457263231
+      },
+      "geometry_only": {
+        "eligible_for_engineering_continuation": false,
+        "fixed_initial_rng_reference_calibration_scaler_scheduler_parity": true,
+        "full_state_parity_by_rank": [
+          false,
+          false
+        ],
+        "images_per_second": 6.631703091816766,
+        "loss_max_abs_difference_by_rank": [
+          0.004342913627624512,
+          0.0056656599044799805
+        ],
+        "mean_visible_prefix_per_image": 2.96875,
+        "measured_updates": 16,
+        "peak_allocated_bytes_by_rank": [
+          7388988928,
+          7384835072
+        ],
+        "speedup_vs_original": 1.0489244697206164,
+        "speedup_vs_original_micro2": 1.0489244697206164,
+        "speedup_vs_same_candidate_micro2": 1.0,
+        "synchronized_update_seconds_mean": 1.20632662368007,
+        "synchronized_update_seconds_median": 1.1923621371388435
+      },
+      "original": {
+        "eligible_for_engineering_continuation": false,
+        "fixed_initial_rng_reference_calibration_scaler_scheduler_parity": true,
+        "full_state_parity_by_rank": [
+          true,
+          true
+        ],
+        "images_per_second": 6.322383816237156,
+        "loss_max_abs_difference_by_rank": [
+          0.0,
+          0.0
+        ],
+        "mean_visible_prefix_per_image": 2.96875,
+        "measured_updates": 16,
+        "peak_allocated_bytes_by_rank": [
+          7122694144,
+          7119304192
+        ],
+        "speedup_vs_original": 1.0,
+        "speedup_vs_original_micro2": 1.0,
+        "speedup_vs_same_candidate_micro2": 1.0,
+        "synchronized_update_seconds_mean": 1.2653455140534788,
+        "synchronized_update_seconds_median": 1.244023771956563
+      }
+    },
+    "candidate_evidence_sha256": "11cdc9079d41693951f504a2831eb675ef891f381b8cf0a6b176f9de140f0781",
+    "config_hash": "0b0358aa4908b852bb53113467184483fbb11d4be517eb58548ba80757052f88",
+    "forward_validation": {
+      "passed": true,
+      "sha256": "28849319d020f8fb5b112b20d2ca2a8588e6f7e55850d90a80352743943ccfda",
+      "source": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/evidence-forward-proof/aggregate.json"
+    },
+    "initialization": "fresh seed42/ImageNet; no parent main state",
+    "measurement_scope": "Real epoch1 registered loader, H2D, forward/backward, production optimizer/guards, per-update CUDA synchronization; excludes between-update receipt IO/barriers and all hash overhead. Loader is warmed; first-start latency is excluded.",
+    "micro4_warning": null,
+    "mode": "equivalence",
+    "no_weights_saved": true,
+    "repeatability_control_by_rank": [
+      {
+        "first_update_gradient_max_abs": 0.00027829408645629883,
+        "full_training_state_bitwise_equal": false,
+        "interpretation": "Observed same-source floating-point repeatability envelope; descriptive, not an acceptance tolerance.",
+        "source_dir": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/equivalence.attempt2",
+        "source_receipt_sha256": "231ede53441cb7b6f4482cdb360b38250f7c1631497d335a15ec9134e5db4d57"
+      },
+      {
+        "first_update_gradient_max_abs": 0.00027829408645629883,
+        "full_training_state_bitwise_equal": false,
+        "interpretation": "Observed same-source floating-point repeatability envelope; descriptive, not an acceptance tolerance.",
+        "source_dir": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/equivalence.attempt2",
+        "source_receipt_sha256": "3c9c4e8a14ff20e10b0dcdab9374f80e852fad22ad1a172ccb33defae71fd145"
+      }
+    ],
+    "scientific_result": false,
+    "source": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/source",
+    "status": "COMPLETED"
+  }
+}

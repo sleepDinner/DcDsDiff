@@ -25,7 +25,8 @@ import torch.nn.functional as F
 from scripts.tect_diff.common import (atomic_json, atomic_torch_save, append_json, read_json,
     sha256, json_hash, seed_all, rng_state, restore_rng, tensor_hash, timestamp)
 from scripts.tect_diff.data import load_bundle, ManifestDataset, ReferenceDataset, evaluation_collate
-from scripts.tect_diff.metrics import per_image_metrics, aggregate_dataset, aggregate_all8
+from scripts.tect_diff.metrics import aggregate_dataset, aggregate_all8
+from scripts.tect_diff.evaluation_pipeline import EvaluationMetricPipeline
 from scripts.tect_diff.reference_health import (
     POLICY_ID, summarize_reference_epoch, require_healthy_reference, require_final_reference_probe,
 )
@@ -362,19 +363,23 @@ class Worker:
                     batch_size=self.config['evaluation']['micro_batch'], shuffle=False,
                     num_workers=self.config['data']['loader_workers'], pin_memory=True,
                     collate_fn=evaluation_collate)
-                rows = []
-                for batch in loader:
-                    image = batch['image'].to(self.device, non_blocking=True)
-                    trace = batch['trace'].to(self.device, non_blocking=True)
-                    with torch.no_grad(), self.amp():
-                        prediction = model.sample(image, trace, batch['id'])
-                    for i, sample_id in enumerate(batch['id']):
-                        probability = F.interpolate(prediction[i:i+1].float(), size=batch['original_hw'][i],
-                            mode='bilinear', align_corners=False)[0, 0].cpu().numpy()
-                        rows.append({'id': sample_id, **per_image_metrics(probability, batch['gt'][i], batch['gt_valid'][i],
-                            self.config['evaluation']['threshold'], self.config['evaluation']['boundary_diagonal_ratio'])})
-                    if len(rows) == 1 or len(rows) % 32 == 0:
-                        self.status('MAIN_EVALUATION', epoch=epoch, dataset=name, evaluated_on_rank=len(rows), assigned=len(loader.dataset))
+                with EvaluationMetricPipeline(self.config['evaluation'].get('metric_workers', 0),
+                        self.config['evaluation'].get('metric_queue_limit', 8)) as metrics:
+                    rows = metrics.rows
+                    for batch in loader:
+                        image = batch['image'].to(self.device, non_blocking=True)
+                        trace = batch['trace'].to(self.device, non_blocking=True)
+                        with torch.no_grad(), self.amp():
+                            prediction = model.sample(image, trace, batch['id'])
+                        for i, sample_id in enumerate(batch['id']):
+                            probability = F.interpolate(prediction[i:i+1].float(), size=batch['original_hw'][i],
+                                mode='bilinear', align_corners=False)[0, 0].cpu().numpy()
+                            metrics.submit(sample_id, probability, batch['gt'][i], batch['gt_valid'][i],
+                                self.config['evaluation']['threshold'], self.config['evaluation']['boundary_diagonal_ratio'])
+                        if metrics.submitted == 1 or metrics.submitted % 32 == 0:
+                            self.status('MAIN_EVALUATION', epoch=epoch, dataset=name, evaluated_on_rank=len(rows),
+                                inferred_on_rank=metrics.submitted, assigned=len(loader.dataset))
+                    metrics.finish()
                 atomic_json(epoch_dir/f'{name}.rank{self.rank}.json', rows)
                 dist.barrier()
                 if self.rank == 0:

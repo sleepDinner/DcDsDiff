@@ -174,9 +174,13 @@ def _spawn(run, root, config):
             "log": str(run / "controller.log"), "state": str(run / "controller_status.json")}
 
 
-def launch(config_file, run_id, reference_parent=None, artifact_parent=None):
-    if reference_parent and artifact_parent:
+def launch(config_file, run_id, reference_parent=None, artifact_parent=None, batch_parent=None, batch_validation=None):
+    if sum(bool(parent) for parent in (reference_parent, artifact_parent, batch_parent)) > 1:
         raise ValueError('Choose one registered continuation boundary')
+    if bool(batch_parent) != bool(batch_validation):
+        raise ValueError('Batch restart requires both --batch-parent and --batch-validation')
+    if run_id == 'TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E' and not batch_parent:
+        raise ValueError('Registered MEMB6 restart requires its fitting parent and measured batch validation')
     if not RUN_PATTERN.fullmatch(run_id):
         raise ValueError("Invalid run ID")
     config = read_json(config_file)
@@ -225,9 +229,11 @@ def launch(config_file, run_id, reference_parent=None, artifact_parent=None):
                       "repository": settings["publish_url"], "config_hash": json_hash(config),
                       "source_hashes": hashes, "created_at": timestamp(), "environment": config["environment"],
                       "gpus": config["gpus"], "config_source": str(Path(config_file).resolve())}
-        if reference_parent or artifact_parent:
-            key = 'reference_parent' if reference_parent else 'artifact_parent'
-            provenance[key] = str(Path(reference_parent or artifact_parent).resolve(strict=True))
+        if reference_parent or artifact_parent or batch_parent:
+            key = 'reference_parent' if reference_parent else ('artifact_parent' if artifact_parent else 'batch_parent')
+            provenance[key] = str(Path(reference_parent or artifact_parent or batch_parent).resolve(strict=True))
+            if batch_parent:
+                provenance['batch_validation_source'] = str(Path(batch_validation).resolve(strict=True))
             atomic_json(run / 'operational_hold.json', {
                 'active': True, 'reason': 'Registered dependency import has not completed'})
         atomic_json(run / "provenance.json", provenance)
@@ -243,6 +249,9 @@ def launch(config_file, run_id, reference_parent=None, artifact_parent=None):
         if artifact_parent:
             from scripts.tect_diff.artifact_continuation import import_completed_artifacts
             import_completed_artifacts(run, artifact_parent)
+        if batch_parent:
+            from scripts.tect_diff.batch_restart import import_batch_dependencies
+            import_batch_dependencies(run, batch_parent, batch_validation)
         return _spawn(run, root, config)
 
 
@@ -530,11 +539,14 @@ def main():
     parser.add_argument("--run-dir")
     parser.add_argument("--reference-parent", help="Stopped same-config reference run; state-preserving source-version continuation")
     parser.add_argument("--artifact-parent", help="Registered held MAIN repair parent; reuse completed reference/calibration and initialize MAIN fresh")
+    parser.add_argument("--batch-parent", help="Registered held D parent; reuse healthy fitting artifacts and restart MAIN at microbatch6/global12")
+    parser.add_argument("--batch-validation", help="Project-runtime measurement receipt bound to the new configuration and published model candidate")
     args = parser.parse_args()
     if args.command == "launch":
         if not args.config or not args.run_id:
             parser.error("launch requires --config and --run-id")
-        result = launch(args.config, args.run_id, args.reference_parent, args.artifact_parent)
+        result = launch(args.config, args.run_id, args.reference_parent, args.artifact_parent,
+                        args.batch_parent, args.batch_validation)
     else:
         run_dir = args.run_dir or (str(SOURCE / "runs" / args.run_id) if args.run_id else None)
         if run_dir is None:
