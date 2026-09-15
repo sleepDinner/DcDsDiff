@@ -1,0 +1,7 @@
+# TECT-DIFF-FULL-REFNORM-V2
+
+按八测试集逐 epoch F1 选择 checkpoint；这些测试集参与模型选择，不是独立泛化评估。selection_protocol=test_selected。固定终点 final.pth 与 test-selected best.pth 分开报告。
+
+各 run 的数值只读取机器可读结果。未完成 run 不提供最终成绩。
+
+- [TECT-DIFF-FULL-R512-S42-REFNORM-V2-20260915-B](../../runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-20260915-B/report.md): INTERRUPTED

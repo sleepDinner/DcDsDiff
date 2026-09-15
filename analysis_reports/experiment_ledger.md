@@ -4,4 +4,5 @@
 
 | Run | Status | Stage | Resolution | Best epoch / All8 F1 | Final epoch / All8 F1 |
 | --- | --- | --- | ---: | --- | --- |
-| [TECT-DIFF-FULL-R512-S42-20260915-A](runs/TECT-DIFF-FULL-R512-S42-20260915-A/report.md) | INTERRUPTED | REFERENCE | 512 |  / None |  / None |
+| [TECT-DIFF-FULL-R512-S42-20260915-A](runs/TECT-DIFF-FULL-R512-S42-20260915-A/report.md) | INTERRUPTED | REFERENCE | 512 |  /  |  /  |
+| [TECT-DIFF-FULL-R512-S42-REFNORM-V2-20260915-B](runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-20260915-B/report.md) | INTERRUPTED | REFERENCE | 512 |  / None |  / None |

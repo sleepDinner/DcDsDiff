@@ -67,3 +67,5 @@ Historical runs are summarized separately in [pre-rebuild audit](docs/history/pr
 - Execute fresh reference epochs0–19, training-only calibration, then main epochs0–99 with all registered mechanisms and selection_protocol=test_selected. Original A stays stopped; no old reference or diagnostic training checkpoint is reused.
 - A 30-minute task covers the reference stage and first three complete main epochs, stops the new run on confirmed abnormalities, performs bounded versioned repairs, and pauses itself after recording healthy early training. Server training/checkpoint/report control remains autonomous.
 - Registration before launch: run not yet dispatched; actual launch/source/process/data evidence will be appended after server verification.
+
+- [TECT-Diff TECT-DIFF-FULL-R512-S42-REFNORM-V2-20260915-B](analysis_reports/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-20260915-B/report.md); test_selected All8 F1; fixed final reported separately.
