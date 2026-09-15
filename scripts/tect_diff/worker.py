@@ -109,6 +109,8 @@ class Worker:
                 'manifest_hash_definition': 'canonical JSON, sort_keys, compact separators, UTF-8, no trailing newline', **extra}
 
     def restore(self, checkpoint, model, optimizer, scheduler, scaler):
+        if checkpoint['source_commit'] != read_json(self.run / 'provenance.json')['commit']:
+            raise RuntimeError('Exact resume source commit mismatch')
         if checkpoint['config_hash'] != self.config_hash or checkpoint['manifest_hashes'] != self.bundle['manifest_hashes']:
             raise RuntimeError('Exact resume protocol/data mismatch')
         if checkpoint['sampler']['world_size'] != self.world:

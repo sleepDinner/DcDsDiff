@@ -139,7 +139,8 @@ def summarize_diagnostics(run):
         "scope": "Low-frequency sampled training records; not an estimate over all unlogged batches.",
         "streams": streams, "peak_allocated_bytes_by_rank": peak_by_rank,
         "preflight": preflight, "main_probe": main_probe,
-        "sample_profiles": main_probe.get("sample_profile", main_probe.get("sample_profiles", {})),
+        "sample_profiles": [{"rank": row['rank'], **row.get('sample_profile', {})}
+                            for row in main_probe.get('ranks', [])],
         "flags": {
             "all_observed_q_zero": all_observed("q_zero_fraction", lambda item: item["minimum"] == 1),
             "all_observed_gamma_below_1e_minus4": all_observed("gamma", lambda item: item["maximum"] < 1e-4),
