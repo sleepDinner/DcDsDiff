@@ -1,6 +1,11 @@
 # Experiment ledger
 
-## TECT-PILOT-CASIA2-GN8-R512-S42-DATA2-V1 — REGISTERED
+## TECT-PILOT-CASIA2-GN8-R512-S42-DATA2-N8192-V1 — REGISTERED
+
+- Next run `TECT-PILOT-CASIA2-GN8-N8192-R512-S42-20260916-C`; [registered scope](configs/tect_diff/PILOT_N8192.md), [config](configs/tect_diff/pilot_casia2_gn8_data2_n8192_r512_s42.json). Registered before C results; actual startup/source/manifest receipts must be recorded after execution.
+- Fresh MAIN, same GN8/mechanisms/optimizer/batch/Test2/gates; fixed nested8192 train (4096Au+4096Tp), maximum10epochs/4h. Data coverage and total update budget change jointly. The [fixed B-final training diagnosis](analysis_reports/tect_diff/gn8_pilot_nogo_diagnostic_20260916.md) supports working conditioning and sampling, not proof of insufficient data or guaranteed improvement. C remains development; no premature Full/All8.
+
+## TECT-PILOT-CASIA2-GN8-R512-S42-DATA2-V1 — COMPLETED / NO_GO
 
 - Current run `TECT-PILOT-CASIA2-GN8-R512-S42-20260916-B`; [DATA2 repair](configs/tect_diff/PILOT_DATA2_REPAIR.md), [configuration](configs/tect_diff/pilot_casia2_gn8_data2_r512_s42.json).
 - A failed before GPU startup on two LA masks whose luminance/alpha channels disagree. B quarantines only those two exact hash-bound image/mask pairs; all unknown semantic errors still block. Same GN8 model, fitting dependencies, fresh initialization, sample/epoch budgets, precision and effectiveness gates. No pilot training result exists at this registration.

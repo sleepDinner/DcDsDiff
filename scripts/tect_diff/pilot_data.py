@@ -328,6 +328,95 @@ def prepare_pilot_bundle(project, config, inherited_bundle=None, progress=print)
     return load_pilot_bundle(destination/"summary.json")
 
 
+def validate_pilot_expansion(bundle, parent_summary):
+    """Verify a nested training expansion after preparation, before model work.
+
+    The caller binds parent_summary to the registered, completed parent run.
+    This checks frozen rows and roles; it neither selects data nor refits assets.
+    Preflight rows may change with the larger training pool.
+    """
+    summary = bundle["summary"]
+    fixed = ("reference", "calibration", "authentic_probe",
+             *("test_"+name for name in TEST_NAMES),
+             *("test_full_"+name for name in TEST_NAMES))
+    roles = ("train", "preflight_train", *fixed)
+    contract = ("audit_version", "seed", "quarantine_policy", "quarantined_pair_count",
+                "quarantined_pairs", "invalid_training_pairs", "reference_source_mode",
+                "inherited_manifest_hashes", "inherited_manifest_paths",
+                "mask_semantics", "selection_rule", "leakage_rule")
+    for key in contract:
+        if summary[key] != parent_summary[key]:
+            raise ValueError(f"Pilot expansion contract changed: {key}")
+    loaded = []
+    for metadata in (parent_summary, summary):
+        if (metadata["audit_version"] != PILOT_DATA_VERSION
+                or metadata["current_audit_status"] != "COMPLETED"
+                or metadata["current_blocking_audit_error_count"] != 0):
+            raise ValueError("Pilot expansion requires completed semantic audits")
+        if set(metadata["manifest_paths"]) != set(roles) or set(metadata["manifest_hashes"]) != set(roles):
+            raise ValueError("Pilot expansion manifest roles changed")
+        manifests = {}
+        for role in roles:
+            path = Path(metadata["manifest_paths"][role])
+            if not path.is_absolute():
+                raise ValueError("Pilot expansion requires absolute frozen manifest paths")
+            rows = json.loads(path.read_text())
+            if not isinstance(rows, list) or not rows or canonical_hash(rows) != metadata["manifest_hashes"][role]:
+                raise ValueError(f"Pilot expansion manifest hash mismatch: {role}")
+            manifests[role] = rows
+        loaded.append(manifests)
+    parent, child = loaded
+    actual = {key:bundle[key] for key in ("train", "preflight_train", "reference", "calibration", "authentic_probe")}
+    actual.update({"test_"+name:bundle["tests"][name] for name in TEST_NAMES})
+    actual.update({"test_full_"+name:bundle["tests_full"][name] for name in TEST_NAMES})
+    if actual != child or bundle["manifest_hashes"] != summary["manifest_hashes"]:
+        raise ValueError("Loaded pilot expansion differs from frozen manifests")
+    for role in fixed:
+        if summary["manifest_hashes"][role] != parent_summary["manifest_hashes"][role]:
+            raise ValueError(f"Fixed pilot role changed: {role}")
+    sizes = [metadata["sample_sizes"] for metadata in (parent_summary, summary)]
+    changing = {"train_authentic", "train_tampered"}
+    if ({key:value for key,value in sizes[0].items() if key not in changing}
+            != {key:value for key,value in sizes[1].items() if key not in changing}
+            or any(type(sizes[1][key]) is not int or sizes[1][key] <= sizes[0][key] for key in changing)
+            or sizes[1]["train_authentic"] != sizes[1]["train_tampered"]):
+        raise ValueError("Pilot expansion must only increase balanced training sizes")
+    for manifests, metadata in zip(loaded, (parent_summary, summary)):
+        rows = manifests["train"]
+        if len({row["id"] for row in rows}) != len(rows):
+            raise ValueError("Duplicate training IDs in pilot expansion")
+        authentic = sum(row["authentic_declared"] is True for row in rows)
+        if (len(rows) != metadata["train_count"] or authentic != metadata["train_authentic_count"]
+                or authentic != metadata["sample_sizes"]["train_authentic"]
+                or len(rows)-authentic != metadata["sample_sizes"]["train_tampered"]):
+            raise ValueError("Pilot expansion training counts differ from manifest")
+    child_by_id = {row["id"]:row for row in child["train"]}
+    for row in parent["train"]:
+        if child_by_id.get(row["id"]) != row:
+            raise ValueError(f"Parent training row missing or changed: {row['id']}")
+    held = [*child["authentic_probe"], *(row for name in TEST_NAMES for row in child["test_full_"+name])]
+    held_rgb = {row["rgb_pixels_sha256"] for row in held}
+    held_sources = {source for row in held for source in row["source_ids"]}
+    quarantine_ids = {row["id"] for row in summary["quarantined_pairs"]}
+    for row in child["train"]:
+        if row["rgb_pixels_sha256"] in held_rgb or held_sources.intersection(row["source_ids"]):
+            raise ValueError(f"Pilot expansion test/probe overlap: {row['id']}")
+        if (row["id"] in quarantine_ids or type(row["authentic_declared"]) is not bool
+                or row["empty_mask"] != row["authentic_declared"]):
+            raise ValueError(f"Pilot expansion semantic/quarantine violation: {row['id']}")
+    if len({row["rgb_pixels_sha256"] for row in child["train"]}) != len(child["train"]):
+        raise ValueError("Duplicate training RGB in pilot expansion")
+    return {"status":"PASSED", "parent_summary_hash":canonical_hash(parent_summary),
+            "parent_manifest_id":parent_summary["manifest_id"], "manifest_id":summary["manifest_id"],
+            "parent_train_hash":parent_summary["manifest_hashes"]["train"],
+            "train_hash":summary["manifest_hashes"]["train"],
+            "parent_train_count":len(parent["train"]), "train_count":len(child["train"]),
+            "retained_parent_train_count":len(parent["train"]), "all_parent_rows_identical":True,
+            "unchanged_manifest_hashes":{role:summary["manifest_hashes"][role] for role in fixed},
+            "test_probe_source_and_rgb_disjoint":True,
+            "quarantined_pair_count":summary["quarantined_pair_count"]}
+
+
 def load_pilot_bundle(summary_path):
     summary = json.loads(Path(summary_path).read_text())
     if summary.get("audit_version") != PILOT_DATA_VERSION:

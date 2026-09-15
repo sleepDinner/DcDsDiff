@@ -28,6 +28,7 @@ class PilotControllerTests(unittest.TestCase):
     def setUp(self):
         project = Path(__file__).resolve().parents[2]
         self.original_config = read_json(project / 'configs/tect_diff/pilot_casia2_gn8_r512_s42.json')
+        self.data2_config = read_json(project / 'configs/tect_diff/pilot_casia2_gn8_data2_r512_s42.json')
         self.temporary = tempfile.TemporaryDirectory(prefix='pilot-control-', dir=project / 'runtime')
         self.addCleanup(self.temporary.cleanup)
         self.root = Path(self.temporary.name).resolve()
@@ -106,6 +107,152 @@ class PilotControllerTests(unittest.TestCase):
         self.assertEqual(current['status'], 'FAILED')
         self.assertEqual(current['pilot_outcome'], 'HOLD')
         self.assertEqual(read_json(self.run / 'operational_hold.json'), hold)
+
+    def test_n8192_accepts_only_registered_c_without_mutating_config(self):
+        config = copy.deepcopy(self.data2_config)
+        config['protocol_id'] = 'TECT-PILOT-CASIA2-GN8-R512-S42-DATA2-N8192-V1'
+        config['pilot'].update(train_authentic=4096, train_tampered=4096)
+        before = copy.deepcopy(config)
+        controller.validate_config(config, 'TECT-PILOT-CASIA2-GN8-N8192-R512-S42-20260916-C')
+        self.assertEqual(config, before)
+        for run_id in (controller.RUN_ID, controller.RUN_ID_DATA2):
+            with self.subTest(run_id=run_id), self.assertRaisesRegex(ValueError, 'protocol'):
+                controller.validate_config(config, run_id)
+
+    def test_n8192_preserves_all_other_b_settings(self):
+        registered = copy.deepcopy(self.data2_config)
+        registered['protocol_id'] = 'TECT-PILOT-CASIA2-GN8-R512-S42-DATA2-N8192-V1'
+        registered['pilot'].update(train_authentic=4096, train_tampered=4096)
+        changes = [
+            (('training', 'learning_rate'), 2e-4),
+            (('training', 'epochs'), 9),
+            (('training', 'scheduler_epochs'), 10),
+            (('training', 'lambda_image'), .5),
+            (('pilot', 'total_deadline_seconds'), 7200),
+            (('pilot', 'gate', 'macro_f1_min'), .4),
+            (('pilot', 'gate', 'consecutive_epochs'), 2),
+            (('pilot', 'quick_test_per_dataset'), 64),
+            (('pilot', 'train_authentic'), 1024),
+            (('pilot', 'train_tampered'), 8192),
+            (('evaluation', 'suite'), 'ALL8'),
+            (('evaluation', 'selection_scope'), 'different tests'),
+            (('evaluation', 'threshold'), .4),
+            (('sampling', 'steps'), 20),
+            (('reference', 'epochs'), 1),
+            (('evidence', 'gamma_max'), 1.),
+            (('model', 'self_condition_probability'), 0.),
+            (('data', 'loader_workers'), 8),
+            (('data', 'quarantine_pairs'), []),
+            (('unregistered_option',), True),
+        ]
+        for keys, value in changes:
+            invalid = copy.deepcopy(registered)
+            target = invalid
+            for key in keys[:-1]:
+                target = target[key]
+            target[keys[-1]] = value
+            with self.subTest(field='.'.join(keys)), self.assertRaises(ValueError):
+                controller.validate_config(invalid, 'TECT-PILOT-CASIA2-GN8-N8192-R512-S42-20260916-C')
+
+    def test_n8192_cannot_redefine_the_canonical_b_anchor(self):
+        config = copy.deepcopy(self.data2_config)
+        config['protocol_id'] = 'TECT-PILOT-CASIA2-GN8-R512-S42-DATA2-N8192-V1'
+        config['pilot'].update(train_authentic=4096, train_tampered=4096)
+        changed_anchor = copy.deepcopy(self.data2_config)
+        changed_anchor['training']['learning_rate'] = config['training']['learning_rate'] = 2e-4
+        with patch.object(controller, 'read_json', return_value=changed_anchor), \
+                self.assertRaisesRegex(ValueError, 'canonical B'):
+            controller.validate_config(config, 'TECT-PILOT-CASIA2-GN8-N8192-R512-S42-20260916-C')
+
+    def test_registered_a_and_b_keep_their_original_sample_budgets(self):
+        for original, run_id in ((self.original_config, controller.RUN_ID), (self.data2_config, controller.RUN_ID_DATA2)):
+            controller.validate_config(original, run_id)
+            for field in ('train_authentic', 'train_tampered'):
+                config = copy.deepcopy(original)
+                config['pilot'][field] = 4096
+                with self.subTest(run_id=run_id, field=field), self.assertRaisesRegex(ValueError, 'budget'):
+                    controller.validate_config(config, run_id)
+
+    def test_data_expansion_parent_binding_and_no_go_evidence(self):
+        parent = self.root / 'runs' / controller.RUN_ID_DATA2
+        parent.mkdir()
+        run = self.root / 'runs' / controller.RUN_ID_N8192
+        run.mkdir()
+        provenance = {'commit': controller.DATA2_SOURCE_COMMIT, 'config_hash': controller.DATA2_CONFIG_HASH}
+        state = {'status': 'COMPLETED', 'outcome': 'NO_GO', 'controller_alive': False, 'worker_alive': False}
+        terminal = {'status': 'COMPLETED', 'outcome': 'NO_GO', 'protocol_id': self.data2_config['protocol_id'],
+                    'source_commit': controller.DATA2_SOURCE_COMMIT, 'config_hash': controller.DATA2_CONFIG_HASH}
+        atomic_json(parent / 'pilot_receipt.json', terminal)
+        atomic_json(parent / 'data_bundle.json', {'fixture': 'frozen parent metadata'})
+        terminal_hash, bundle_hash = sha256(parent / 'pilot_receipt.json'), sha256(parent / 'data_bundle.json')
+        proof = {'status': 'PASSED', 'parent_train_count': 2048, 'train_count': 8192,
+                 'retained_parent_train_count': 2048}
+        data = types.ModuleType('scripts.tect_diff.pilot_data')
+        data.validate_pilot_expansion = lambda bundle, summary: dict(proof)
+        with patch.object(controller, '_read_pilot', return_value=(parent, self.root, self.data2_config, provenance)), \
+                patch.object(controller, 'base_status', return_value=state), \
+                patch.object(controller, 'verify_source'), \
+                patch.object(controller, 'acquire_file', return_value=nullcontext()), \
+                patch.object(controller, 'DATA2_TERMINAL_HASH', terminal_hash), \
+                patch.object(controller, 'DATA2_BUNDLE_HASH', bundle_hash), \
+                patch.dict(sys.modules, {'scripts.tect_diff.pilot_data': data}):
+            result = controller.validate_data_expansion(run, self.root, {})
+            self.assertEqual(read_json(run / 'data_expansion.json'), result)
+            self.assertEqual(result['parent_source_commit'], controller.DATA2_SOURCE_COMMIT)
+            self.assertEqual(result['parent_data_bundle_sha256'], bundle_hash)
+            self.assertEqual(result['parent_terminal_sha256'], terminal_hash)
+            self.assertFalse(result['parent_weights_loaded'])
+            before = (run / 'data_expansion.json').read_bytes()
+            cases = [(state, 'controller_alive', True), (state, 'worker_alive', True),
+                     (state, 'status', 'RUNNING'), (state, 'outcome', 'READY_FOR_FULL'),
+                     (provenance, 'commit', 'different'), (provenance, 'config_hash', 'different'),
+                     (proof, 'parent_train_count', 1024), (proof, 'train_count', 4096),
+                     (proof, 'retained_parent_train_count', 2047)]
+            for target, key, invalid in cases:
+                old = target[key]
+                target[key] = invalid
+                try:
+                    with self.subTest(key=key, value=invalid), self.assertRaises(ValueError):
+                        controller.validate_data_expansion(run, self.root, {})
+                    self.assertEqual((run / 'data_expansion.json').read_bytes(), before)
+                finally:
+                    target[key] = old
+            for filename in ('data_bundle.json', 'pilot_receipt.json'):
+                original = (parent / filename).read_bytes()
+                try:
+                    (parent / filename).write_bytes(original + b' ')
+                    with self.subTest(filename=filename), self.assertRaises(ValueError):
+                        controller.validate_data_expansion(run, self.root, {})
+                    self.assertEqual((run / 'data_expansion.json').read_bytes(), before)
+                finally:
+                    (parent / filename).write_bytes(original)
+
+    def test_data_expansion_rejects_parent_change_during_validation(self):
+        parent = self.root / 'runs' / controller.RUN_ID_DATA2
+        parent.mkdir()
+        run = self.root / 'runs' / controller.RUN_ID_N8192
+        run.mkdir()
+        provenance = {'commit': controller.DATA2_SOURCE_COMMIT, 'config_hash': controller.DATA2_CONFIG_HASH}
+        state = {'status': 'COMPLETED', 'outcome': 'NO_GO', 'controller_alive': False, 'worker_alive': False}
+        terminal = {'status': 'COMPLETED', 'outcome': 'NO_GO', 'protocol_id': self.data2_config['protocol_id'],
+                    'source_commit': controller.DATA2_SOURCE_COMMIT, 'config_hash': controller.DATA2_CONFIG_HASH}
+        atomic_json(parent / 'pilot_receipt.json', terminal)
+        atomic_json(parent / 'data_bundle.json', {'fixture': 'frozen parent metadata'})
+        data = types.ModuleType('scripts.tect_diff.pilot_data')
+        def changed(bundle, summary):
+            atomic_json(parent / 'data_bundle.json', {'fixture': 'changed during validation'})
+            return {'status': 'PASSED', 'parent_train_count': 2048, 'train_count': 8192,
+                    'retained_parent_train_count': 2048}
+        data.validate_pilot_expansion = changed
+        with patch.object(controller, '_read_pilot', return_value=(parent, self.root, self.data2_config, provenance)), \
+                patch.object(controller, 'base_status', return_value=state), patch.object(controller, 'verify_source'), \
+                patch.object(controller, 'acquire_file', return_value=nullcontext()), \
+                patch.object(controller, 'DATA2_TERMINAL_HASH', sha256(parent / 'pilot_receipt.json')), \
+                patch.object(controller, 'DATA2_BUNDLE_HASH', sha256(parent / 'data_bundle.json')), \
+                patch.dict(sys.modules, {'scripts.tect_diff.pilot_data': data}), \
+                self.assertRaisesRegex(ValueError, 'changed during validation'):
+            controller.validate_data_expansion(run, self.root, {})
+        self.assertFalse((run / 'data_expansion.json').exists())
 
     def test_unpublished_head_fails_before_resource_or_registration_actions(self):
         responses = {('branch', '--show-current'): 'feature/tect-diff', ('rev-parse', 'HEAD'): 'local',
@@ -266,6 +413,42 @@ class PilotControllerTests(unittest.TestCase):
         self.assertEqual([message['stage'] for message in messages], ['FITTING_REUSE', 'PREPARING', 'PREPARING'])
         self.assertEqual(messages[-1]['message']['completed'], 100)
         self.assertEqual(read_json(self.run / 'controller_status.json')['status'], 'INTERRUPTED')
+
+    def test_c_expansion_failure_blocks_fresh_and_reused_bundle_before_worker(self):
+        run = self.root / 'runs' / 'TECT-PILOT-CASIA2-GN8-N8192-R512-S42-20260916-C'
+        run.mkdir()
+        bundle = {'train': ['train'], 'tests': {'Casiav1': ['test'], 'Columbia': ['test']},
+                  'manifest_hashes': {'reference': 'ref', 'calibration': 'cal'},
+                  'summary': {}, 'summary_path': 'fixture'}
+        for reused in (False, True):
+            with self.subTest(reused=reused):
+                atomic_json(run / 'controller_status.json', {'status': 'REGISTERED'})
+                atomic_json(run / 'operational_hold.json', {'active': False})
+                if reused:
+                    atomic_json(run / 'data_bundle.json', {'existing': True})
+                output = io.StringIO()
+                data = types.ModuleType('scripts.tect_diff.pilot_data')
+                data.prepare_pilot_bundle = lambda *args, **kwargs: bundle
+                data.load_pilot_bundle = lambda *_: bundle
+                with patch.object(controller, '_read_pilot', return_value=(run, self.root, self.config, self.provenance)), \
+                        patch.object(controller, 'acquire_file') as lock, \
+                        patch.object(controller, 'acquire_all', return_value=[lock.return_value]), \
+                        patch.object(controller.signal, 'signal'), patch.object(controller, 'process_identity', return_value=None), \
+                        patch.object(controller.os, 'getpgrp', return_value=123, create=True), \
+                        patch.object(controller, 'verify_source'), patch.object(controller, 'runtime_environment', return_value={}), \
+                        patch.object(controller, 'import_fitting', return_value={'manifest_hashes': bundle['manifest_hashes']}), \
+                        patch.dict(sys.modules, {'scripts.tect_diff.pilot_data': data}), \
+                        patch.object(controller, 'validate_data_expansion', create=True, side_effect=ValueError('expansion proof failed')) as validate, \
+                        patch.object(controller.subprocess, 'Popen', side_effect=AssertionError('Unexpected worker launch')) as spawn, \
+                        patch.object(controller.traceback, 'print_exc'), \
+                        patch.object(report, 'generate', return_value={}), \
+                        patch.object(report, 'publish', return_value={'commit': 'published'}), redirect_stdout(output):
+                    controller.supervise(run)
+                    validate.assert_called_once_with(run, self.root, bundle)
+                    spawn.assert_not_called()
+                self.assertNotIn('PREPARATION_COMPLETE', output.getvalue())
+                self.assertIn('expansion proof failed', read_json(run / 'controller_status.json')['failure_reason'])
+                self.assertTrue(read_json(run / 'operational_hold.json')['requires_repair'])
 
     def test_incomplete_duplicate_or_nonfinite_epoch_display_is_rejected(self):
         path = self.run / 'metrics_per_epoch.jsonl'

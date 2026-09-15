@@ -1,5 +1,6 @@
 """Data-contract checks for the bounded CASIA2 development protocol."""
 import json
+import copy
 import tempfile
 import unittest
 from pathlib import Path
@@ -8,7 +9,10 @@ import numpy as np
 from PIL import Image
 
 from scripts.tect_diff.data import _audit_one, canonical_hash, paired_records, read_mask, sha256_file
-from scripts.tect_diff.pilot_data import prepare_pilot_bundle, load_pilot_bundle, select_pilot_records, _fit_overlap
+from scripts.tect_diff.pilot_data import (
+    prepare_pilot_bundle, load_pilot_bundle, select_pilot_records, _fit_overlap,
+    validate_pilot_expansion,
+)
 
 
 def record(name, authentic, source, rgb=None):
@@ -204,6 +208,106 @@ class PilotBundleTests(unittest.TestCase):
         self.quarantine_fixture()
         with self.assertRaisesRegex(ValueError, "Data audit blocked"):
             prepare_pilot_bundle(self.project, self.config, self.inherited, progress=None)
+
+    def expansion_fixture(self):
+        parent = prepare_pilot_bundle(self.project, self.config, self.inherited, progress=None)
+        larger = copy.deepcopy(self.config)
+        larger["pilot"].update(train_authentic=4, train_tampered=4)
+        return parent, prepare_pilot_bundle(self.project, larger, self.inherited, progress=None)
+
+    def rebind_role(self, bundle, role, rows):
+        """Create a self-consistent changed manifest, distinct from hash corruption."""
+        path = self.project / (role + "-candidate.json")
+        path.write_text(json.dumps(rows))
+        bundle["manifest_paths"][role] = str(path)
+        bundle["manifest_hashes"][role] = canonical_hash(rows)
+        if role.startswith("test_full_"):
+            bundle["tests_full"][role.removeprefix("test_full_")] = rows
+        elif role.startswith("test_"):
+            bundle["tests"][role.removeprefix("test_")] = rows
+        else:
+            bundle[role] = rows
+
+    def test_expansion_preserves_parent_rows_and_all_fixed_roles(self):
+        parent, child = self.expansion_fixture()
+        receipt = validate_pilot_expansion(child, parent["summary"])
+        self.assertEqual(receipt["parent_train_count"], 4)
+        self.assertEqual(receipt["train_count"], 8)
+        self.assertEqual(receipt["retained_parent_train_count"], 4)
+        self.assertEqual(receipt["unchanged_manifest_hashes"]["authentic_probe"],
+                         parent["manifest_hashes"]["authentic_probe"])
+        self.assertTrue(receipt["all_parent_rows_identical"])
+        self.assertTrue(receipt["test_probe_source_and_rgb_disjoint"])
+
+    def test_expansion_rejects_rehashed_old_id_or_row_changes(self):
+        parent, child = self.expansion_fixture()
+        old_id = parent["train"][0]["id"]
+        for field, value in (("id", "CASIA2:replacement"), ("mask_pixels_sha256", "changed")):
+            with self.subTest(field=field):
+                candidate = copy.deepcopy(child)
+                rows = copy.deepcopy(candidate["train"])
+                next(row for row in rows if row["id"] == old_id)[field] = value
+                self.rebind_role(candidate, "train", rows)
+                with self.assertRaisesRegex(ValueError, "Parent training row"):
+                    validate_pilot_expansion(candidate, parent["summary"])
+
+    def test_expansion_rejects_changed_fixed_roles_even_with_valid_hashes(self):
+        parent, child = self.expansion_fixture()
+        for role in ("reference", "calibration", "authentic_probe", "test_Casiav1", "test_full_Columbia"):
+            with self.subTest(role=role):
+                candidate = copy.deepcopy(child)
+                rows = json.loads(Path(candidate["manifest_paths"][role]).read_text())
+                rows[0]["id"] += "-changed"
+                self.rebind_role(candidate, role, rows)
+                with self.assertRaisesRegex(ValueError, "Fixed pilot role changed"):
+                    validate_pilot_expansion(candidate, parent["summary"])
+
+    def test_expansion_rejects_hash_corruption_and_duplicate_train_ids(self):
+        parent, child = self.expansion_fixture()
+        candidate = copy.deepcopy(child)
+        self.rebind_role(candidate, "train", [*candidate["train"][:-1], candidate["train"][0]])
+        with self.assertRaisesRegex(ValueError, "Duplicate training IDs"):
+            validate_pilot_expansion(candidate, parent["summary"])
+        Path(parent["manifest_paths"]["train"]).write_text("[]")
+        with self.assertRaisesRegex(ValueError, "manifest hash mismatch"):
+            validate_pilot_expansion(child, parent["summary"])
+
+    def test_expansion_rejects_new_test_or_probe_overlap(self):
+        parent, child = self.expansion_fixture()
+        old_ids = {row["id"] for row in parent["train"]}
+        for held in (child["authentic_probe"][0], child["tests_full"]["Casiav1"][0]):
+            for field in ("rgb_pixels_sha256", "source_ids"):
+                if field == "source_ids" and not held[field]:
+                    continue  # Generic test fixture names have no recognized source ID.
+                with self.subTest(held=held["id"], field=field):
+                    candidate = copy.deepcopy(child)
+                    rows = copy.deepcopy(candidate["train"])
+                    next(row for row in rows if row["id"] not in old_ids)[field] = held[field]
+                    self.rebind_role(candidate, "train", rows)
+                    with self.assertRaisesRegex(ValueError, "test/probe overlap"):
+                        validate_pilot_expansion(candidate, parent["summary"])
+
+    def test_expansion_rejects_semantic_and_quarantine_policy_changes(self):
+        parent, child = self.expansion_fixture()
+        for field, value in (("mask_semantics", "inverted"), ("quarantine_policy", "none"),
+                             ("quarantined_pairs", [{"id":"changed"}]), ("seed", 43)):
+            with self.subTest(field=field):
+                candidate = copy.deepcopy(child)
+                candidate["summary"][field] = value
+                with self.assertRaisesRegex(ValueError, "Pilot expansion contract changed"):
+                    validate_pilot_expansion(candidate, parent["summary"])
+
+    def test_expansion_preserves_and_enforces_registered_quarantine(self):
+        exception = self.quarantine_fixture()
+        self.config["data"]["quarantine_pairs"] = [exception]
+        parent, child = self.expansion_fixture()
+        self.assertEqual(validate_pilot_expansion(child, parent["summary"])["quarantined_pair_count"], 1)
+        rows = copy.deepcopy(child["train"])
+        old_ids = {row["id"] for row in parent["train"]}
+        next(row for row in rows if row["id"] not in old_ids)["id"] = exception["id"]
+        self.rebind_role(child, "train", rows)
+        with self.assertRaisesRegex(ValueError, "semantic/quarantine violation"):
+            validate_pilot_expansion(child, parent["summary"])
 
 
 if __name__ == "__main__":

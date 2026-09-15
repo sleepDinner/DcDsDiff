@@ -48,3 +48,4 @@ analysis_reports/runs/*/*
 !analysis_reports/runs/*/report.json
 !analysis_reports/runs/TECT-PILOT-CASIA2-GN8-R512-S42-20260916-A/metrics_per_epoch.jsonl
 !analysis_reports/runs/TECT-PILOT-CASIA2-GN8-R512-S42-20260916-B/metrics_per_epoch.jsonl
+!analysis_reports/runs/TECT-PILOT-CASIA2-GN8-N8192-R512-S42-20260916-C/metrics_per_epoch.jsonl

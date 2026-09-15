@@ -1,5 +1,10 @@
 # Project rules
 
+## Operational registration, 2026-09-16
+
+- Under the existing authorized CASIA2 stabilization scope, the next development revision is `TECT-PILOT-CASIA2-GN8-N8192-R512-S42-20260916-C`, protocol `TECT-PILOT-CASIA2-GN8-R512-S42-DATA2-N8192-V1`, config `configs/tect_diff/pilot_casia2_gn8_data2_n8192_r512_s42.json`. See `configs/tect_diff/PILOT_N8192.md`. B completed all ten registered epochs as NO_GO; preserve it and do not resume. Final-epoch9/16-training-image diagnosis showed useful prior-start localization and strong direct PVT conditioning, without a demonstrated sampling defect. This is not a proven cause or guaranteed remedy for the failed Test2 gate.
+- C changes only the registered training pool to 4096 Au + 4096 Tp (8192 total), nested over B's 2048 unchanged rows. Keep B's quick/full Test2, authentic probe and fitting manifests/hashes. C is fresh seed42/ImageNet MAIN with the same GN8 architecture, uniform-t sampling, mechanisms, optimizer, batch, precision and evaluation rules. Maximum ten epochs/4h, at most6830updates; the old effectiveness/confirmation gates remain fixed. Coverage and update count change together, so improvement would not isolate their individual effects. This remains CASIA2 development, not READY_FOR_FULL or authorized premature FinalTrainData/All8 expansion.
+
 ## Latest user authorization, 2026-09-16
 
 - Active pilot revision is `TECT-PILOT-CASIA2-GN8-R512-S42-20260916-B`, protocol `TECT-PILOT-CASIA2-GN8-R512-S42-DATA2-V1`, config `configs/tect_diff/pilot_casia2_gn8_data2_r512_s42.json`. Pilot A failed during data preparation before GPU/model initialization: two LA masks have luminance/alpha disagreement under the unchanged channel-consensus decoder. B explicitly quarantines only those two hash-bound image/mask pairs; all other semantics failures still block. See `configs/tect_diff/PILOT_DATA2_REPAIR.md`. A stays FAILED/HOLD with no trained checkpoint; B keeps the same GN8 architecture, sample budgets and effectiveness gates.

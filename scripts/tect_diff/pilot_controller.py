@@ -26,10 +26,17 @@ from tools.resource_locks import ResourceBusy, acquire_file
 
 RUN_ID = "TECT-PILOT-CASIA2-GN8-R512-S42-20260916-A"
 RUN_ID_DATA2 = "TECT-PILOT-CASIA2-GN8-R512-S42-20260916-B"
+RUN_ID_N8192 = "TECT-PILOT-CASIA2-GN8-N8192-R512-S42-20260916-C"
 RUN_PROTOCOLS = {
     RUN_ID: "TECT-PILOT-CASIA2-GN8-R512-S42-V1",
     RUN_ID_DATA2: "TECT-PILOT-CASIA2-GN8-R512-S42-DATA2-V1",
+    RUN_ID_N8192: "TECT-PILOT-CASIA2-GN8-R512-S42-DATA2-N8192-V1",
 }
+DATA2_CONFIG = SOURCE / "configs/tect_diff/pilot_casia2_gn8_data2_r512_s42.json"
+DATA2_CONFIG_HASH = "174434a273212505913ed20b5469e9309776e656bf07f2da30e94eee8b9c36b8"
+DATA2_SOURCE_COMMIT = "2ea2f5b855ef4d917fae4265e9e6d2ca7c1a6382"
+DATA2_BUNDLE_HASH = "5a2c357bfe741922eec250a1874d0e6b44914a6d02a6f134cbf17fe33f65976a"
+DATA2_TERMINAL_HASH = "77fa9b7e5f300479affe6787114167460eff16175baaaea1a53a3565de5f2487"
 GROUP_ID = "TECT-PILOT-CASIA2-GN8"
 FITTING_PARENT = "TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E"
 REFERENCE_HASH = "800f50c392a275fde3ec249c6f52275c6db79813e6f8b7e8b534f9ddb52a523f"
@@ -46,7 +53,7 @@ def validate_config(config, run_id):
         if "quarantine_pairs" in data:
             raise ValueError("Original pilot A does not permit a quarantine amendment")
     elif type(data.get("quarantine_pairs")) is not list or len(data["quarantine_pairs"]) != 2:
-        raise ValueError("Pilot B DATA2 requires exactly two registered quarantine pairs")
+        raise ValueError("DATA2 pilots require exactly two registered quarantine pairs")
     if config.get("project_root") != "/data1/hl/DcDsDiff-and-GIT10K" or config.get("environment") != "/data0/hl/conda_envs/dcdsdiff":
         raise ValueError("Pilot project/environment differs from the authorized server")
     if config.get("world_size") != 2 or config.get("gpus") != [0, 1] or config.get("seed") != 42 or config.get("resolution") != 512:
@@ -65,7 +72,8 @@ def validate_config(config, run_id):
     deadline = pilot.get("total_deadline_seconds", 14400)
     if type(deadline) not in (int, float) or not 0 < deadline <= 14400:
         raise ValueError("Pilot deadline must be positive and no more than four hours")
-    for key, expected in {"train_authentic": 1024, "train_tampered": 1024,
+    train_per_class = 4096 if run_id == RUN_ID_N8192 else 1024
+    for key, expected in {"train_authentic": train_per_class, "train_tampered": train_per_class,
                           "quick_test_per_dataset": 128, "authentic_probe": 64,
                           "preflight_train": 64, "engineering_updates": 8}.items():
         if type(pilot.get(key)) is not int or pilot[key] != expected:
@@ -77,6 +85,15 @@ def validate_config(config, run_id):
     settings = config["runtime"]
     if settings.get("publish_branch") != "feature/tect-diff" or settings.get("publish_url") != "git@github.com:sleepDinner/DcDsDiff.git":
         raise ValueError("Pilot publication destination is not registered")
+    if run_id == RUN_ID_N8192:
+        # Bind to the unchanged B config in this executing source snapshot.
+        baseline = read_json(DATA2_CONFIG)
+        if json_hash(baseline) != DATA2_CONFIG_HASH:
+            raise ValueError("The registered canonical B configuration changed")
+        expected = {**baseline, "protocol_id": RUN_PROTOCOLS[RUN_ID_N8192],
+                    "pilot": {**baseline["pilot"], "train_authentic": 4096, "train_tampered": 4096}}
+        if json_hash(config) != json_hash(expected):
+            raise ValueError("Pilot C permits only its protocol ID and 4096-per-class expansion over canonical B")
 
 
 def _read_pilot(run_dir):
@@ -175,6 +192,53 @@ def import_fitting(run):
                   "selection_protocol": "test_selected", "at": timestamp()}
         atomic_json(run / "fitting_reuse.json", result)
         return source_bundle
+
+
+def validate_data_expansion(run, root, bundle):
+    """Bind C's data-only expansion to completed B; never load B weights."""
+    if run.name != RUN_ID_N8192:
+        raise ValueError("Only registered pilot C may import a data expansion")
+    parent_path = root / "runs" / RUN_ID_DATA2
+    with acquire_file(root / "runtime/locks" / f"tect-registration-{RUN_ID_DATA2}.lock"):
+        parent, parent_root, parent_config, provenance = _read_pilot(parent_path)
+        if (parent != parent_path or parent_root != root or provenance["commit"] != DATA2_SOURCE_COMMIT
+                or provenance["config_hash"] != DATA2_CONFIG_HASH or json_hash(parent_config) != DATA2_CONFIG_HASH):
+            raise ValueError("Pilot expansion parent source/config differs from registered B")
+        state = base_status(parent)
+        terminal_path = parent / "pilot_receipt.json"
+        if (terminal_path.is_symlink() or terminal_path.resolve(strict=True) != terminal_path
+                or sha256(terminal_path) != DATA2_TERMINAL_HASH):
+            raise ValueError("Pilot expansion parent terminal receipt changed")
+        terminal = read_json(terminal_path)
+        if (state.get("status") != "COMPLETED" or state.get("outcome") != "NO_GO"
+                or state["controller_alive"] or state["worker_alive"]
+                or terminal.get("status") != "COMPLETED" or terminal.get("outcome") != "NO_GO"
+                or terminal.get("protocol_id") != RUN_PROTOCOLS[RUN_ID_DATA2]
+                or terminal.get("source_commit") != DATA2_SOURCE_COMMIT or terminal.get("config_hash") != DATA2_CONFIG_HASH):
+            raise ValueError("Pilot expansion requires stopped, completed NO_GO parent B")
+        verify_source(parent, provenance)
+        bundle_path = parent / "data_bundle.json"
+        if bundle_path.is_symlink() or bundle_path.resolve(strict=True) != bundle_path:
+            raise ValueError("Pilot expansion parent data bundle is linked")
+        bundle_hash = sha256(bundle_path)
+        if bundle_hash != DATA2_BUNDLE_HASH:
+            raise ValueError("Pilot expansion parent data bundle differs from registered B")
+        parent_summary = read_json(bundle_path)
+        from scripts.tect_diff.pilot_data import validate_pilot_expansion
+        proof = validate_pilot_expansion(bundle, parent_summary)
+        if (proof.get("status") != "PASSED" or proof.get("parent_train_count") != 2048
+                or proof.get("train_count") != 8192 or proof.get("retained_parent_train_count") != 2048):
+            raise ValueError("Pilot C expansion must retain all 2048 B rows in exactly 8192 training images")
+        if sha256(bundle_path) != bundle_hash or sha256(terminal_path) != DATA2_TERMINAL_HASH:
+            raise ValueError("Pilot expansion parent evidence changed during validation")
+        receipt = {**proof, "run_id": run.name, "parent_run": parent.name, "parent_source_commit": provenance["commit"],
+                   "parent_config_hash": provenance["config_hash"], "parent_data_bundle_path": str(bundle_path),
+                   "parent_data_bundle_sha256": bundle_hash, "parent_outcome": "NO_GO",
+                   "parent_terminal_sha256": DATA2_TERMINAL_HASH,
+                   "parent_weights_loaded": False, "reference_sha256": REFERENCE_HASH,
+                   "calibration_sha256": CALIBRATION_HASH, "at": timestamp()}
+        atomic_json(run / "data_expansion.json", receipt)
+        return receipt
 
 
 def validate_pilot_receipt(run, provenance):
@@ -391,6 +455,9 @@ def supervise(run_dir):
             for key in ("reference", "calibration"):
                 if bundle["manifest_hashes"][key] != inherited["manifest_hashes"][key]:
                     raise ValueError("Pilot fitting manifest differs: " + key)
+            if run.name == RUN_ID_N8192:
+                preparation_progress("VERIFYING_DATA_EXPANSION", "Verifying nested B training data and unchanged Test2/fitting manifests")
+                validate_data_expansion(run, root, bundle)
             preparation_progress("PREPARATION_COMPLETE", {
                 "train_images": len(bundle["train"]),
                 "test_images": {name: len(rows) for name, rows in bundle["tests"].items()}})
