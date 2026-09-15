@@ -52,3 +52,11 @@ Historical runs are summarized separately in [pre-rebuild audit](docs/history/pr
 - Final closure verified at 14:37:17: both follow-ups COMPLETED, GPU 0 original controller COMPLETED, GPU 1 training remains explicitly INTERRUPTED/EARLY_STOPPED_BY_USER. All controller/owned evaluation children exited; GPU/run/follow-up locks released. All frozen source hashes and checkpoint hashes match; all three CSV result aggregations agree. Temporary validation files removed. [Combined report](docs/results/README.md), [completion receipt](docs/results/completion_receipt.json).
 
 - [TECT-Diff TECT-DIFF-FULL-R512-S42-20260915-A](analysis_reports/runs/TECT-DIFF-FULL-R512-S42-20260915-A/report.md); test_selected All8 F1; fixed final reported separately.
+
+## 2026-09-15 TECT reference collapse: stopped and repaired
+
+- A remains `INTERRUPTED` after epoch15 (16 complete reference epochs, optimizer_step11968); both ranks and controller exited, GPU/run locks released. The frozen epoch15 checkpoint and source remain unchanged. Calibration and main training did not start.
+- Diagnostic evidence identifies unnormalized reference paths amplifying intermediate features while injected-noise dependence vanishes. The first triggering optimizer update is not recoverable from the retained every-50-step logs/checkpoint; BF16 alone is not established as the cause.
+- `TECT-DIFF-FULL-R512-S42-REFNORM-V2` is prepared with normalized reference transition/projection paths and explicit training/fixed-final health gates. No new formal run exists and no historical checkpoint was reselected.
+- A bounded 512/BF16/two-rank regression completed1024 updates using64 training-role authentic images: fixed-probe four-scale MSE0.1192773/0.1251472/0.1421247/0.1841749. This is engineering learning evidence, not full20-epoch stability or localization performance. See [repair report](analysis_reports/reference_repair_20260915.md).
+- selection_protocol=test_selected remains the registered main-run selection rule; this task did not evaluate All8 or compare against a full matched baseline.

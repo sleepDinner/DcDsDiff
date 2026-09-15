@@ -1,0 +1,1318 @@
+{
+  "status": "STOPPED_AND_REPAIR_VALIDATED",
+  "selection_protocol": "test_selected",
+  "formal_training_restarted": false,
+  "original_run": {
+    "at": "2026-09-15T09:15:25Z",
+    "calibration_receipt_exists": false,
+    "checkpoint_epoch": 15,
+    "checkpoint_sha256": "0edf2b8d355371ccae7d6d8ced7a915907bd0e486f3453d0c515d4ff99aa700a",
+    "current_controller_hold_rejects": true,
+    "formal_training_restarted": false,
+    "frozen_source_verified_unchanged": true,
+    "gpu_and_run_locks_verified_released": true,
+    "gpu_processes": [],
+    "main_receipt_exists": false,
+    "operational_hold": {
+      "active": true,
+      "diagnosis_report": "analysis_reports/reference_repair_20260915.md",
+      "reason": "Reference collapsed to near-zero noise prediction. Keep original A stopped; versioned repair requires a new run identity and fresh reference initialization.",
+      "requested_by": "user_2026-09-15_stop_and_repair",
+      "retained_checkpoint_epoch": 15,
+      "retained_checkpoint_sha256": "0edf2b8d355371ccae7d6d8ced7a915907bd0e486f3453d0c515d4ff99aa700a",
+      "run_id": "TECT-DIFF-FULL-R512-S42-20260915-A",
+      "scope": "Current controller resume/supervise honor this hold. Historical frozen source is unchanged and must not be invoked to resume this run.",
+      "updated_at": "2026-09-15T09:15:25Z"
+    },
+    "optimizer_step": 11968,
+    "original_controller_alive": false,
+    "original_worker_alive": false,
+    "reference_receipt_exists": false,
+    "run_id": "TECT-DIFF-FULL-R512-S42-20260915-A",
+    "server_dirty_reports_equal_published_stop_commit": {
+      "analysis_reports/experiment_ledger.csv": false,
+      "analysis_reports/experiment_ledger.md": true,
+      "analysis_reports/failure_registry.jsonl": true,
+      "analysis_reports/groups/TECT-DIFF-FULL-V1/report.md": true,
+      "analysis_reports/runs/TECT-DIFF-FULL-R512-S42-20260915-A/report.json": false,
+      "analysis_reports/runs/TECT-DIFF-FULL-R512-S42-20260915-A/report.md": true
+    },
+    "source_commit": "4b4b785103f10ec9d9281cc8af095e3f91609433",
+    "status": "STOPPED_AND_REPAIR_VALIDATED",
+    "unit_tests": {
+      "passed": 24,
+      "seconds": 0.496,
+      "server_environment": "/data0/hl/conda_envs/dcdsdiff"
+    }
+  },
+  "historical_reference_epochs": [
+    {
+      "epoch": 0,
+      "mse_by_scale": [
+        0.5156375568911846,
+        0.5306555360296585,
+        0.5620327339458131,
+        0.622356005125084
+      ],
+      "optimizer_step": 748,
+      "padded_training_samples": 0,
+      "samples_by_scale": [
+        2991,
+        2991,
+        2991,
+        2991
+      ],
+      "zero_predictor_mse_by_scale": [
+        1.000041514385986,
+        1.0000083472010524,
+        1.0000003374208777,
+        0.9999823749802735
+      ]
+    },
+    {
+      "epoch": 1,
+      "mse_by_scale": [
+        0.18218579837029214,
+        0.2012545829311895,
+        0.2425951246571995,
+        0.31762328881936025
+      ],
+      "optimizer_step": 1496,
+      "padded_training_samples": 0,
+      "samples_by_scale": [
+        2991,
+        2991,
+        2991,
+        2991
+      ],
+      "zero_predictor_mse_by_scale": [
+        0.999984935947343,
+        1.0000117497474443,
+        1.0000008326715069,
+        1.000029319267694
+      ]
+    },
+    {
+      "epoch": 2,
+      "mse_by_scale": [
+        0.12031742485768816,
+        0.14125551015327942,
+        0.18746287864920927,
+        0.26150173476431054
+      ],
+      "optimizer_step": 2244,
+      "padded_training_samples": 0,
+      "samples_by_scale": [
+        2991,
+        2991,
+        2991,
+        2991
+      ],
+      "zero_predictor_mse_by_scale": [
+        0.9999507294574815,
+        0.9999941294705816,
+        1.0000023426159852,
+        0.9999760726709025
+      ]
+    },
+    {
+      "epoch": 3,
+      "mse_by_scale": [
+        0.09823335329552073,
+        0.1223487690943055,
+        0.16330956730185764,
+        0.23262966647918548
+      ],
+      "optimizer_step": 2992,
+      "padded_training_samples": 0,
+      "samples_by_scale": [
+        2991,
+        2991,
+        2991,
+        2991
+      ],
+      "zero_predictor_mse_by_scale": [
+        1.0000061610597146,
+        0.9999869448291303,
+        1.0000135959370484,
+        1.0000218716364409
+      ]
+    },
+    {
+      "epoch": 4,
+      "mse_by_scale": [
+        0.08638143824523646,
+        0.11101098022221602,
+        0.15019524131444775,
+        0.2138253776864119
+      ],
+      "optimizer_step": 3740,
+      "padded_training_samples": 0,
+      "samples_by_scale": [
+        2991,
+        2991,
+        2991,
+        2991
+      ],
+      "zero_predictor_mse_by_scale": [
+        0.999982569935887,
+        0.9999464819240793,
+        0.9999740636296912,
+        0.9999785797526628
+      ]
+    },
+    {
+      "epoch": 5,
+      "mse_by_scale": [
+        0.45219188252297665,
+        0.4686876313841211,
+        0.4944237704531718,
+        0.5315644306627973
+      ],
+      "optimizer_step": 4488,
+      "padded_training_samples": 0,
+      "samples_by_scale": [
+        2991,
+        2991,
+        2991,
+        2991
+      ],
+      "zero_predictor_mse_by_scale": [
+        1.0000113170308758,
+        0.9999685086402077,
+        1.0000090343184553,
+        0.999995230771514
+      ]
+    },
+    {
+      "epoch": 6,
+      "mse_by_scale": [
+        1.00016720641301,
+        1.000194196615758,
+        1.0002130613762255,
+        1.0001682592689771
+      ],
+      "optimizer_step": 5236,
+      "padded_training_samples": 0,
+      "samples_by_scale": [
+        2991,
+        2991,
+        2991,
+        2991
+      ],
+      "zero_predictor_mse_by_scale": [
+        0.9999881652795682,
+        1.000007023862356,
+        1.0000180119816096,
+        0.9999685979176428
+      ]
+    },
+    {
+      "epoch": 7,
+      "mse_by_scale": [
+        1.0000880439318929,
+        1.0000885841002316,
+        1.00003652347844,
+        1.0002057776328355
+      ],
+      "optimizer_step": 5984,
+      "padded_training_samples": 0,
+      "samples_by_scale": [
+        2991,
+        2991,
+        2991,
+        2991
+      ],
+      "zero_predictor_mse_by_scale": [
+        1.0000178648133375,
+        1.0000050776541254,
+        0.9999395493319584,
+        0.9999874063416573
+      ]
+    },
+    {
+      "epoch": 8,
+      "mse_by_scale": [
+        1.0000826646675038,
+        1.0000493601985856,
+        1.0000771673097932,
+        1.0001054228806887
+      ],
+      "optimizer_step": 6732,
+      "padded_training_samples": 0,
+      "samples_by_scale": [
+        2991,
+        2991,
+        2991,
+        2991
+      ],
+      "zero_predictor_mse_by_scale": [
+        1.0000204291083827,
+        0.9999823196003645,
+        1.000005287157178,
+        1.0000301022387714
+      ]
+    },
+    {
+      "epoch": 9,
+      "mse_by_scale": [
+        1.0000976806737554,
+        1.000046913957006,
+        1.0001214827155238,
+        1.0000962910146787
+      ],
+      "optimizer_step": 7480,
+      "padded_training_samples": 0,
+      "samples_by_scale": [
+        2991,
+        2991,
+        2991,
+        2991
+      ],
+      "zero_predictor_mse_by_scale": [
+        1.0000344625048636,
+        0.9999793590769167,
+        1.0000506131515898,
+        1.0000231137486135
+      ]
+    },
+    {
+      "epoch": 10,
+      "mse_by_scale": [
+        1.0000220095979773,
+        1.000097542094451,
+        1.0000875553372153,
+        1.0000860984809261
+      ],
+      "optimizer_step": 8228,
+      "padded_training_samples": 0,
+      "samples_by_scale": [
+        2991,
+        2991,
+        2991,
+        2991
+      ],
+      "zero_predictor_mse_by_scale": [
+        0.9999449135507081,
+        1.0000170293319828,
+        1.000004878812552,
+        1.0000012903977142
+      ]
+    },
+    {
+      "epoch": 11,
+      "mse_by_scale": [
+        1.0000956872560953,
+        1.0001153703199825,
+        1.0001429816784566,
+        1.0000847392319756
+      ],
+      "optimizer_step": 8976,
+      "padded_training_samples": 0,
+      "samples_by_scale": [
+        2991,
+        2991,
+        2991,
+        2991
+      ],
+      "zero_predictor_mse_by_scale": [
+        1.000006451410659,
+        1.0000240580169144,
+        1.000049612885612,
+        0.9999901944281305
+      ]
+    },
+    {
+      "epoch": 12,
+      "mse_by_scale": [
+        1.00007171528828,
+        1.0000726524622134,
+        1.0000834500100133,
+        1.0000742851033813
+      ],
+      "optimizer_step": 9724,
+      "padded_training_samples": 0,
+      "samples_by_scale": [
+        2991,
+        2991,
+        2991,
+        2991
+      ],
+      "zero_predictor_mse_by_scale": [
+        0.9999765301978297,
+        0.9999756910098672,
+        0.9999839867568263,
+        0.9999747961231475
+      ]
+    },
+    {
+      "epoch": 13,
+      "mse_by_scale": [
+        1.0000808292788752,
+        1.0000930003640007,
+        1.000092884163839,
+        1.0000754023068568
+      ],
+      "optimizer_step": 10472,
+      "padded_training_samples": 0,
+      "samples_by_scale": [
+        2991,
+        2991,
+        2991,
+        2991
+      ],
+      "zero_predictor_mse_by_scale": [
+        0.9999821279527988,
+        0.9999930858412781,
+        0.9999918378702736,
+        0.9999740066555423
+      ]
+    },
+    {
+      "epoch": 14,
+      "mse_by_scale": [
+        1.0001233504871507,
+        1.000138448815966,
+        1.0000774009057967,
+        1.0000998031252086
+      ],
+      "optimizer_step": 11220,
+      "padded_training_samples": 0,
+      "samples_by_scale": [
+        2991,
+        2991,
+        2991,
+        2991
+      ],
+      "zero_predictor_mse_by_scale": [
+        1.0000242201511136,
+        1.0000373783696659,
+        0.9999755479866188,
+        0.9999982657260378
+      ]
+    },
+    {
+      "epoch": 15,
+      "mse_by_scale": [
+        1.0000682057285342,
+        1.000042382788395,
+        1.0001206689357598,
+        1.0001019891071223
+      ],
+      "optimizer_step": 11968,
+      "padded_training_samples": 0,
+      "samples_by_scale": [
+        2991,
+        2991,
+        2991,
+        2991
+      ],
+      "zero_predictor_mse_by_scale": [
+        0.9999733821319841,
+        0.9999473835464625,
+        1.0000256597497559,
+        1.0000062183327836
+      ]
+    }
+  ],
+  "cpu_fp32_diagnosis": {
+    "scope": "Two authentic training-role images at 512; CPU FP32; no optimizer updates or test-set evaluation; original run remains stopped.",
+    "fresh_lambda5": {
+      "lambda": 5.0,
+      "layers": {
+        "decoder.0.1": {
+          "noise_change_rms": 0.1941537857055664,
+          "relative_noise_change": 0.33450910335178663,
+          "rms": 0.5804140567779541
+        },
+        "decoder.1.1": {
+          "noise_change_rms": 0.20414219796657562,
+          "relative_noise_change": 0.352895584078051,
+          "rms": 0.5784776210784912
+        },
+        "decoder.2.1": {
+          "noise_change_rms": 0.2000422328710556,
+          "relative_noise_change": 0.3230538713214096,
+          "rms": 0.6192225217819214
+        },
+        "encoder.0.1": {
+          "noise_change_rms": 0.15497395396232605,
+          "relative_noise_change": 0.2489614602753289,
+          "rms": 0.6224817037582397
+        },
+        "encoder.1.1": {
+          "noise_change_rms": 0.16775068640708923,
+          "relative_noise_change": 0.2892036931975531,
+          "rms": 0.580043375492096
+        },
+        "encoder.2.1": {
+          "noise_change_rms": 0.17938683927059174,
+          "relative_noise_change": 0.2927390712535167,
+          "rms": 0.6127874851226807
+        },
+        "encoder.3.1": {
+          "noise_change_rms": 0.19276666641235352,
+          "relative_noise_change": 0.3189959377949202,
+          "rms": 0.6042919158935547
+        },
+        "entry": {
+          "noise_change_rms": 0.06643158197402954,
+          "relative_noise_change": 0.19190816676877323,
+          "rms": 0.34616339206695557
+        },
+        "feature": {
+          "noise_change_rms": 0.11666050553321838,
+          "relative_noise_change": 0.3065922778863156,
+          "rms": 0.3805069923400879
+        },
+        "output": {
+          "noise_change_rms": 0.11025367677211761,
+          "relative_noise_change": 0.3450895278676505,
+          "rms": 0.31949296593666077
+        },
+        "output_norm": {
+          "noise_change_rms": 0.3126945495605469,
+          "relative_noise_change": 0.3127057887071723,
+          "rms": 0.9999640583992004
+        }
+      },
+      "mse": 1.1023496389389038,
+      "noise_correlation": -0.0004720217257272452,
+      "prediction_rms": 0.31949296593666077,
+      "zero_mse": 0.9999721050262451
+    },
+    "collapsed_by_lambda": [
+      {
+        "lambda": 2.0,
+        "layers": {
+          "decoder.0.1": {
+            "noise_change_rms": 18.58550262451172,
+            "relative_noise_change": 0.0023939166386948473,
+            "rms": 7763.63818359375
+          },
+          "decoder.1.1": {
+            "noise_change_rms": 124.92649841308594,
+            "relative_noise_change": 0.0022599010170132167,
+            "rms": 55279.6328125
+          },
+          "decoder.2.1": {
+            "noise_change_rms": 356.22772216796875,
+            "relative_noise_change": 0.0022286828519647557,
+            "rms": 159837.78125
+          },
+          "encoder.0.1": {
+            "noise_change_rms": 0.3061639368534088,
+            "relative_noise_change": 0.14240141420615718,
+            "rms": 2.1500062942504883
+          },
+          "encoder.1.1": {
+            "noise_change_rms": 0.1844213902950287,
+            "relative_noise_change": 0.02104878316318034,
+            "rms": 8.761617660522461
+          },
+          "encoder.2.1": {
+            "noise_change_rms": 0.3579252064228058,
+            "relative_noise_change": 0.006051416126393588,
+            "rms": 59.14734649658203
+          },
+          "encoder.3.1": {
+            "noise_change_rms": 1.7663311958312988,
+            "relative_noise_change": 0.00325353659422962,
+            "rms": 542.895751953125
+          },
+          "entry": {
+            "noise_change_rms": 0.29983803629875183,
+            "relative_noise_change": 0.5591401500718703,
+            "rms": 0.5362484455108643
+          },
+          "feature": {
+            "noise_change_rms": 291.75140380859375,
+            "relative_noise_change": 0.0022285785711301876,
+            "rms": 130913.671875
+          },
+          "output": {
+            "noise_change_rms": 4.342336251283996e-05,
+            "relative_noise_change": 0.004425026349989262,
+            "rms": 0.009813130833208561
+          },
+          "output_norm": {
+            "noise_change_rms": 0.002372855320572853,
+            "relative_noise_change": 0.0022230027242317583,
+            "rms": 1.0674099922180176
+          }
+        },
+        "mse": 1.0000686645507812,
+        "noise_correlation": -9.79699325398542e-06,
+        "prediction_rms": 0.009813130833208561,
+        "zero_mse": 0.9999721050262451
+      },
+      {
+        "lambda": 3.0,
+        "layers": {
+          "decoder.0.1": {
+            "noise_change_rms": 12.973017692565918,
+            "relative_noise_change": 0.001677567493525558,
+            "rms": 7733.2314453125
+          },
+          "decoder.1.1": {
+            "noise_change_rms": 87.28368377685547,
+            "relative_noise_change": 0.001585223990847261,
+            "rms": 55060.7890625
+          },
+          "decoder.2.1": {
+            "noise_change_rms": 248.95126342773438,
+            "relative_noise_change": 0.0015637272300086926,
+            "rms": 159203.765625
+          },
+          "encoder.0.1": {
+            "noise_change_rms": 0.19422274827957153,
+            "relative_noise_change": 0.08991896766223384,
+            "rms": 2.159975290298462
+          },
+          "encoder.1.1": {
+            "noise_change_rms": 0.11934646219015121,
+            "relative_noise_change": 0.013636996114599563,
+            "rms": 8.751667976379395
+          },
+          "encoder.2.1": {
+            "noise_change_rms": 0.24427901208400726,
+            "relative_noise_change": 0.004144068553747954,
+            "rms": 58.94666290283203
+          },
+          "encoder.3.1": {
+            "noise_change_rms": 1.2273809909820557,
+            "relative_noise_change": 0.002269131922268386,
+            "rms": 540.9033203125
+          },
+          "entry": {
+            "noise_change_rms": 0.1891258805990219,
+            "relative_noise_change": 0.35753269198417215,
+            "rms": 0.5289750695228577
+          },
+          "feature": {
+            "noise_change_rms": 203.89210510253906,
+            "relative_noise_change": 0.0015636558084781188,
+            "rms": 130394.4921875
+          },
+          "output": {
+            "noise_change_rms": 3.0439698093687184e-05,
+            "relative_noise_change": 0.0031011731314138746,
+            "rms": 0.009815542958676815
+          },
+          "output_norm": {
+            "noise_change_rms": 0.001665353076532483,
+            "relative_noise_change": 0.001560181792037061,
+            "rms": 1.067409634590149
+          }
+        },
+        "mse": 1.00006902217865,
+        "noise_correlation": -3.2386367820436135e-05,
+        "prediction_rms": 0.009815542958676815,
+        "zero_mse": 0.9999721050262451
+      },
+      {
+        "lambda": 4.0,
+        "layers": {
+          "decoder.0.1": {
+            "noise_change_rms": 8.667332649230957,
+            "relative_noise_change": 0.0011273240072237991,
+            "rms": 7688.4130859375
+          },
+          "decoder.1.1": {
+            "noise_change_rms": 58.362545013427734,
+            "relative_noise_change": 0.0010661862707099358,
+            "rms": 54739.5390625
+          },
+          "decoder.2.1": {
+            "noise_change_rms": 166.49778747558594,
+            "relative_noise_change": 0.001051960012197755,
+            "rms": 158273.875
+          },
+          "encoder.0.1": {
+            "noise_change_rms": 0.1202297955751419,
+            "relative_noise_change": 0.05525129226017834,
+            "rms": 2.176054000854492
+          },
+          "encoder.1.1": {
+            "noise_change_rms": 0.07517688721418381,
+            "relative_noise_change": 0.008601163144582485,
+            "rms": 8.740316390991211
+          },
+          "encoder.2.1": {
+            "noise_change_rms": 0.1604350209236145,
+            "relative_noise_change": 0.0027349003067384924,
+            "rms": 58.662109375
+          },
+          "encoder.3.1": {
+            "noise_change_rms": 0.8168531060218811,
+            "relative_noise_change": 0.0015185422445476815,
+            "rms": 537.9192504882812
+          },
+          "entry": {
+            "noise_change_rms": 0.11646973341703415,
+            "relative_noise_change": 0.22145693341132153,
+            "rms": 0.5259249806404114
+          },
+          "feature": {
+            "noise_change_rms": 136.3625946044922,
+            "relative_noise_change": 0.0010519129827655232,
+            "rms": 129632.9609375
+          },
+          "output": {
+            "noise_change_rms": 2.0484960259636864e-05,
+            "relative_noise_change": 0.0020859838432349216,
+            "rms": 0.009820287115871906
+          },
+          "output_norm": {
+            "noise_change_rms": 0.0011204795446246862,
+            "relative_noise_change": 0.0010497189963403258,
+            "rms": 1.0674090385437012
+          }
+        },
+        "mse": 1.000069499015808,
+        "noise_correlation": -4.645600711228326e-05,
+        "prediction_rms": 0.009820287115871906,
+        "zero_mse": 0.9999721050262451
+      },
+      {
+        "lambda": 5.0,
+        "layers": {
+          "decoder.0.1": {
+            "noise_change_rms": 5.55237340927124,
+            "relative_noise_change": 0.0007252360768955519,
+            "rms": 7655.953125
+          },
+          "decoder.1.1": {
+            "noise_change_rms": 37.40657424926758,
+            "relative_noise_change": 0.0006862705238194221,
+            "rms": 54507.0390625
+          },
+          "decoder.2.1": {
+            "noise_change_rms": 106.72834014892578,
+            "relative_noise_change": 0.0006772059160004273,
+            "rms": 157601.015625
+          },
+          "encoder.0.1": {
+            "noise_change_rms": 0.07358556985855103,
+            "relative_noise_change": 0.03367972402378094,
+            "rms": 2.1848626136779785
+          },
+          "encoder.1.1": {
+            "noise_change_rms": 0.04651728272438049,
+            "relative_noise_change": 0.005329582748495264,
+            "rms": 8.728128433227539
+          },
+          "encoder.2.1": {
+            "noise_change_rms": 0.10174825042486191,
+            "relative_noise_change": 0.0017406126115418045,
+            "rms": 58.45542526245117
+          },
+          "encoder.3.1": {
+            "noise_change_rms": 0.5220310688018799,
+            "relative_noise_change": 0.000974376828745776,
+            "rms": 535.7589111328125
+          },
+          "entry": {
+            "noise_change_rms": 0.07104750722646713,
+            "relative_noise_change": 0.13539881149137784,
+            "rms": 0.5247277021408081
+          },
+          "feature": {
+            "noise_change_rms": 87.41117095947266,
+            "relative_noise_change": 0.0006771759746074819,
+            "rms": 129081.9140625
+          },
+          "output": {
+            "noise_change_rms": 1.3197046428103931e-05,
+            "relative_noise_change": 0.001343258379652275,
+            "rms": 0.009824652224779129
+          },
+          "output_norm": {
+            "noise_change_rms": 0.0007213527569547296,
+            "relative_noise_change": 0.0006757981740388619,
+            "rms": 1.067408561706543
+          }
+        },
+        "mse": 1.0000697374343872,
+        "noise_correlation": -5.562142177950591e-05,
+        "prediction_rms": 0.009824652224779129,
+        "zero_mse": 0.9999721050262451
+      }
+    ]
+  },
+  "same_weight_architecture_intervention": {
+    "kind": "SAME_COLLAPSED_WEIGHTS_ARCHITECTURE_INTERVENTION_CPU_FP32",
+    "results": {
+      "tect-reference-pixel-unet-v1": [
+        {
+          "correlation": -9.79699325398542e-06,
+          "feature_relative_noise_change": 0.002228578319773078,
+          "feature_rms": 130913.671875,
+          "lambda": 2.0,
+          "mse": 1.0000686645507812,
+          "noise_sensitivity": 4.342336251283996e-05,
+          "pred_rms": 0.009813130833208561
+        },
+        {
+          "correlation": -3.2386367820436135e-05,
+          "feature_relative_noise_change": 0.0015636557945981622,
+          "feature_rms": 130394.4921875,
+          "lambda": 3.0,
+          "mse": 1.00006902217865,
+          "noise_sensitivity": 3.0439699912676588e-05,
+          "pred_rms": 0.009815542958676815
+        },
+        {
+          "correlation": -4.645600711228326e-05,
+          "feature_relative_noise_change": 0.0010519128991290927,
+          "feature_rms": 129632.9609375,
+          "lambda": 4.0,
+          "mse": 1.000069499015808,
+          "noise_sensitivity": 2.0484960259636864e-05,
+          "pred_rms": 0.009820287115871906
+        },
+        {
+          "correlation": -5.562142177950591e-05,
+          "feature_relative_noise_change": 0.0006771759944967926,
+          "feature_rms": 129081.9140625,
+          "lambda": 5.0,
+          "mse": 1.0000697374343872,
+          "noise_sensitivity": 1.3197047337598633e-05,
+          "pred_rms": 0.009824652224779129
+        }
+      ],
+      "tect-reference-pixel-unet-v2-stable-paths": [
+        {
+          "correlation": 0.08084897696971893,
+          "feature_relative_noise_change": 0.04781154543161392,
+          "feature_rms": 0.3758567273616791,
+          "lambda": 2.0,
+          "mse": 1.2212309837341309,
+          "noise_sensitivity": 0.07568886131048203,
+          "pred_rms": 0.5581268072128296
+        },
+        {
+          "correlation": 0.05024278908967972,
+          "feature_relative_noise_change": 0.029440391808748245,
+          "feature_rms": 0.3867802917957306,
+          "lambda": 3.0,
+          "mse": 1.241709589958191,
+          "noise_sensitivity": 0.0461169071495533,
+          "pred_rms": 0.5444704294204712
+        },
+        {
+          "correlation": 0.03028876706957817,
+          "feature_relative_noise_change": 0.017644155770540237,
+          "feature_rms": 0.3986507058143616,
+          "lambda": 4.0,
+          "mse": 1.2532745599746704,
+          "noise_sensitivity": 0.027357954531908035,
+          "pred_rms": 0.5344904661178589
+        },
+        {
+          "correlation": 0.018287699669599533,
+          "feature_relative_noise_change": 0.010560109280049801,
+          "feature_rms": 0.40742334723472595,
+          "lambda": 5.0,
+          "mse": 1.2595620155334473,
+          "noise_sensitivity": 0.016257457435131073,
+          "pred_rms": 0.5281152129173279
+        }
+      ]
+    },
+    "scope": "Training-role images only. New GN affine identity; existing weights unchanged; diagnostic intervention only, not a resumable model or calibrated reference."
+  },
+  "bounded_ddp": {
+    "accumulation_steps": 4,
+    "architecture_version": "tect-reference-pixel-unet-v2-stable-paths",
+    "both_rank_parameter_hashes": [
+      "e3618067708e4a1a2a72a327cce14ef419200735e36568c9db0000d26df02025",
+      "e3618067708e4a1a2a72a327cce14ef419200735e36568c9db0000d26df02025"
+    ],
+    "candidate_reference_sha256": "dee956ec8057fe324f2a9f3392e15beb91d7e18bf795ee7f6e65b81c06eb496f",
+    "elapsed_seconds": 162.73232091590762,
+    "final_hash": "e3618067708e4a1a2a72a327cce14ef419200735e36568c9db0000d26df02025",
+    "frozen_boundary_passed": true,
+    "global_batch": 16,
+    "images": 64,
+    "initial_hash": "6f127a7e0904fd481bf2db1dbf5449e55eb49c352513eab035be5670f6236bec",
+    "kind": "BOUNDED_REFERENCE_REPAIR_DDP_REGRESSION",
+    "last_gradient_norm": 1.2850360870361328,
+    "legacy_checks": {
+      "legacy_initialization_equal": true,
+      "legacy_outputs_bitwise_equal_128": true,
+      "legacy_strict_load": true,
+      "unknown_architecture_rejected": true,
+      "v2_shared_initialization_equal": true
+    },
+    "lr": 0.0002,
+    "maximum_gradient_norm": 2.2826056480407715,
+    "maximum_probed_layer_rms": 1.7020889520645142,
+    "micro_batch_per_rank": 2,
+    "peak_memory_bytes": 996958208,
+    "precision": "BF16",
+    "rank": 0,
+    "resolution": 512,
+    "scope": "64 authentic training-role images, 1024 fixed diagnostic updates. No checkpoint files, no calibration, no benchmark images, no formal training restart. This is not 20-epoch stability or localization performance evidence.",
+    "seed": 42,
+    "status": "PASSED",
+    "steps": 1024,
+    "v2_strict_reconstruction": true,
+    "weight_decay": 0.01,
+    "world_size": 2
+  },
+  "bounded_ddp_probes": [
+    {
+      "step": 0,
+      "mse": [
+        1.1078911125659943,
+        1.1078748106956482,
+        1.1075740158557892,
+        1.1074826121330261
+      ],
+      "zero_mse": [
+        0.9995691776275635,
+        0.9995691776275635,
+        0.9995691776275635,
+        0.9995691776275635
+      ],
+      "correlation": [
+        -0.0001083804854885327,
+        0.00048344997110605375,
+        0.0007550249088282028,
+        0.0008068202381910462
+      ],
+      "layer_rms_by_lambda": {
+        "2": {
+          "decoder.0.1": 0.41677308082580566,
+          "decoder.1.1": 0.41554468870162964,
+          "decoder.2.1": 0.42461711168289185,
+          "encoder.3.1": 0.4098462462425232,
+          "entry": 0.3788153827190399,
+          "feature": 0.2657255232334137
+        },
+        "3": {
+          "decoder.0.1": 0.4168022572994232,
+          "decoder.1.1": 0.41705095767974854,
+          "decoder.2.1": 0.425839900970459,
+          "encoder.3.1": 0.41009223461151123,
+          "entry": 0.35822781920433044,
+          "feature": 0.2671816051006317
+        },
+        "4": {
+          "decoder.0.1": 0.41692066192626953,
+          "decoder.1.1": 0.41670364141464233,
+          "decoder.2.1": 0.42638635635375977,
+          "encoder.3.1": 0.4102645814418793,
+          "entry": 0.3494352698326111,
+          "feature": 0.2675853669643402
+        },
+        "5": {
+          "decoder.0.1": 0.41766247153282166,
+          "decoder.1.1": 0.41567519307136536,
+          "decoder.2.1": 0.4254361689090729,
+          "encoder.3.1": 0.41055116057395935,
+          "entry": 0.3460114300251007,
+          "feature": 0.26682695746421814
+        }
+      }
+    },
+    {
+      "step": 64,
+      "mse": [
+        0.9473613351583481,
+        0.9557925909757614,
+        0.9677041471004486,
+        0.9808930605649948
+      ],
+      "zero_mse": [
+        0.9995691776275635,
+        0.9995691776275635,
+        0.9995691776275635,
+        0.9995691776275635
+      ],
+      "correlation": [
+        0.2382679879871962,
+        0.21619454648025843,
+        0.18141729961510858,
+        0.13669228468509623
+      ],
+      "layer_rms_by_lambda": {
+        "2": {
+          "decoder.0.1": 1.509283423423767,
+          "decoder.1.1": 1.1845378875732422,
+          "decoder.2.1": 0.4957689344882965,
+          "encoder.3.1": 1.6105033159255981,
+          "entry": 0.2979068160057068,
+          "feature": 0.31573954224586487
+        },
+        "3": {
+          "decoder.0.1": 1.5138709545135498,
+          "decoder.1.1": 1.1880165338516235,
+          "decoder.2.1": 0.4937005937099457,
+          "encoder.3.1": 1.6147487163543701,
+          "entry": 0.2621673047542572,
+          "feature": 0.3146292269229889
+        },
+        "4": {
+          "decoder.0.1": 1.517845630645752,
+          "decoder.1.1": 1.1907333135604858,
+          "decoder.2.1": 0.49419471621513367,
+          "encoder.3.1": 1.6177847385406494,
+          "entry": 0.24601301550865173,
+          "feature": 0.3153799772262573
+        },
+        "5": {
+          "decoder.0.1": 1.5187236070632935,
+          "decoder.1.1": 1.1911859512329102,
+          "decoder.2.1": 0.49638327956199646,
+          "encoder.3.1": 1.618721842765808,
+          "entry": 0.23953324556350708,
+          "feature": 0.31715041399002075
+        }
+      }
+    },
+    {
+      "step": 256,
+      "mse": [
+        0.3792160525918007,
+        0.387246698141098,
+        0.4090130627155304,
+        0.4593958258628845
+      ],
+      "zero_mse": [
+        0.9995691776275635,
+        0.9995691776275635,
+        0.9995691776275635,
+        0.9995691776275635
+      ],
+      "correlation": [
+        0.7891341819437367,
+        0.7842841812591383,
+        0.7705602431838469,
+        0.7374400095084117
+      ],
+      "layer_rms_by_lambda": {
+        "2": {
+          "decoder.0.1": 1.494856357574463,
+          "decoder.1.1": 1.3673219680786133,
+          "decoder.2.1": 0.2645372450351715,
+          "encoder.3.1": 1.2914350032806396,
+          "entry": 0.21124997735023499,
+          "feature": 0.13593655824661255
+        },
+        "3": {
+          "decoder.0.1": 1.5080044269561768,
+          "decoder.1.1": 1.3731939792633057,
+          "decoder.2.1": 0.2611163854598999,
+          "encoder.3.1": 1.2978694438934326,
+          "entry": 0.14168812334537506,
+          "feature": 0.13365280628204346
+        },
+        "4": {
+          "decoder.0.1": 1.5165811777114868,
+          "decoder.1.1": 1.3725615739822388,
+          "decoder.2.1": 0.253409206867218,
+          "encoder.3.1": 1.3059378862380981,
+          "entry": 0.10002327710390091,
+          "feature": 0.12889628112316132
+        },
+        "5": {
+          "decoder.0.1": 1.5171326398849487,
+          "decoder.1.1": 1.367323875427246,
+          "decoder.2.1": 0.2406376749277115,
+          "encoder.3.1": 1.3138890266418457,
+          "entry": 0.07836736738681793,
+          "feature": 0.12089698016643524
+        }
+      }
+    },
+    {
+      "step": 512,
+      "mse": [
+        0.22261930629611015,
+        0.22917651012539864,
+        0.24828137084841728,
+        0.29607127606868744
+      ],
+      "zero_mse": [
+        0.9995691776275635,
+        0.9995691776275635,
+        0.9995691776275635,
+        0.9995691776275635
+      ],
+      "correlation": [
+        0.8820671249161793,
+        0.8785644303775603,
+        0.8678185627043931,
+        0.8404769792907035
+      ],
+      "layer_rms_by_lambda": {
+        "2": {
+          "decoder.0.1": 1.68117094039917,
+          "decoder.1.1": 0.9162391424179077,
+          "decoder.2.1": 0.27754008769989014,
+          "encoder.3.1": 1.2310372591018677,
+          "entry": 0.20863176882266998,
+          "feature": 0.14125600457191467
+        },
+        "3": {
+          "decoder.0.1": 1.6929504871368408,
+          "decoder.1.1": 0.9083117842674255,
+          "decoder.2.1": 0.2710150480270386,
+          "encoder.3.1": 1.2393193244934082,
+          "entry": 0.13674046099185944,
+          "feature": 0.1372859627008438
+        },
+        "4": {
+          "decoder.0.1": 1.7020889520645142,
+          "decoder.1.1": 0.9031829833984375,
+          "decoder.2.1": 0.26053276658058167,
+          "encoder.3.1": 1.2525312900543213,
+          "entry": 0.0922764465212822,
+          "feature": 0.13120993971824646
+        },
+        "5": {
+          "decoder.0.1": 1.699379801750183,
+          "decoder.1.1": 0.8996230959892273,
+          "decoder.2.1": 0.24625499546527863,
+          "encoder.3.1": 1.2546803951263428,
+          "entry": 0.06789091974496841,
+          "feature": 0.12307138741016388
+        }
+      }
+    },
+    {
+      "step": 1024,
+      "mse": [
+        0.11927729658782482,
+        0.12514718808233738,
+        0.142124705016613,
+        0.18417489901185036
+      ],
+      "zero_mse": [
+        0.9995691776275635,
+        0.9995691776275635,
+        0.9995691776275635,
+        0.9995691776275635
+      ],
+      "correlation": [
+        0.9384967653647928,
+        0.9356356082167361,
+        0.926301570672744,
+        0.9036484439427817
+      ],
+      "layer_rms_by_lambda": {
+        "2": {
+          "decoder.0.1": 1.5779346227645874,
+          "decoder.1.1": 0.641109049320221,
+          "decoder.2.1": 0.22556622326374054,
+          "encoder.3.1": 1.1207304000854492,
+          "entry": 0.20837140083312988,
+          "feature": 0.1073407456278801
+        },
+        "3": {
+          "decoder.0.1": 1.601148247718811,
+          "decoder.1.1": 0.6564244627952576,
+          "decoder.2.1": 0.2127344310283661,
+          "encoder.3.1": 1.1335026025772095,
+          "entry": 0.13579930365085602,
+          "feature": 0.09981296956539154
+        },
+        "4": {
+          "decoder.0.1": 1.625512719154358,
+          "decoder.1.1": 0.6616830229759216,
+          "decoder.2.1": 0.2051873356103897,
+          "encoder.3.1": 1.1259781122207642,
+          "entry": 0.09054607897996902,
+          "feature": 0.09607100486755371
+        },
+        "5": {
+          "decoder.0.1": 1.6176930665969849,
+          "decoder.1.1": 0.6686060428619385,
+          "decoder.2.1": 0.197132408618927,
+          "encoder.3.1": 1.0923914909362793,
+          "entry": 0.06534448266029358,
+          "feature": 0.09171675145626068
+        }
+      }
+    }
+  ],
+  "rank1_verification": {
+    "status": "PASSED",
+    "final_hash": "e3618067708e4a1a2a72a327cce14ef419200735e36568c9db0000d26df02025",
+    "both_rank_parameter_hashes": [
+      "e3618067708e4a1a2a72a327cce14ef419200735e36568c9db0000d26df02025",
+      "e3618067708e4a1a2a72a327cce14ef419200735e36568c9db0000d26df02025"
+    ],
+    "legacy_checks": {
+      "legacy_initialization_equal": true,
+      "legacy_outputs_bitwise_equal_128": true,
+      "legacy_strict_load": true,
+      "unknown_architecture_rejected": true,
+      "v2_shared_initialization_equal": true
+    },
+    "v2_strict_reconstruction": true,
+    "frozen_boundary_passed": true,
+    "peak_memory_bytes": 996958208
+  },
+  "known_collapsed_final_probe": {
+    "actual_mixed_modes_preserved": true,
+    "actual_rng_preserved": true,
+    "actual_weight_hash_preserved": true,
+    "known_collapsed_final_rejected": true,
+    "probe": {
+      "architecture_version": "tect-reference-pixel-unet-v1",
+      "checkpoint_selection": "fixed_final_only_no_reselection",
+      "ddp_padding": false,
+      "image_count": 16,
+      "image_noise_observations_per_scale": 32,
+      "lambdas": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "metrics": {
+        "epoch": 19,
+        "mse_by_scale": [
+          1.0004770494997501,
+          1.0004795007407665,
+          1.0004799701273441,
+          1.0004807375371456
+        ],
+        "mse_ratio_by_scale": [
+          1.0001091667289244,
+          1.0001116170686015,
+          1.000112086282582,
+          1.0001128534102015
+        ],
+        "prediction_energy_by_scale": [
+          0.00010444242661833414,
+          0.00010529041310292087,
+          0.00010516464772081235,
+          0.00010542520158196567
+        ],
+        "prediction_energy_ratio_by_scale": [
+          0.0001044040223697656,
+          0.00010525169704348397,
+          0.00010512597790623161,
+          0.0001053864359598135
+        ],
+        "prediction_noise_correlation_by_scale": [
+          -0.00023234068126775802,
+          -0.0003104544573723042,
+          -0.00033869525544735085,
+          -0.00036331372165811075
+        ],
+        "prediction_noise_cross_by_scale": [
+          -2.3748905348952576e-06,
+          -3.1861937088706327e-06,
+          -3.473952371990663e-06,
+          -3.7310741660689928e-06
+        ],
+        "reference_health": {
+          "all_scales_pass_final_margin": false,
+          "checkpoint_selection": "fixed_final_only_no_reselection",
+          "collapse_detected_epoch": null,
+          "collapse_patience_epochs": 2,
+          "collapse_ratio_threshold": 0.98,
+          "consecutive_collapsed_epochs": 0,
+          "correlation_definition": "uncentered_cross_over_sqrt_prediction_energy_times_noise_energy",
+          "failed": true,
+          "failure_reason": "Reference fixed final endpoint must beat zero prediction on every scale by the registered margin",
+          "final_endpoint_checked": true,
+          "final_ratio_threshold": 0.98,
+          "first_learned_epoch": null,
+          "learning_ratio_threshold": 0.98,
+          "policy_id": "REFERENCE-NOISE-HEALTH-v1",
+          "state": "FAILED",
+          "statistics_source": "fixed_final_weights_training_reference_probe"
+        },
+        "samples_by_scale": [
+          16,
+          16,
+          16,
+          16
+        ],
+        "zero_predictor_mse_by_scale": [
+          1.0003678426146507,
+          1.0003678426146507,
+          1.0003678426146507,
+          1.0003678426146507
+        ]
+      },
+      "micro_batch": 2,
+      "model_parameter_hash": "710bf59325b42a628f3b71d7006907fc3b63c295b96e0410b95b5385d70b3a77",
+      "noise_purposes": [
+        "reference-final-probe-replica-0",
+        "reference-final-probe-replica-1"
+      ],
+      "parameters_unchanged": true,
+      "probe_id": "REFERENCE-FIXED-FINAL-TRAINING-PROBE-v1",
+      "reference_manifest_sha256": "0a501e3f0570b245ac594941fcbf2328d1bed195835825de8b7a758f62a13f79",
+      "replicas": 2,
+      "resolution": 512,
+      "rng_and_modes_restored": true,
+      "scope": "training_reference_images_only_no_validation_split_or_test_data",
+      "seed": 42,
+      "selected_reference_ids": [
+        "FinalTrainData:Au_ani_00002",
+        "FinalTrainData:Au_ani_00003",
+        "FinalTrainData:Au_ani_00004",
+        "FinalTrainData:Au_ani_00006",
+        "FinalTrainData:Au_ani_00011",
+        "FinalTrainData:Au_ani_00013",
+        "FinalTrainData:Au_ani_00017",
+        "FinalTrainData:Au_ani_00018",
+        "FinalTrainData:Au_ani_00019",
+        "FinalTrainData:Au_ani_00020",
+        "FinalTrainData:Au_ani_00022",
+        "FinalTrainData:Au_ani_00024",
+        "FinalTrainData:Au_ani_00025",
+        "FinalTrainData:Au_ani_00027",
+        "FinalTrainData:Au_ani_00028",
+        "FinalTrainData:Au_ani_00029"
+      ],
+      "selection": "first_16_in_frozen_reference_manifest_order",
+      "shared_noise_across_scales": true,
+      "training_augmentation": false
+    },
+    "scope": "Known stopped epoch15 weights, fixed16 training-role images only, no updates. Probe config uses explicit legacy version for this regression only.",
+    "status": "PASSED"
+  },
+  "rank1_final_gate": {
+    "actual_mixed_modes_preserved": true,
+    "actual_rng_preserved": true,
+    "actual_weight_hash_preserved": true,
+    "known_collapsed_final_rejected": true,
+    "scope": "Known stopped epoch15 weights, fixed16 training-role images only, no updates. Probe config uses explicit legacy version for this regression only.",
+    "status": "PASSED"
+  },
+  "review": "Independent review approved after fixing the final-weight gate; 24 server tests passed.",
+  "source_sha256": {
+    "model/tect_diff/reference.py": "dee956ec8057fe324f2a9f3392e15beb91d7e18bf795ee7f6e65b81c06eb496f",
+    "scripts/tect_diff/reference_health.py": "5054df3f168febe9a21d5298acdb2fe1f10f0614454643be679e12255875cb4e",
+    "scripts/tect_diff/reference_probe.py": "5b90b8d471e0bb5317c962ae6bebb150059e0a92bc537fe0e7e883be6cd7ff3c",
+    "scripts/tect_diff/worker.py": "5d06a487717d4fe37991ddd65c39873016699a9632e05fa30f159abe1be38c95",
+    "scripts/tect_diff/controller.py": "acc2149fd3a4038c87b230debb3bc653f64bfb480d84613103558c2d1f9c157a",
+    "scripts/tect_diff/diagnostics.py": "8b59932f44fd8f7ad0b7684dcb836f0f84a01cc77b7ec46020a42b288761dc04",
+    "scripts/tect_diff/report.py": "d9a86f089b464bbfa801cdadf136672985143ced50fdbc04695d6e98a3337a67",
+    "scripts/tect_diff/test_reference_health.py": "f2534fdd2e6181fcb46428cf958c7b00fd4531793197752b7b46c13a0fadfb16",
+    "scripts/tect_diff/test_reference_model.py": "b2e16456a18bb7bc80785276d57a2a8c93c6720bf88bff7ad18c2f823c05ace2",
+    "configs/tect_diff/full_r512_s42_refnorm_v2.json": "1afeeaa018b5aeddb6518a0a2ff3217f19895d5321339f76c11a2373387ec36d"
+  },
+  "validation_script_sha256": {
+    "inspect_reference.py": "7a01956c3443a7fb43f974f83ed4407dc71a88a15f47d08afa8961356b743aac",
+    "intervention.py": "c09ef13c5141910c574b3b5bc0279765f90ec37c29fe17e13af78294bcf4e584",
+    "validate_ddp.py": "2f8336ffd2ed8cd0f5cea5710c2d0c27e1b7493d4f80b1f57acb2f4bc0ac2219",
+    "check_final_gate.py": "963706d3b8332ef4bf237cc6831470388cf21bf2a39912727908a7b7f3a0294c"
+  },
+  "limits": [
+    "Initial triggering optimizer update is not identifiable from retained every-50-step logs and last-only checkpoint.",
+    "Same-weight intervention removes amplification but worsens MSE; old weights were not recovered or reused.",
+    "1024 diagnostic updates on 64 training-role images do not cover the original roughly4200-update collapse horizon or full20-epoch training.",
+    "No main training, calibration, All8 evaluation, new formal run, or full matched baseline comparison."
+  ],
+  "repair_source_commit": "76bfdc798bbefcdd5781e7cdfd2d4e17b37e2e2a"
+}

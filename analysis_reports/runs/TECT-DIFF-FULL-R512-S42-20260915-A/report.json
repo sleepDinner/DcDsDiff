@@ -476,6 +476,17 @@
     "test_wild": "25a688eb600bc1dd9720c18c8eaff6fb6877549b3a041a691f3d17b14021fcb3",
     "train": "ba5c7de4a3988f1abe6fa34dd3d2424abd2712fde4754a2adab6aa9637ea74cc"
   },
+  "operational_hold": {
+    "active": true,
+    "diagnosis_report": "analysis_reports/reference_repair_20260915.md",
+    "reason": "Reference collapsed to near-zero noise prediction. Keep original A stopped; versioned repair requires a new run identity and fresh reference initialization.",
+    "requested_by": "user_2026-09-15_stop_and_repair",
+    "retained_checkpoint_epoch": 15,
+    "retained_checkpoint_sha256": "0edf2b8d355371ccae7d6d8ced7a915907bd0e486f3453d0c515d4ff99aa700a",
+    "run_id": "TECT-DIFF-FULL-R512-S42-20260915-A",
+    "scope": "Current controller resume/supervise honor this hold. Historical frozen source is unchanged and must not be invoked to resume this run.",
+    "updated_at": "2026-09-15T09:15:25Z"
+  },
   "pretrained_load_report": {},
   "progress": {
     "elapsed_seconds": 2188.676743142307,
@@ -512,6 +523,8 @@
   },
   "protocol_id": "TECT-DIFF-FULL-R512-S42",
   "reference": {},
+  "reference_final_health": {},
+  "reference_health": {},
   "reference_source_mode": "authentic",
   "resolution": 512,
   "run_id": "TECT-DIFF-FULL-R512-S42-20260915-A",
@@ -534,5 +547,5 @@
     "records": 17,
     "rule": "exclude train records with exact decoded RGB or known namespaced source IDs present in tests; quarantine image-mask dimension mismatches as invalid training pairs; test anomalies block; no source files changed"
   },
-  "updated_at": "2026-09-15T08:55:57Z"
+  "updated_at": "2026-09-15T09:15:25Z"
 }

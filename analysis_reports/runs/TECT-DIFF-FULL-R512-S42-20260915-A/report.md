@@ -114,6 +114,19 @@
 ```json
 {
   "reference": {},
+  "reference_health": {},
+  "reference_final_health": {},
+  "operational_hold": {
+    "active": true,
+    "diagnosis_report": "analysis_reports/reference_repair_20260915.md",
+    "reason": "Reference collapsed to near-zero noise prediction. Keep original A stopped; versioned repair requires a new run identity and fresh reference initialization.",
+    "requested_by": "user_2026-09-15_stop_and_repair",
+    "retained_checkpoint_epoch": 15,
+    "retained_checkpoint_sha256": "0edf2b8d355371ccae7d6d8ced7a915907bd0e486f3453d0c515d4ff99aa700a",
+    "run_id": "TECT-DIFF-FULL-R512-S42-20260915-A",
+    "scope": "Current controller resume/supervise honor this hold. Historical frozen source is unchanged and must not be invoked to resume this run.",
+    "updated_at": "2026-09-15T09:15:25Z"
+  },
   "calibration": {},
   "costs": {
     "preflight_seconds": 60.00244477391243,
@@ -152,7 +165,7 @@ Exact hashes and available name-level source IDs cannot exclude transformed or u
 
 ```bash
 /data0/hl/conda_envs/dcdsdiff/bin/python -s /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-20260915-A/source/scripts/tect_diff/controller.py status --run-dir /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-20260915-A
-/data0/hl/conda_envs/dcdsdiff/bin/python -s /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-20260915-A/source/scripts/tect_diff/controller.py resume --run-dir /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-20260915-A
+# Resume is blocked by the recorded user-requested operational hold.
 ```
 
 Source snapshot: `/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-20260915-A/source`; logs/status/checkpoints: `/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-20260915-A`.
