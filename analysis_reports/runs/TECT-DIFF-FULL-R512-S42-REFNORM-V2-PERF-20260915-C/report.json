@@ -1,12 +1,162 @@
 {
   "baseline_comparison": "No complete baseline under this protocol; no superiority claim.",
   "best": {},
-  "calibration": {},
+  "calibration": {
+    "artifact_hash": "bcb2f80690dff8632a5af39c3c3263f29460aede883f93335fbf45c36b470f43",
+    "artifact_path": "/data1/hl/DcDsDiff-and-GIT10K/artifacts/calibration/TECT-DIFF-FULL-R512-S42-REFNORM-V2-PERF-20260915-C/calibration.pth",
+    "completed_at": "2026-09-15T10:45:25Z",
+    "config_hash": "0b0358aa4908b852bb53113467184483fbb11d4be517eb58548ba80757052f88",
+    "elapsed_seconds": 96.11043768748641,
+    "fit_receipt": {
+      "content_fit": {
+        "coefficient_l2": 0.8784816861152649,
+        "fitting_pixels": 131072,
+        "iterations": 4,
+        "negative_pixels": 87245,
+        "positive_pixels": 43827,
+        "regularized_objective": 0.6183885335922241
+      },
+      "images": 2048,
+      "normal_pixels": 262016,
+      "normal_statistics": "only known GT=0 training query pixels",
+      "sample_ids_sha256": "d08a7359e8725a2d45b7642c35975fa86ea35472d88e9f3070b4e4a2670af71f",
+      "sampling": "up to 128 uniform pixels per available class per image; equal pixel weight; identical joint/content sample",
+      "semantics": "estimated content-subtracted evidence; no conditional-density guarantee",
+      "tampered_pixels": 130561
+    },
+    "prefix_metadata": {
+      "1": {
+        "A_quantiles": [
+          -7.880748748779297,
+          0.018113723024725914,
+          0.12383788824081421,
+          0.3908524513244629,
+          61.65579605102539
+        ],
+        "W_normalization": "inverse shrunk variance divided by dimension",
+        "W_sha256": "31e596978019c5eea3f77fd720a18058a76f1cd835bf6874f16836a6050caf04",
+        "anomaly_scale": 0.13599398732185364,
+        "control_enabled": false,
+        "d0": 0.1414022594690323,
+        "dimension": 9,
+        "ell_mean": -0.000751599611248821,
+        "ell_std": 0.04960409551858902,
+        "joint_fit": {
+          "coefficient_l2": 0.9058691263198853,
+          "fitting_pixels": 131072,
+          "iterations": 4,
+          "negative_pixels": 87245,
+          "positive_pixels": 43827,
+          "regularized_objective": 0.6180851459503174
+        },
+        "negative_A_fraction": 0.204996719956398,
+        "normal_trajectory_rows": 524032,
+        "q_mean": 0.21458935737609863,
+        "q_zero_fraction": 0.0,
+        "v0": 0.2336273193359375
+      },
+      "2": {
+        "A_quantiles": [
+          -8.633238792419434,
+          0.025318020954728127,
+          0.10904906690120697,
+          0.35280659794807434,
+          52.047515869140625
+        ],
+        "W_normalization": "inverse shrunk variance divided by dimension",
+        "W_sha256": "2b7499bec14dca40816894214005791a66a3b6c4e9a2310b607519b34bfd9c72",
+        "anomaly_scale": 0.1128426045179367,
+        "control_enabled": true,
+        "d0": 0.1414022594690323,
+        "dimension": 27,
+        "ell_mean": -0.0009161768830381334,
+        "ell_std": 0.05373438075184822,
+        "joint_fit": {
+          "coefficient_l2": 0.9088301062583923,
+          "fitting_pixels": 131072,
+          "iterations": 4,
+          "negative_pixels": 87245,
+          "positive_pixels": 43827,
+          "regularized_objective": 0.6180295348167419
+        },
+        "negative_A_fraction": 0.16642339527606964,
+        "normal_trajectory_rows": 524032,
+        "q_mean": 0.2145639955997467,
+        "q_zero_fraction": 0.0,
+        "v0": 0.19703319668769836
+      },
+      "3": {
+        "A_quantiles": [
+          -6.8743896484375,
+          0.029178602620959282,
+          0.1082027405500412,
+          0.34457486867904663,
+          40.679908752441406
+        ],
+        "W_normalization": "inverse shrunk variance divided by dimension",
+        "W_sha256": "b56377d1e5e030a8c695867bff70b968ad3583dd50f77e27ef1581f26de4357d",
+        "anomaly_scale": 0.11086861789226532,
+        "control_enabled": true,
+        "d0": 0.1414022594690323,
+        "dimension": 45,
+        "ell_mean": -0.0010517120826989412,
+        "ell_std": 0.05607052892446518,
+        "joint_fit": {
+          "coefficient_l2": 0.9096332788467407,
+          "fitting_pixels": 131072,
+          "iterations": 4,
+          "negative_pixels": 87245,
+          "positive_pixels": 43827,
+          "regularized_objective": 0.6179935336112976
+        },
+        "negative_A_fraction": 0.14441242814064026,
+        "normal_trajectory_rows": 524032,
+        "q_mean": 0.21562372148036957,
+        "q_zero_fraction": 0.0,
+        "v0": 0.18079955875873566
+      },
+      "4": {
+        "A_quantiles": [
+          -6.197851181030273,
+          0.03362632915377617,
+          0.11223015189170837,
+          0.33935195207595825,
+          37.91045379638672
+        ],
+        "W_normalization": "inverse shrunk variance divided by dimension",
+        "W_sha256": "fef4391de6ebf63e4cf5cb783625445e93630af6cd65e7c7e7da74807e985232",
+        "anomaly_scale": 0.1134263351559639,
+        "control_enabled": true,
+        "d0": 0.1414022594690323,
+        "dimension": 63,
+        "ell_mean": -0.0010528421262279153,
+        "ell_std": 0.055919308215379715,
+        "joint_fit": {
+          "coefficient_l2": 0.9076429605484009,
+          "fitting_pixels": 131072,
+          "iterations": 4,
+          "negative_pixels": 87245,
+          "positive_pixels": 43827,
+          "regularized_objective": 0.6179834604263306
+        },
+        "negative_A_fraction": 0.12565432488918304,
+        "normal_trajectory_rows": 524032,
+        "q_mean": 0.21798691153526306,
+        "q_zero_fraction": 0.0,
+        "v0": 0.17477399110794067
+      }
+    },
+    "protocol_id": "TECT-DIFF-FULL-R512-S42-REFNORM-V2",
+    "sha256": "bb349a143385b25798fe0a9c7c43904ba08c26f38ed7a6aee991add7ed16f59c",
+    "status": "COMPLETED"
+  },
   "checkpoints_local": "Not downloaded; server-authoritative weights only.",
   "commit": "f9c1b90d2fc19c914dd3998f49c2c6665d580ca2",
   "config_hash": "0b0358aa4908b852bb53113467184483fbb11d4be517eb58548ba80757052f88",
   "costs": {
-    "preflight_seconds": 60.00258359313011
+    "calibration_seconds": 120.00357347354293,
+    "preflight_seconds": 60.00258359313011,
+    "reference_seconds": 2520.0487769581378
   },
   "data_counts": {
     "calibration_count": 2048,
@@ -28,15 +178,270 @@
     "cache_scope": "Per-image within one ten-step call; no claimed cross-call or cross-epoch cache.",
     "control_effect_boundary": "A nonzero logit change/finite gradient is not proof of benefit. Compare registered training-probe base/control diagnostics where available; no checkpoint/output reselection.",
     "flags": {
-      "all_observed_gamma_below_1e_minus4": null,
-      "all_observed_image_loss_below_1e_minus12": null,
-      "all_observed_joint_ref_mse_below_1e_minus12": null,
-      "all_observed_q_zero": null
+      "all_observed_gamma_below_1e_minus4": false,
+      "all_observed_image_loss_below_1e_minus12": false,
+      "all_observed_joint_ref_mse_below_1e_minus12": false,
+      "all_observed_q_zero": false
     },
-    "main_probe": {},
+    "main_probe": {
+      "completed_at": "2026-09-15T10:45:55Z",
+      "config_hash": "0b0358aa4908b852bb53113467184483fbb11d4be517eb58548ba80757052f88",
+      "elapsed_seconds": 7.5237791538238525,
+      "formal_optimizer_steps": 0,
+      "initial_state_and_rng_restored": true,
+      "no_diagnostic_weights_saved": true,
+      "protocol_id": "TECT-DIFF-FULL-R512-S42-REFNORM-V2",
+      "ranks": [
+        {
+          "anomaly_mask_invariance": true,
+          "backward_micro_batch": 2,
+          "backward_training_ids": [
+            "FinalTrainData:Au_ani_00001",
+            "FinalTrainData:Au_ani_00002"
+          ],
+          "calibration_artifact_hash": "bcb2f80690dff8632a5af39c3c3263f29460aede883f93335fbf45c36b470f43",
+          "calibration_state_hash": "724c995fd96ed6971b5985a03589e17cc5e3de9b332ec34b714882c86c12b5d8",
+          "completed_at": "2026-09-15T10:45:53Z",
+          "control_numerics": {
+            "extreme_evidence_finite": true,
+            "final_zero_noise_identity": true,
+            "gamma_zero_identity": true,
+            "prefix_one_disabled": true
+          },
+          "diagnostic_override": "Full prefix and one predicted self-conditioning pass; restored before formal training",
+          "diagnostic_seed": 30045,
+          "elapsed_seconds": 4.482295818626881,
+          "ell_all_zero_on_training_probe": false,
+          "evidence": {
+            "A": {
+              "max": 6.79133415222168,
+              "mean": 0.07441355288028717,
+              "min": -2.9450554847717285
+            },
+            "ell": {
+              "max": 0.24836519360542297,
+              "mean": -0.01934228464961052,
+              "min": -0.32226434350013733
+            },
+            "q": {
+              "max": 0.8260631561279297,
+              "mean": 0.41746199131011963,
+              "min": 0.0
+            }
+          },
+          "external_gt_invariance": true,
+          "external_gt_inversion_prediction_max_abs": 0.0,
+          "finite_loss": 1.8280800580978394,
+          "fixed_training_probe_pixel_f1": {
+            "P_base": 0.0,
+            "P_ctrl": 0.0,
+            "control_minus_base": 0.0,
+            "coordinates": "fixed resized training grid; diagnostic only"
+          },
+          "formal_optimizer_steps": 0,
+          "gamma": 0.10000000149011612,
+          "gradients": {
+            "controller": {
+              "gradient_tensors": 1,
+              "nonzero_tensors": 1,
+              "norm": 0.0002727378417167082
+            },
+            "hf_pvt": {
+              "gradient_tensors": 106,
+              "nonzero_tensors": 104,
+              "norm": 0.02745404678602806
+            },
+            "image_task": {
+              "gradient_tensors": 12,
+              "nonzero_tensors": 12,
+              "norm": 0.0881871715177227
+            },
+            "image_to_mask": {
+              "gradient_tensors": 4,
+              "nonzero_tensors": 4,
+              "norm": 0.00038953807074099546
+            },
+            "mask": {
+              "gradient_tensors": 16,
+              "nonzero_tensors": 16,
+              "norm": 0.16585601604631658
+            },
+            "mask_to_image": {
+              "gradient_tensors": 4,
+              "nonzero_tensors": 4,
+              "norm": 0.026838476366458287
+            },
+            "rgb_pvt": {
+              "gradient_tensors": 106,
+              "nonzero_tensors": 106,
+              "norm": 0.023258294423477356
+            }
+          },
+          "history_epsilon_joint_mean_abs_change": 0.1458035558462143,
+          "image_loss": 0.1936405897140503,
+          "initial_state_and_rng_restored": true,
+          "joint_ref_mse": 0.12419527769088745,
+          "peak_allocated_bytes": 5260846592,
+          "peak_reserved_bytes": 5618270208,
+          "q_all_zero_on_training_probe": false,
+          "rank": 0,
+          "reference_index_invariance": true,
+          "reference_mask_isolation": true,
+          "reference_state_hash": "fdbed02735fb8ac2398c0407dee63d7668b51a99d073d81a12f4412ff1ac0878",
+          "resolution": 512,
+          "sample_profile": {
+            "cold_reference_and_measurement_seconds": 0.8578331619501114,
+            "cross_call_cache": false,
+            "image_count": 1,
+            "mask_ten_steps_with_reference_reuse_seconds": 0.5328049883246422,
+            "reference_feature_requests": 20,
+            "reference_feature_reuse_hits": 12,
+            "reference_forwards": 8,
+            "total_seconds": 1.3906381502747536
+          },
+          "sample_shape": [
+            1,
+            1,
+            512,
+            512
+          ],
+          "sampling_peak_allocated_bytes": 1154150400,
+          "sampling_steps": 10,
+          "status": "PASS",
+          "synthetic_engineering_only": false,
+          "training_ids": [
+            "FinalTrainData:Au_ani_00001"
+          ],
+          "visualization_server_only": "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-PERF-20260915-C/diagnostics/training-0.png"
+        },
+        {
+          "anomaly_mask_invariance": true,
+          "backward_micro_batch": 2,
+          "backward_training_ids": [
+            "FinalTrainData:Au_ani_00001",
+            "FinalTrainData:Au_ani_00002"
+          ],
+          "calibration_artifact_hash": "bcb2f80690dff8632a5af39c3c3263f29460aede883f93335fbf45c36b470f43",
+          "calibration_state_hash": "724c995fd96ed6971b5985a03589e17cc5e3de9b332ec34b714882c86c12b5d8",
+          "completed_at": "2026-09-15T10:45:53Z",
+          "control_numerics": {
+            "extreme_evidence_finite": true,
+            "final_zero_noise_identity": true,
+            "gamma_zero_identity": true,
+            "prefix_one_disabled": true
+          },
+          "diagnostic_override": "Full prefix and one predicted self-conditioning pass; restored before formal training",
+          "diagnostic_seed": 30145,
+          "elapsed_seconds": 4.711087226867676,
+          "ell_all_zero_on_training_probe": false,
+          "evidence": {
+            "A": {
+              "max": 5.7427449226379395,
+              "mean": 0.15279364585876465,
+              "min": -2.267827033996582
+            },
+            "ell": {
+              "max": 0.2913540303707123,
+              "mean": -0.0077019548043608665,
+              "min": -0.3699227571487427
+            },
+            "q": {
+              "max": 0.7706204056739807,
+              "mean": 0.22767791152000427,
+              "min": 0.0
+            }
+          },
+          "external_gt_invariance": true,
+          "external_gt_inversion_prediction_max_abs": 0.0,
+          "finite_loss": 1.8201987743377686,
+          "fixed_training_probe_pixel_f1": {
+            "P_base": 0.0,
+            "P_ctrl": 0.0,
+            "control_minus_base": 0.0,
+            "coordinates": "fixed resized training grid; diagnostic only"
+          },
+          "formal_optimizer_steps": 0,
+          "gamma": 0.10000000149011612,
+          "gradients": {
+            "controller": {
+              "gradient_tensors": 1,
+              "nonzero_tensors": 1,
+              "norm": 0.00023808329073387815
+            },
+            "hf_pvt": {
+              "gradient_tensors": 106,
+              "nonzero_tensors": 102,
+              "norm": 0.010905523324658169
+            },
+            "image_task": {
+              "gradient_tensors": 12,
+              "nonzero_tensors": 12,
+              "norm": 0.08808262938335393
+            },
+            "image_to_mask": {
+              "gradient_tensors": 4,
+              "nonzero_tensors": 4,
+              "norm": 0.00012482324564345342
+            },
+            "mask": {
+              "gradient_tensors": 16,
+              "nonzero_tensors": 16,
+              "norm": 0.1687253399062742
+            },
+            "mask_to_image": {
+              "gradient_tensors": 4,
+              "nonzero_tensors": 4,
+              "norm": 0.026758617183083838
+            },
+            "rgb_pvt": {
+              "gradient_tensors": 106,
+              "nonzero_tensors": 106,
+              "norm": 0.009945637092910206
+            }
+          },
+          "history_epsilon_joint_mean_abs_change": 0.13316695392131805,
+          "image_loss": 0.19380329549312592,
+          "initial_state_and_rng_restored": true,
+          "joint_ref_mse": 0.1242837905883789,
+          "peak_allocated_bytes": 5260846592,
+          "peak_reserved_bytes": 5618270208,
+          "q_all_zero_on_training_probe": false,
+          "rank": 1,
+          "reference_index_invariance": true,
+          "reference_mask_isolation": true,
+          "reference_state_hash": "fdbed02735fb8ac2398c0407dee63d7668b51a99d073d81a12f4412ff1ac0878",
+          "resolution": 512,
+          "sample_profile": {
+            "cold_reference_and_measurement_seconds": 0.9195086620748043,
+            "cross_call_cache": false,
+            "image_count": 1,
+            "mask_ten_steps_with_reference_reuse_seconds": 0.5161568410694599,
+            "reference_feature_requests": 20,
+            "reference_feature_reuse_hits": 12,
+            "reference_forwards": 8,
+            "total_seconds": 1.4356655031442642
+          },
+          "sample_shape": [
+            1,
+            1,
+            512,
+            512
+          ],
+          "sampling_peak_allocated_bytes": 1154150400,
+          "sampling_steps": 10,
+          "status": "PASS",
+          "synthetic_engineering_only": false,
+          "training_ids": [
+            "FinalTrainData:Au_ani_00002"
+          ],
+          "visualization_server_only": "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-PERF-20260915-C/diagnostics/training-1.png"
+        }
+      ],
+      "status": "COMPLETED"
+    },
     "peak_allocated_bytes_by_rank": {
-      "0": 990669824,
-      "1": 990669824
+      "0": 7029094912,
+      "1": 7029358080
     },
     "preflight": {
       "completed_at": "2026-09-15T10:00:55Z",
@@ -450,12 +855,540 @@
       "status": "COMPLETED",
       "synthetic_engineering_only": true
     },
-    "sample_profiles": [],
+    "sample_profiles": [
+      {
+        "cold_reference_and_measurement_seconds": 0.8578331619501114,
+        "cross_call_cache": false,
+        "image_count": 1,
+        "mask_ten_steps_with_reference_reuse_seconds": 0.5328049883246422,
+        "rank": 0,
+        "reference_feature_requests": 20,
+        "reference_feature_reuse_hits": 12,
+        "reference_forwards": 8,
+        "total_seconds": 1.3906381502747536
+      },
+      {
+        "cold_reference_and_measurement_seconds": 0.9195086620748043,
+        "cross_call_cache": false,
+        "image_count": 1,
+        "mask_ten_steps_with_reference_reuse_seconds": 0.5161568410694599,
+        "rank": 1,
+        "reference_feature_requests": 20,
+        "reference_feature_reuse_hits": 12,
+        "reference_forwards": 8,
+        "total_seconds": 1.4356655031442642
+      }
+    ],
     "scope": "Low-frequency sampled training records; not an estimate over all unlogged batches.",
-    "streams": {}
+    "streams": {
+      "training_metrics.jsonl": {
+        "malformed_lines": 0,
+        "metrics": {
+          "A_mean": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 0.0998484343290329,
+            "maximum": 0.8028234839439392,
+            "mean": 0.4251682866896902,
+            "minimum": 0.0998484343290329,
+            "nonfinite_count": 0
+          },
+          "A_negative_fraction": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 0.1943511962890625,
+            "maximum": 0.27401161193847656,
+            "mean": 0.16101079668317525,
+            "minimum": 0.09677886962890625,
+            "nonfinite_count": 0
+          },
+          "amp_skipped": {
+            "count": 35,
+            "kind": "boolean_frequency",
+            "last": 0,
+            "maximum": 0,
+            "mean": 0.0,
+            "minimum": 0,
+            "nonfinite_count": 0
+          },
+          "control_logit_change": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 0.000777989742346108,
+            "maximum": 0.0014271094696596265,
+            "mean": 0.00044897822413726587,
+            "minimum": 0.0,
+            "nonfinite_count": 0
+          },
+          "ell_mean": {
+            "count": 35,
+            "kind": "scalar",
+            "last": -0.021976951509714127,
+            "maximum": 0.030825752764940262,
+            "mean": 0.003054444416193291,
+            "minimum": -0.023149095475673676,
+            "nonfinite_count": 0
+          },
+          "epoch": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 0,
+            "maximum": 0,
+            "mean": 0.0,
+            "minimum": 0,
+            "nonfinite_count": 0
+          },
+          "gamma": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 0.0725632905960083,
+            "maximum": 0.1074516773223877,
+            "mean": 0.05970853726778712,
+            "minimum": 0.0,
+            "nonfinite_count": 0
+          },
+          "gradient_norm": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 0.4435051381587982,
+            "maximum": 1.2393805980682373,
+            "mean": 0.45976592387471876,
+            "minimum": 0.07725086063146591,
+            "nonfinite_count": 0
+          },
+          "image_loss": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 0.04893457889556885,
+            "maximum": 0.21210674941539764,
+            "mean": 0.1150928426001753,
+            "minimum": 0.03393331915140152,
+            "nonfinite_count": 0
+          },
+          "joint_ref_mse": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 0.001127617433667183,
+            "maximum": 0.12436667084693909,
+            "mean": 0.005562367827431965,
+            "minimum": 0.000851418066304177,
+            "nonfinite_count": 0
+          },
+          "loss": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 0.9789183139801025,
+            "maximum": 1.7314845323562622,
+            "mean": 1.2009806956563678,
+            "minimum": 0.5746917128562927,
+            "nonfinite_count": 0
+          },
+          "mask_loss": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 0.9299837350845337,
+            "maximum": 1.5605813264846802,
+            "mean": 1.0858878476279126,
+            "minimum": 0.449526846408844,
+            "nonfinite_count": 0
+          },
+          "optimizer_step": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 1700,
+            "maximum": 1700,
+            "mean": 850.0285714285715,
+            "minimum": 1,
+            "nonfinite_count": 0
+          },
+          "peak_memory_bytes": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 7029094912,
+            "maximum": 7029094912,
+            "mean": 6982801247.085716,
+            "minimum": 5452511744,
+            "nonfinite_count": 0
+          },
+          "prefix": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 3,
+            "maximum": 4,
+            "mean": 2.6857142857142864,
+            "minimum": 1,
+            "nonfinite_count": 0
+          },
+          "q_mean": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 0.28744035959243774,
+            "maximum": 0.3585834503173828,
+            "mean": 0.2092349031141826,
+            "minimum": 0.10323052108287811,
+            "nonfinite_count": 0
+          },
+          "q_zero_fraction": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 0.0233001708984375,
+            "maximum": 0.0233001708984375,
+            "mean": 0.023300170898437507,
+            "minimum": 0.0233001708984375,
+            "nonfinite_count": 0
+          },
+          "sampling_step": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 6,
+            "maximum": 9,
+            "mean": 5.285714285714286,
+            "minimum": 1,
+            "nonfinite_count": 0
+          }
+        },
+        "records": 35
+      },
+      "training_metrics.rank0.jsonl": {
+        "malformed_lines": 0,
+        "metrics": {
+          "A_mean": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 0.0998484343290329,
+            "maximum": 0.8028234839439392,
+            "mean": 0.4251682866896902,
+            "minimum": 0.0998484343290329,
+            "nonfinite_count": 0
+          },
+          "A_negative_fraction": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 0.1943511962890625,
+            "maximum": 0.27401161193847656,
+            "mean": 0.16101079668317525,
+            "minimum": 0.09677886962890625,
+            "nonfinite_count": 0
+          },
+          "amp_skipped": {
+            "count": 35,
+            "kind": "boolean_frequency",
+            "last": 0,
+            "maximum": 0,
+            "mean": 0.0,
+            "minimum": 0,
+            "nonfinite_count": 0
+          },
+          "control_logit_change": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 0.000777989742346108,
+            "maximum": 0.0014271094696596265,
+            "mean": 0.00044897822413726587,
+            "minimum": 0.0,
+            "nonfinite_count": 0
+          },
+          "ell_mean": {
+            "count": 35,
+            "kind": "scalar",
+            "last": -0.021976951509714127,
+            "maximum": 0.030825752764940262,
+            "mean": 0.003054444416193291,
+            "minimum": -0.023149095475673676,
+            "nonfinite_count": 0
+          },
+          "epoch": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 0,
+            "maximum": 0,
+            "mean": 0.0,
+            "minimum": 0,
+            "nonfinite_count": 0
+          },
+          "gamma": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 0.0725632905960083,
+            "maximum": 0.1074516773223877,
+            "mean": 0.05970853726778712,
+            "minimum": 0.0,
+            "nonfinite_count": 0
+          },
+          "gradient_norm": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 0.4435051381587982,
+            "maximum": 1.2393805980682373,
+            "mean": 0.45976592387471876,
+            "minimum": 0.07725086063146591,
+            "nonfinite_count": 0
+          },
+          "image_loss": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 0.04893457889556885,
+            "maximum": 0.21210674941539764,
+            "mean": 0.1150928426001753,
+            "minimum": 0.03393331915140152,
+            "nonfinite_count": 0
+          },
+          "joint_ref_mse": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 0.001127617433667183,
+            "maximum": 0.12436667084693909,
+            "mean": 0.005562367827431965,
+            "minimum": 0.000851418066304177,
+            "nonfinite_count": 0
+          },
+          "loss": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 0.9789183139801025,
+            "maximum": 1.7314845323562622,
+            "mean": 1.2009806956563678,
+            "minimum": 0.5746917128562927,
+            "nonfinite_count": 0
+          },
+          "mask_loss": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 0.9299837350845337,
+            "maximum": 1.5605813264846802,
+            "mean": 1.0858878476279126,
+            "minimum": 0.449526846408844,
+            "nonfinite_count": 0
+          },
+          "optimizer_step": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 1700,
+            "maximum": 1700,
+            "mean": 850.0285714285715,
+            "minimum": 1,
+            "nonfinite_count": 0
+          },
+          "peak_memory_bytes": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 7029094912,
+            "maximum": 7029094912,
+            "mean": 6982801247.085716,
+            "minimum": 5452511744,
+            "nonfinite_count": 0
+          },
+          "prefix": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 3,
+            "maximum": 4,
+            "mean": 2.6857142857142864,
+            "minimum": 1,
+            "nonfinite_count": 0
+          },
+          "q_mean": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 0.28744035959243774,
+            "maximum": 0.3585834503173828,
+            "mean": 0.2092349031141826,
+            "minimum": 0.10323052108287811,
+            "nonfinite_count": 0
+          },
+          "q_zero_fraction": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 0.0233001708984375,
+            "maximum": 0.0233001708984375,
+            "mean": 0.023300170898437507,
+            "minimum": 0.0233001708984375,
+            "nonfinite_count": 0
+          },
+          "sampling_step": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 6,
+            "maximum": 9,
+            "mean": 5.285714285714286,
+            "minimum": 1,
+            "nonfinite_count": 0
+          }
+        },
+        "records": 35
+      },
+      "training_metrics.rank1.jsonl": {
+        "malformed_lines": 0,
+        "metrics": {
+          "A_mean": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 0.289373517036438,
+            "maximum": 0.6318490505218506,
+            "mean": 0.3541239904505866,
+            "minimum": 0.1193612813949585,
+            "nonfinite_count": 0
+          },
+          "A_negative_fraction": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 0.12430000305175781,
+            "maximum": 0.2645282745361328,
+            "mean": 0.16643834795270648,
+            "minimum": 0.10422325134277344,
+            "nonfinite_count": 0
+          },
+          "amp_skipped": {
+            "count": 35,
+            "kind": "boolean_frequency",
+            "last": 0,
+            "maximum": 0,
+            "mean": 0.0,
+            "minimum": 0,
+            "nonfinite_count": 0
+          },
+          "control_logit_change": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 0.0007795761339366436,
+            "maximum": 0.0014466606080532074,
+            "mean": 0.0004551144657723074,
+            "minimum": 0.0,
+            "nonfinite_count": 0
+          },
+          "ell_mean": {
+            "count": 35,
+            "kind": "scalar",
+            "last": -0.004156879149377346,
+            "maximum": 0.0179236251860857,
+            "mean": -0.0032361962350218425,
+            "minimum": -0.01737191155552864,
+            "nonfinite_count": 0
+          },
+          "epoch": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 0,
+            "maximum": 0,
+            "mean": 0.0,
+            "minimum": 0,
+            "nonfinite_count": 0
+          },
+          "gamma": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 0.08465716987848282,
+            "maximum": 0.10671214014291763,
+            "mean": 0.05611186517136439,
+            "minimum": 0.0,
+            "nonfinite_count": 0
+          },
+          "gradient_norm": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 0.18739734590053558,
+            "maximum": 1.2393805980682373,
+            "mean": 0.44877942800521853,
+            "minimum": 0.09757983684539795,
+            "nonfinite_count": 0
+          },
+          "image_loss": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 0.07931114733219147,
+            "maximum": 0.25999578833580017,
+            "mean": 0.09654127742562978,
+            "minimum": 0.038820527493953705,
+            "nonfinite_count": 0
+          },
+          "joint_ref_mse": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 0.001222921535372734,
+            "maximum": 0.126103475689888,
+            "mean": 0.005068141353383128,
+            "minimum": 0.0005921015981584787,
+            "nonfinite_count": 0
+          },
+          "loss": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 1.001158356666565,
+            "maximum": 1.6458793878555298,
+            "mean": 1.1771567242486143,
+            "minimum": 0.5786399841308594,
+            "nonfinite_count": 0
+          },
+          "mask_loss": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 0.9218472242355347,
+            "maximum": 1.529280662536621,
+            "mean": 1.080615450654711,
+            "minimum": 0.4766009449958801,
+            "nonfinite_count": 0
+          },
+          "optimizer_step": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 1700,
+            "maximum": 1700,
+            "mean": 850.0285714285715,
+            "minimum": 1,
+            "nonfinite_count": 0
+          },
+          "peak_memory_bytes": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 7029358080,
+            "maximum": 7029358080,
+            "mean": 6985144144.457142,
+            "minimum": 5490260480,
+            "nonfinite_count": 0
+          },
+          "prefix": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 3,
+            "maximum": 4,
+            "mean": 2.6285714285714294,
+            "minimum": 1,
+            "nonfinite_count": 0
+          },
+          "q_mean": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 0.28487271070480347,
+            "maximum": 0.3849181532859802,
+            "mean": 0.2369879850319454,
+            "minimum": 0.13453352451324463,
+            "nonfinite_count": 0
+          },
+          "q_zero_fraction": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 0.0233001708984375,
+            "maximum": 0.0233001708984375,
+            "mean": 0.023300170898437507,
+            "minimum": 0.0233001708984375,
+            "nonfinite_count": 0
+          },
+          "sampling_step": {
+            "count": 35,
+            "kind": "scalar",
+            "last": 7,
+            "maximum": 9,
+            "mean": 5.171428571428573,
+            "minimum": 1,
+            "nonfinite_count": 0
+          }
+        },
+        "records": 35
+      }
+    }
   },
   "environment": "/data0/hl/conda_envs/dcdsdiff",
-  "failure_reason": null,
+  "failure_reason": "Controller terminated only its registered worker process group",
   "final": {},
   "gpus": [
     0,
@@ -476,28 +1409,247 @@
     "train": "ba5c7de4a3988f1abe6fa34dd3d2424abd2712fde4754a2adab6aa9637ea74cc"
   },
   "operational_hold": {
-    "active": false,
-    "at": "2026-09-15T10:00:33Z",
-    "reason": "Reference state import verified; see reference_continuation.json"
+    "active": true,
+    "at": "2026-09-15T11:24:12Z",
+    "evidence": "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-PERF-20260915-C/early_supervision/gradient_sync_anomaly.json",
+    "reason": "Multiple equal optimizer steps have different post-DDP gradient norms between ranks; formal gradient synchronization requires diagnosis before continuing",
+    "run_id": "TECT-DIFF-FULL-R512-S42-REFNORM-V2-PERF-20260915-C"
   },
   "pretrained_load_report": {},
   "progress": {
+    "A_mean": 0.0998484343290329,
+    "A_negative_fraction": 0.1943511962890625,
     "amp_skipped": false,
-    "elapsed_seconds": 309.9320814497769,
-    "epoch": 4,
-    "gradient_norm": 0.870252251625061,
-    "loss": 0.10220833122730255,
-    "micro_batch": 632,
-    "micro_batches_per_epoch": 2991,
-    "optimizer_step": 3150,
-    "peak_memory_bytes": 990669824,
-    "pid": 522403,
+    "control_logit_change": 0.000777989742346108,
+    "elapsed_seconds": 2288.3594669774175,
+    "ell_mean": -0.021976951509714127,
+    "epoch": 0,
+    "gamma": 0.0725632905960083,
+    "gradient_norm": 0.4435051381587982,
+    "image_loss": 0.04893457889556885,
+    "joint_ref_mse": 0.001127617433667183,
+    "loss": 0.9789183139801025,
+    "mask_loss": 0.9299837350845337,
+    "micro_batch": 3400,
+    "micro_batches_per_epoch": 12153,
+    "optimizer_step": 1700,
+    "peak_memory_bytes": 7029094912,
+    "pid": 554456,
+    "prefix": 3,
+    "q_mean": 0.28744035959243774,
+    "q_zero_fraction": 0.0233001708984375,
     "rank": 0,
-    "stage": "REFERENCE_TRAINING",
-    "updated_at": "2026-09-15T10:06:58Z"
+    "sampling_step": 6,
+    "stage": "MAIN_TRAINING",
+    "updated_at": "2026-09-15T11:23:56Z"
   },
   "protocol_id": "TECT-DIFF-FULL-R512-S42-REFNORM-V2",
-  "reference": {},
+  "reference": {
+    "architecture_version": "tect-reference-pixel-unet-v2-stable-paths",
+    "artifact_path": "/data1/hl/DcDsDiff-and-GIT10K/artifacts/reference/TECT-DIFF-FULL-R512-S42-REFNORM-V2-PERF-20260915-C/reference_final.pth",
+    "completed_at": "2026-09-15T10:43:15Z",
+    "config_hash": "0b0358aa4908b852bb53113467184483fbb11d4be517eb58548ba80757052f88",
+    "elapsed_seconds": 2486.857013281435,
+    "epoch": 19,
+    "final_health_probe": {
+      "architecture_version": "tect-reference-pixel-unet-v2-stable-paths",
+      "checkpoint_selection": "fixed_final_only_no_reselection",
+      "ddp_padding": false,
+      "image_count": 16,
+      "image_noise_observations_per_scale": 32,
+      "lambdas": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "metrics": {
+        "epoch": 19,
+        "mse_by_scale": [
+          0.03451702056918293,
+          0.04682891140691936,
+          0.06367181369569153,
+          0.08684402983635664
+        ],
+        "mse_ratio_by_scale": [
+          0.03450432840680501,
+          0.04681169207171148,
+          0.06364840110141204,
+          0.08681209664774242
+        ],
+        "prediction_energy_by_scale": [
+          0.9665694944560528,
+          0.9556144587695599,
+          0.9413436762988567,
+          0.9262109212577343
+        ],
+        "prediction_energy_ratio_by_scale": [
+          0.966214079742648,
+          0.9552630723033645,
+          0.9409975373043548,
+          0.9258703466885808
+        ],
+        "prediction_noise_correlation_by_scale": [
+          0.9825964555943345,
+          0.9763142073464643,
+          0.9676555887442707,
+          0.9556313676432615
+        ],
+        "prediction_noise_cross_by_scale": [
+          0.9662101529538631,
+          0.9545766934752464,
+          0.9390198551118374,
+          0.919867355376482
+        ],
+        "reference_health": {
+          "all_scales_pass_final_margin": true,
+          "checkpoint_selection": "fixed_final_only_no_reselection",
+          "collapse_detected_epoch": null,
+          "collapse_patience_epochs": 2,
+          "collapse_ratio_threshold": 0.98,
+          "consecutive_collapsed_epochs": 0,
+          "correlation_definition": "uncentered_cross_over_sqrt_prediction_energy_times_noise_energy",
+          "failed": false,
+          "failure_reason": null,
+          "final_endpoint_checked": true,
+          "final_ratio_threshold": 0.98,
+          "first_learned_epoch": 19,
+          "learning_ratio_threshold": 0.98,
+          "policy_id": "REFERENCE-NOISE-HEALTH-v1",
+          "state": "LEARNED",
+          "statistics_source": "fixed_final_weights_training_reference_probe"
+        },
+        "samples_by_scale": [
+          16,
+          16,
+          16,
+          16
+        ],
+        "zero_predictor_mse_by_scale": [
+          1.0003678426146507,
+          1.0003678426146507,
+          1.0003678426146507,
+          1.0003678426146507
+        ]
+      },
+      "micro_batch": 2,
+      "model_parameter_hash": "7fcf803535527efb7b42979e6ffa9f9454e7b308e28dafa3dac6a8744730d828",
+      "noise_purposes": [
+        "reference-final-probe-replica-0",
+        "reference-final-probe-replica-1"
+      ],
+      "parameters_unchanged": true,
+      "probe_id": "REFERENCE-FIXED-FINAL-TRAINING-PROBE-v1",
+      "reference_manifest_sha256": "0a501e3f0570b245ac594941fcbf2328d1bed195835825de8b7a758f62a13f79",
+      "replicas": 2,
+      "resolution": 512,
+      "rng_and_modes_restored": true,
+      "scope": "training_reference_images_only_no_validation_split_or_test_data",
+      "seed": 42,
+      "selected_reference_ids": [
+        "FinalTrainData:Au_ani_00002",
+        "FinalTrainData:Au_ani_00003",
+        "FinalTrainData:Au_ani_00004",
+        "FinalTrainData:Au_ani_00006",
+        "FinalTrainData:Au_ani_00011",
+        "FinalTrainData:Au_ani_00013",
+        "FinalTrainData:Au_ani_00017",
+        "FinalTrainData:Au_ani_00018",
+        "FinalTrainData:Au_ani_00019",
+        "FinalTrainData:Au_ani_00020",
+        "FinalTrainData:Au_ani_00022",
+        "FinalTrainData:Au_ani_00024",
+        "FinalTrainData:Au_ani_00025",
+        "FinalTrainData:Au_ani_00027",
+        "FinalTrainData:Au_ani_00028",
+        "FinalTrainData:Au_ani_00029"
+      ],
+      "selection": "first_16_in_frozen_reference_manifest_order",
+      "shared_noise_across_scales": true,
+      "training_augmentation": false
+    },
+    "final_parameter_hash": "7fcf803535527efb7b42979e6ffa9f9454e7b308e28dafa3dac6a8744730d828",
+    "health_metrics": {
+      "epoch": 19,
+      "mse_by_scale": [
+        0.04705284501944984,
+        0.06933950953775925,
+        0.10231307664632658,
+        0.15306649952740803
+      ],
+      "mse_ratio_by_scale": [
+        0.04705354736842748,
+        0.06933632493333626,
+        0.10231176212651907,
+        0.15307022817873817
+      ],
+      "optimizer_step": 14960,
+      "padded_training_samples": 0,
+      "prediction_energy_by_scale": [
+        0.949628342955617,
+        0.9273398385841845,
+        0.894701914498735,
+        0.8402182572822992
+      ],
+      "prediction_energy_ratio_by_scale": [
+        0.9496425178794826,
+        0.9272972479951933,
+        0.8946904193563058,
+        0.8402387247322788
+      ],
+      "prediction_noise_correlation_by_scale": [
+        0.9761912373069056,
+        0.9647106996623951,
+        0.9474654366732265,
+        0.9202951126132125
+      ],
+      "prediction_noise_cross_by_scale": [
+        0.9512802883957748,
+        0.9290231312449183,
+        0.896200845330027,
+        0.8435637002424108
+      ],
+      "reference_health": {
+        "all_scales_pass_final_margin": true,
+        "checkpoint_selection": "fixed_final_only_no_reselection",
+        "collapse_detected_epoch": null,
+        "collapse_patience_epochs": 2,
+        "collapse_ratio_threshold": 0.98,
+        "consecutive_collapsed_epochs": 0,
+        "correlation_definition": "uncentered_cross_over_sqrt_prediction_energy_times_noise_energy",
+        "failed": false,
+        "failure_reason": null,
+        "final_endpoint_checked": true,
+        "final_ratio_threshold": 0.98,
+        "first_learned_epoch": 0,
+        "learning_ratio_threshold": 0.98,
+        "policy_id": "REFERENCE-NOISE-HEALTH-v1",
+        "state": "LEARNED",
+        "statistics_source": "training_images_only_all_rank_per_image_mean_sums"
+      },
+      "samples_by_scale": [
+        2991,
+        2991,
+        2991,
+        2991
+      ],
+      "zero_predictor_mse_by_scale": [
+        0.9999850734106795,
+        1.0000459298127793,
+        1.000012848178745,
+        0.9999756409108779
+      ]
+    },
+    "initial_parameter_hash": "6f127a7e0904fd481bf2db1dbf5449e55eb49c352513eab035be5670f6236bec",
+    "mean_epsilon_mse": 0.09294298268273593,
+    "optimizer_step": 14960,
+    "protocol_id": "TECT-DIFF-FULL-R512-S42-REFNORM-V2",
+    "reference_source_mode": "authentic",
+    "sample_count": 11964,
+    "sha256": "800f50c392a275fde3ec249c6f52275c6db79813e6f8b7e8b534f9ddb52a523f",
+    "status": "COMPLETED",
+    "zero_predictor_mse": 1.0000048730782705
+  },
   "reference_continuation": {
     "all_other_state_exactly_equal": true,
     "at": "2026-09-15T10:00:33Z",
@@ -536,46 +1688,162 @@
     "source_commit": "f9c1b90d2fc19c914dd3998f49c2c6665d580ca2",
     "status": "COMPLETED"
   },
-  "reference_final_health": {},
+  "reference_final_health": {
+    "architecture_version": "tect-reference-pixel-unet-v2-stable-paths",
+    "checkpoint_selection": "fixed_final_only_no_reselection",
+    "ddp_padding": false,
+    "image_count": 16,
+    "image_noise_observations_per_scale": 32,
+    "lambdas": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "metrics": {
+      "epoch": 19,
+      "mse_by_scale": [
+        0.03451702056918293,
+        0.04682891140691936,
+        0.06367181369569153,
+        0.08684402983635664
+      ],
+      "mse_ratio_by_scale": [
+        0.03450432840680501,
+        0.04681169207171148,
+        0.06364840110141204,
+        0.08681209664774242
+      ],
+      "prediction_energy_by_scale": [
+        0.9665694944560528,
+        0.9556144587695599,
+        0.9413436762988567,
+        0.9262109212577343
+      ],
+      "prediction_energy_ratio_by_scale": [
+        0.966214079742648,
+        0.9552630723033645,
+        0.9409975373043548,
+        0.9258703466885808
+      ],
+      "prediction_noise_correlation_by_scale": [
+        0.9825964555943345,
+        0.9763142073464643,
+        0.9676555887442707,
+        0.9556313676432615
+      ],
+      "prediction_noise_cross_by_scale": [
+        0.9662101529538631,
+        0.9545766934752464,
+        0.9390198551118374,
+        0.919867355376482
+      ],
+      "reference_health": {
+        "all_scales_pass_final_margin": true,
+        "checkpoint_selection": "fixed_final_only_no_reselection",
+        "collapse_detected_epoch": null,
+        "collapse_patience_epochs": 2,
+        "collapse_ratio_threshold": 0.98,
+        "consecutive_collapsed_epochs": 0,
+        "correlation_definition": "uncentered_cross_over_sqrt_prediction_energy_times_noise_energy",
+        "failed": false,
+        "failure_reason": null,
+        "final_endpoint_checked": true,
+        "final_ratio_threshold": 0.98,
+        "first_learned_epoch": 19,
+        "learning_ratio_threshold": 0.98,
+        "policy_id": "REFERENCE-NOISE-HEALTH-v1",
+        "state": "LEARNED",
+        "statistics_source": "fixed_final_weights_training_reference_probe"
+      },
+      "samples_by_scale": [
+        16,
+        16,
+        16,
+        16
+      ],
+      "zero_predictor_mse_by_scale": [
+        1.0003678426146507,
+        1.0003678426146507,
+        1.0003678426146507,
+        1.0003678426146507
+      ]
+    },
+    "micro_batch": 2,
+    "model_parameter_hash": "7fcf803535527efb7b42979e6ffa9f9454e7b308e28dafa3dac6a8744730d828",
+    "noise_purposes": [
+      "reference-final-probe-replica-0",
+      "reference-final-probe-replica-1"
+    ],
+    "parameters_unchanged": true,
+    "probe_id": "REFERENCE-FIXED-FINAL-TRAINING-PROBE-v1",
+    "reference_manifest_sha256": "0a501e3f0570b245ac594941fcbf2328d1bed195835825de8b7a758f62a13f79",
+    "replicas": 2,
+    "resolution": 512,
+    "rng_and_modes_restored": true,
+    "scope": "training_reference_images_only_no_validation_split_or_test_data",
+    "seed": 42,
+    "selected_reference_ids": [
+      "FinalTrainData:Au_ani_00002",
+      "FinalTrainData:Au_ani_00003",
+      "FinalTrainData:Au_ani_00004",
+      "FinalTrainData:Au_ani_00006",
+      "FinalTrainData:Au_ani_00011",
+      "FinalTrainData:Au_ani_00013",
+      "FinalTrainData:Au_ani_00017",
+      "FinalTrainData:Au_ani_00018",
+      "FinalTrainData:Au_ani_00019",
+      "FinalTrainData:Au_ani_00020",
+      "FinalTrainData:Au_ani_00022",
+      "FinalTrainData:Au_ani_00024",
+      "FinalTrainData:Au_ani_00025",
+      "FinalTrainData:Au_ani_00027",
+      "FinalTrainData:Au_ani_00028",
+      "FinalTrainData:Au_ani_00029"
+    ],
+    "selection": "first_16_in_frozen_reference_manifest_order",
+    "shared_noise_across_scales": true,
+    "training_augmentation": false
+  },
   "reference_health": {
-    "epoch": 3,
+    "epoch": 19,
     "mse_by_scale": [
-      0.08950342306451868,
-      0.11432038330037392,
-      0.15390143608247822,
-      0.21864565773996292
+      0.04705284501944984,
+      0.06933950953775925,
+      0.10231307664632658,
+      0.15306649952740803
     ],
     "mse_ratio_by_scale": [
-      0.08950287163198192,
-      0.11432187579199653,
-      0.1538993436766898,
-      0.21864087570621837
+      0.04705354736842748,
+      0.06933632493333626,
+      0.10231176212651907,
+      0.15307022817873817
     ],
-    "optimizer_step": 2992,
+    "optimizer_step": 14960,
     "padded_training_samples": 0,
     "prediction_energy_by_scale": [
-      0.8921338790278497,
-      0.865841437306782,
-      0.8295666980568042,
-      0.7506751710357813
+      0.949628342955617,
+      0.9273398385841845,
+      0.894701914498735,
+      0.8402182572822992
     ],
     "prediction_energy_ratio_by_scale": [
-      0.8921283825716115,
-      0.8658527411622658,
-      0.8295554194735428,
-      0.7506587529004467
+      0.9496425178794826,
+      0.9272972479951933,
+      0.8946904193563058,
+      0.8402387247322788
     ],
     "prediction_noise_correlation_by_scale": [
-      0.9542492767014854,
-      0.9411650296562266,
-      0.9198821432141405,
-      0.8841227420873415
+      0.9761912373069056,
+      0.9647106996623951,
+      0.9474654366732265,
+      0.9202951126132125
     ],
     "prediction_noise_cross_by_scale": [
-      0.9013183092600683,
-      0.8757540012274806,
-      0.8378394307479616,
-      0.7660256942073385
+      0.9512802883957748,
+      0.9290231312449183,
+      0.896200845330027,
+      0.8435637002424108
     ],
     "reference_health": {
       "all_scales_pass_final_margin": true,
@@ -587,7 +1855,7 @@
       "correlation_definition": "uncentered_cross_over_sqrt_prediction_energy_times_noise_energy",
       "failed": false,
       "failure_reason": null,
-      "final_endpoint_checked": false,
+      "final_endpoint_checked": true,
       "final_ratio_threshold": 0.98,
       "first_learned_epoch": 0,
       "learning_ratio_threshold": 0.98,
@@ -602,10 +1870,10 @@
       2991
     ],
     "zero_predictor_mse_by_scale": [
-      1.0000061610597146,
-      0.9999869448291303,
-      1.0000135959370484,
-      1.0000218716364409
+      0.9999850734106795,
+      1.0000459298127793,
+      1.000012848178745,
+      0.9999756409108779
     ]
   },
   "reference_source_mode": "authentic",
@@ -615,13 +1883,13 @@
   "selection_notice": "\u6309\u516b\u6d4b\u8bd5\u96c6\u9010 epoch F1 \u9009\u62e9 checkpoint\uff1b\u8fd9\u4e9b\u6d4b\u8bd5\u96c6\u53c2\u4e0e\u6a21\u578b\u9009\u62e9\uff0c\u4e0d\u662f\u72ec\u7acb\u6cdb\u5316\u8bc4\u4f30\u3002selection_protocol=test_selected\u3002\u56fa\u5b9a\u7ec8\u70b9 final.pth \u4e0e test-selected best.pth \u5206\u5f00\u62a5\u544a\u3002",
   "selection_protocol": "test_selected",
   "source_snapshot": "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-PERF-20260915-C/source",
-  "stage": "REFERENCE",
+  "stage": "MAIN",
   "stage_budgets": {
     "calibration_max_images": 2048,
     "main_epochs": 100,
     "reference_epochs": 20
   },
-  "status": "RUNNING",
+  "status": "INTERRUPTED",
   "train_exclusions": {
     "counts_may_overlap": true,
     "exact_rgb_overlap_count": 0,
@@ -630,5 +1898,5 @@
     "records": 17,
     "rule": "exclude train records with exact decoded RGB or known namespaced source IDs present in tests; quarantine image-mask dimension mismatches as invalid training pairs; test anomalies block; no source files changed"
   },
-  "updated_at": "2026-09-15T10:06:59Z"
+  "updated_at": "2026-09-15T11:24:16Z"
 }
