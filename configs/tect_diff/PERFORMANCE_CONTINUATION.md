@@ -27,6 +27,8 @@ CPU NUMA绑定试验约84.68→85.76 images/s，变化太小，不采用，线�
 
 单独统计改写提速约2%，组合优化为小幅改善；记录原始窗口及正式续训后的实测，不把驻留输入基准当作全程加速比。见 `analysis_reports/tect_diff/refnorm_v2_performance.json`。方向依据亦与 [PyTorch performance tuning](https://docs.pytorch.org/tutorials/recipes/recipes/tuning_guide.html) 关于避免CPU–GPU同步的说明一致。
 
+正式C的step1550–2100窗口为0.18651秒/update、85.78 images/s；B的step100–450为0.18894秒/update、84.68 images/s，观测仅约1.3%改善，不能据此宣称显著全程提速。同期GPU平均利用率32.8%/41.7%，各1896MiB显存；CPU整体忙碌约7.3%，I/O等待约0.003%。参考网络在固定micro2下仍未充分占满GPU，当前证据不支持以增加读取进程或占满RAM来解决；主模型实际资源与吞吐由前期定时检查继续核对。
+
 ## 操作与监督
 
 发布后在服务器运行：

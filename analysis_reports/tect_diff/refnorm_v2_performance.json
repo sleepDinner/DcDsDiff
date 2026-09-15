@@ -1,5 +1,5 @@
 {
-  "status": "ENGINEERING_VALIDATED_FORMAL_CONTINUATION_PENDING",
+  "status": "OPTIMIZED_CONTINUATION_RUNNING",
   "at": "2026-09-15T09:51:13Z",
   "selection_protocol": "test_selected",
   "scope": "64 authentic training-role images, resident input; four isolated 40-update sequences; no formal updates/checkpoints retained",
@@ -99,5 +99,39 @@
     "count": 6,
     "scope": "CPU actual candidate optimizer AST and tail statistics; dual-GPU full-update parity recorded separately",
     "status": "PASS"
-  }
+  },
+  "formal_measurement": {
+    "run_id": "TECT-DIFF-FULL-R512-S42-REFNORM-V2-PERF-20260915-C",
+    "first_step": 1550,
+    "last_step": 2100,
+    "first_epoch": 2,
+    "last_epoch": 2,
+    "seconds_per_update": 0.18651440057564866,
+    "images_per_second_nominal": 85.78426089684446,
+    "gpu_util_mean": [
+      32.775,
+      41.675
+    ],
+    "gpu_memory_mib": [
+      1896.0,
+      1896.0
+    ],
+    "cpu_busy_percent": 7.293017088980554,
+    "cpu_iowait_percent": 0.0029463759575721863,
+    "measured_seconds": 42.5821317024529,
+    "raw_receipt": "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-PERF-20260915-C/early_supervision/resource_optimized.json"
+  },
+  "formal_baseline": {
+    "original_run": "TECT-DIFF-FULL-R512-S42-REFNORM-V2-20260915-B",
+    "step_window": [
+      100,
+      450
+    ],
+    "seconds_per_update": 0.18893892094492912,
+    "images_per_second": 84.68345177362156
+  },
+  "formal_observed_speed_ratio": 1.0129991054942542,
+  "interpretation": "Resident-input paired benchmark improved about 9%, but live windows improved only about 1.3%; window noise and different image order prevent claiming a significant end-to-end speedup. Low GPU occupancy persists for this small fixed-micro-batch reference network; main-stage resource measurements remain pending.",
+  "active_run": "TECT-DIFF-FULL-R512-S42-REFNORM-V2-PERF-20260915-C",
+  "execution_commit": "f9c1b90d2fc19c914dd3998f49c2c6665d580ca2"
 }
