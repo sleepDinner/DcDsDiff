@@ -77,6 +77,7 @@ Historical runs are summarized separately in [pre-rebuild audit](docs/history/pr
 - C于2026-09-15 18:00:33 Asia/Shanghai完成状态导入并派发；执行提交`f9c1b90d2fc19c914dd3998f49c2c6665d580ca2`。仅source_commit字段变化，其余恢复状态逐项相等；B checkpoint SHA256 `df51ace1ebccc1bd9177b83e164b4d9bac9a8eeeaef0c606ede5bcf60852d220`未变。A/B均保持hold、无存活训练进程。
 - 18:04:49实际C为REFERENCE、epoch3、step2450；controller521647、torchrun522370、两rank522403/522404存活，两GPU/run/controller锁均持有。149个冻结文件校验、新快照双卡preflight和完整恢复通过；[启动收据](analysis_reports/tect_diff/refnorm_v2_startup.json)。参考前三轮完成且健康，尚未覆盖旧版约4200-step退化位置，校准和主训练仍待自动推进。
 - 正式参考窗口约84.68→85.78 images/s，仅约1.3%的观测变化，不宣称显著端到端加速；驻留输入对照约9%改善及其数值等价证据见[性能收据](analysis_reports/tect_diff/refnorm_v2_performance.json)。20项CPU异常/状态转移检查通过，有界GPU诊断未保留权重。`tect-v2`已更新为每30分钟检查C，完成健康的参考20轮、校准及main0–2后暂停监督。
+- 18:11:51交接检查：C已完成参考epoch0–5，正在epoch6、step4700，超过旧A约4200-step退化点；epoch5四尺度MSE/zero_MSE为0.07265/0.09776/0.13720/0.19496，噪声相关性0.9630/0.9499/0.9289/0.8973，健康状态LEARNED、无失败、无AMP跳步。两rank及控制器身份保持，149个冻结文件仍匹配；这仍不是20轮最终参考检查或定位结果。
 
 - [TECT-Diff TECT-DIFF-FULL-R512-S42-REFNORM-V2-20260915-B](analysis_reports/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-20260915-B/report.md); test_selected All8 F1; fixed final reported separately.
 

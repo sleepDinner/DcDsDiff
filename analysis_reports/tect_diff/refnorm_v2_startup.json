@@ -408,5 +408,57 @@
     "retained_small_receipts": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-performance-20260915",
     "diagnostic_checkpoints_written": false,
     "formal_run_source_modified": false
+  },
+  "later_handoff_check": {
+    "at": "2026-09-15T10:11:51Z",
+    "controller_alive": true,
+    "controller_pid": 521647,
+    "frozen_execution_commit": "f9c1b90d2fc19c914dd3998f49c2c6665d580ca2",
+    "gpu_processes": "522403, 1876 MiB\n522404, 1876 MiB",
+    "health_failed": false,
+    "health_state": "LEARNED",
+    "last_complete_epoch": 5,
+    "mse_ratio_by_scale": [
+      0.07265424683194543,
+      0.09775594513571315,
+      0.13719975337323773,
+      0.1949566793329153
+    ],
+    "prediction_noise_correlation_by_scale": [
+      0.9630092614234125,
+      0.9498872875520205,
+      0.9288977031455482,
+      0.8973346222130162
+    ],
+    "progress": [
+      {
+        "amp_skipped": false,
+        "epoch": 6,
+        "gradient_norm": 1.8694440126419067,
+        "loss": 0.048592459410429,
+        "optimizer_step": 4700,
+        "pid": 522403,
+        "rank": 0,
+        "updated_at": "2026-09-15T10:11:42Z"
+      },
+      {
+        "amp_skipped": false,
+        "epoch": 6,
+        "gradient_norm": 1.8694440126419067,
+        "loss": 0.13327044248580933,
+        "optimizer_step": 4700,
+        "pid": 522404,
+        "rank": 1,
+        "updated_at": "2026-09-15T10:11:42Z"
+      }
+    ],
+    "repository_head": "13dc6386e3bc243b3095602df9b0418e7992792d",
+    "run_id": "TECT-DIFF-FULL-R512-S42-REFNORM-V2-PERF-20260915-C",
+    "selection_protocol": "test_selected",
+    "source_files_verified": 149,
+    "stage": "REFERENCE",
+    "status": "RUNNING",
+    "worker_alive": true,
+    "worker_pid": 522370
   }
 }
