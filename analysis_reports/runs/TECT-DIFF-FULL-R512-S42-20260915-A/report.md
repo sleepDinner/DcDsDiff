@@ -68,18 +68,18 @@
 ```json
 {
   "amp_skipped": false,
-  "elapsed_seconds": 156.67708839476109,
-  "epoch": 1,
-  "gradient_norm": 2.7845346927642822,
-  "loss": 0.24058526754379272,
-  "micro_batch": 408,
+  "elapsed_seconds": 286.0782602503896,
+  "epoch": 2,
+  "gradient_norm": 1.8476111888885498,
+  "loss": 0.15094396471977234,
+  "micro_batch": 216,
   "micro_batches_per_epoch": 2991,
-  "optimizer_step": 850,
+  "optimizer_step": 1550,
   "peak_memory_bytes": 970050048,
   "pid": 448690,
   "rank": 0,
   "stage": "REFERENCE_TRAINING",
-  "updated_at": "2026-09-15T08:21:56Z"
+  "updated_at": "2026-09-15T08:24:05Z"
 }
 ```
 
