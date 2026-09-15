@@ -1,6 +1,6 @@
 # TECT-PILOT-CASIA2-GN8-R512-S42-20260916-B
 
-状态：**RUNNING**；结果：**PENDING**。
+状态：**COMPLETED**；结果：**NO_GO**。
 
 selection_protocol=test_selected：Casiav1/Columbia 用于开发、checkpoint 选择和推进判断，不是独立泛化评估。READY_FOR_FULL 只表示小规模验证通过，完整训练尚未执行。
 
@@ -18,6 +18,12 @@ selection_protocol=test_selected：Casiav1/Columbia 用于开发、checkpoint �
 | 2 | 0.230497 | 0.232411 | 0.231454 |
 | 3 | 0.297329 | 0.234444 | 0.265886 |
 | 4 | 0.330409 | 0.519150 | 0.424779 |
+| 5 | 0.305634 | 0.180750 | 0.243192 |
+| 6 | 0.355393 | 0.385013 | 0.370203 |
+| 7 | 0.419469 | 0.447342 | 0.433405 |
+| 8 | 0.428355 | 0.418729 | 0.423542 |
+| 9 | 0.400106 | 0.440326 | 0.420216 |
+| 10 | 0.403324 | 0.278310 | 0.340817 |
 
 详细记录：[metrics_per_epoch.jsonl](metrics_per_epoch.jsonl)。
 

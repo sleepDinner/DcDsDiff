@@ -1,6 +1,6 @@
 {
   "commit": "2ea2f5b855ef4d917fae4265e9e6d2ca7c1a6382",
-  "complete_epoch_count": 4,
+  "complete_epoch_count": 10,
   "config_hash": "174434a273212505913ed20b5469e9309776e656bf07f2da30e94eee8b9c36b8",
   "confirmation_result": {},
   "data_counts": {
@@ -15,7 +15,7 @@
     },
     "train_count": 2048
   },
-  "elapsed_seconds": 1158.5593050010502,
+  "elapsed_seconds": 2784.8611894212663,
   "failure_reason": null,
   "fitting_reuse": {
     "at": "2026-09-15T19:50:09Z",
@@ -66,7 +66,7 @@
   "full_training_started": false,
   "group_id": "TECT-PILOT-CASIA2-GN8",
   "last_complete_epoch": {
-    "average_test2": 0.42477938011021343,
+    "average_test2": 0.34081703831603294,
     "config_hash": "174434a273212505913ed20b5469e9309776e656bf07f2da30e94eee8b9c36b8",
     "dataset_metrics": {
       "Casiav1": {
@@ -74,24 +74,24 @@
         "authentic_false_positive_images": 0,
         "authentic_image_false_positive_rate": null,
         "authentic_pixel_false_positive_rate": null,
-        "boundary_f1_sum": 24.313857971186057,
+        "boundary_f1_sum": 48.41830785703112,
         "count": 128,
-        "dataset_boundary_f1": 0.18995201539989107,
-        "dataset_iou": 0.2487146758044983,
-        "dataset_mae": 0.16165781182296832,
-        "dataset_pixel_f1": 0.3304087022325319,
-        "fn": 536410,
-        "fp": 726062,
+        "dataset_boundary_f1": 0.3782680301330556,
+        "dataset_iou": 0.3595891081729212,
+        "dataset_mae": 0.06307824891104502,
+        "dataset_pixel_f1": 0.40332420741788005,
+        "fn": 578527,
+        "fp": 57488,
         "id_unique_count": 128,
         "ignored_pixels": 0,
-        "iou_sum": 31.835478502975782,
-        "mae_sum": 20.692199913339945,
-        "pixel_f1_sum": 42.29231388576408,
-        "pooled_pixel_f1": 0.4632283037383098,
+        "iou_sum": 46.02740584613392,
+        "mae_sum": 8.074015860613763,
+        "pixel_f1_sum": 51.62549854948865,
+        "pooled_pixel_f1": 0.6124886597724583,
         "positive_count": 128,
-        "positive_only_pixel_f1": 0.3304087022325319,
-        "tn": 10775690,
-        "tp": 544750,
+        "positive_only_pixel_f1": 0.40332420741788005,
+        "tn": 11444264,
+        "tp": 502633,
         "valid_pixels": 12582912
       },
       "Columbia": {
@@ -99,55 +99,55 @@
         "authentic_false_positive_images": 0,
         "authentic_image_false_positive_rate": null,
         "authentic_pixel_false_positive_rate": null,
-        "boundary_f1_sum": 27.79709181076859,
+        "boundary_f1_sum": 32.86354786888958,
         "count": 128,
-        "dataset_boundary_f1": 0.2171647797716296,
-        "dataset_iou": 0.41639177296170243,
-        "dataset_mae": 0.28510787812264843,
-        "dataset_pixel_f1": 0.5191500579878949,
-        "fn": 10002055,
-        "fp": 9028239,
+        "dataset_boundary_f1": 0.25674646772569987,
+        "dataset_iou": 0.20244797893657543,
+        "dataset_mae": 0.24104284344846647,
+        "dataset_pixel_f1": 0.27830986921418577,
+        "fn": 15739271,
+        "fp": 750698,
         "id_unique_count": 128,
         "ignored_pixels": 0,
-        "iou_sum": 53.29814693909791,
-        "mae_sum": 36.493808399699,
-        "pixel_f1_sum": 66.45120742245055,
-        "pooled_pixel_f1": 0.4857976700482446,
+        "iou_sum": 25.913341303881655,
+        "mae_sum": 30.853483961403708,
+        "pixel_f1_sum": 35.62366325941578,
+        "pooled_pixel_f1": 0.28287623964468517,
         "positive_count": 128,
-        "positive_only_pixel_f1": 0.5191500579878949,
-        "tn": 45191690,
-        "tp": 8989528,
+        "positive_only_pixel_f1": 0.27830986921418577,
+        "tn": 53469231,
+        "tp": 3252312,
         "valid_pixels": 73211512
       }
     },
     "epoch_complete": true,
-    "epoch_index": 3,
-    "epoch_number": 4,
+    "epoch_index": 9,
+    "epoch_number": 10,
     "evaluation_complete": true,
-    "evaluation_seconds": 46.86219284310937,
+    "evaluation_seconds": 46.33894453570247,
     "health": {
       "authentic_probe": {
         "authentic_count": 64,
-        "authentic_false_positive_images": 62,
-        "authentic_image_false_positive_rate": 0.96875,
-        "authentic_pixel_false_positive_rate": 0.04036030393201057,
-        "boundary_f1_sum": 2.0,
+        "authentic_false_positive_images": 14,
+        "authentic_image_false_positive_rate": 0.21875,
+        "authentic_pixel_false_positive_rate": 0.0013961396538550491,
+        "boundary_f1_sum": 50.0,
         "count": 64,
-        "dataset_boundary_f1": 0.03125,
-        "dataset_iou": 0.03125,
-        "dataset_mae": 0.11052728215552009,
-        "dataset_pixel_f1": 0.03125,
+        "dataset_boundary_f1": 0.78125,
+        "dataset_iou": 0.78125,
+        "dataset_mae": 0.014219382938324506,
+        "dataset_pixel_f1": 0.78125,
         "fn": 0,
-        "fp": 485126,
+        "fp": 13919,
         "id_unique_count": 64,
         "ignored_pixels": 0,
-        "iou_sum": 2.0,
-        "mae_sum": 7.073746057953286,
-        "pixel_f1_sum": 2.0,
+        "iou_sum": 50.0,
+        "mae_sum": 0.9100405080527684,
+        "pixel_f1_sum": 50.0,
         "pooled_pixel_f1": 0.0,
         "positive_count": 0,
         "positive_only_pixel_f1": null,
-        "tn": 7763700,
+        "tn": 8234907,
         "tp": 0,
         "valid_pixels": 8248826
       },
@@ -159,11 +159,11 @@
     },
     "metric": "PixelF1(threshold=0.5, mode=origin)",
     "pixel_f1": {
-      "Casiav1": 0.3304087022325319,
-      "Columbia": 0.5191500579878949
+      "Casiav1": 0.40332420741788005,
+      "Columbia": 0.27830986921418577
     },
     "run_id": "TECT-PILOT-CASIA2-GN8-R512-S42-20260916-B",
-    "selected": true,
+    "selected": false,
     "selection_authority": "Fixed pilot development gates; no independent generalization claim",
     "selection_direction": "maximize",
     "selection_metric": "test2_macro_pixel_f1",
@@ -174,37 +174,37 @@
       "count": 256,
       "dataset_count": 2,
       "evaluation_complete": true,
-      "fn": 10538465,
-      "fp": 9754301,
+      "fn": 16317798,
+      "fp": 808186,
       "ignored_pixels": 0,
-      "recall": 0.474986303565985,
+      "recall": 0.18706685977098397,
       "selection_protocol": "test_selected",
-      "specificity": 0.8515816873278089,
-      "test2_macro_boundary_f1": 0.20355839758576033,
-      "test2_macro_iou": 0.33255322438310037,
-      "test2_macro_mae": 0.22338284497280836,
-      "test2_macro_pixel_f1": 0.42477938011021343,
-      "test2_pooled_pixel_f1": 0.4844490741444101,
-      "tn": 55967380,
-      "tp": 9534278,
+      "specificity": 0.9877029012693695,
+      "test2_macro_boundary_f1": 0.31750724892937776,
+      "test2_macro_iou": 0.2810185435547483,
+      "test2_macro_mae": 0.15206054617975573,
+      "test2_macro_pixel_f1": 0.34081703831603294,
+      "test2_pooled_pixel_f1": 0.3048355418606216,
+      "tn": 64913495,
+      "tp": 3754945,
       "valid_pixels": 85794424
     },
     "total_epochs": 10,
     "training": {
       "images": 2048,
-      "images_per_second": 9.453789215435238,
-      "learning_rate_next_epoch": 9.960967771506668e-05,
-      "loss": 1.0362312670913525,
-      "mask_loss": 0.9545388554688543,
-      "optimizer_step": 684,
+      "images_per_second": 9.64558686758583,
+      "learning_rate_next_epoch": 9.757729755661012e-05,
+      "loss": 0.8077411564008798,
+      "mask_loss": 0.7266687406809069,
+      "optimizer_step": 1710,
       "peak_allocated_bytes": 19805605888,
       "prefix_updates_on_rank0": [
-        15,
-        32,
-        68,
-        56
+        26,
+        26,
+        60,
+        59
       ],
-      "seconds": 216.63271237909794
+      "seconds": 212.3250796571374
     }
   },
   "manifest_hashes": {
@@ -229,7 +229,7 @@
     "self_condition_probability": 0.5,
     "window_size": 8
   },
-  "outcome": "PENDING",
+  "outcome": "NO_GO",
   "pilot": {
     "authentic_probe": 64,
     "consecutive_degenerate_epochs": 3,
@@ -252,49 +252,113 @@
     "train_authentic": 1024,
     "train_tampered": 1024
   },
-  "pilot_receipt": {},
-  "progress": {
-    "A_mean": 0.2527172565460205,
-    "A_negative_fraction": 0.13406436145305634,
-    "amp_skipped": false,
-    "control_logit_change": 0.000644417479634285,
-    "elapsed_seconds": 1173.9929104968905,
-    "ell_mean": -0.00510824378579855,
-    "epoch": 4,
-    "gamma": 0.09278032183647156,
-    "gradient_norm": 0.8345314860343933,
-    "gradient_sync": {
-      "at": "2026-09-15T20:10:04Z",
-      "coverage_pass_by_rank": [
-        true,
-        true
-      ],
-      "gradient_norm_by_rank": [
-        0.8345314860343933,
-        0.8345314860343933
-      ],
-      "gradient_tensors_by_rank": [
-        856,
-        856
-      ],
-      "passed": true
+  "pilot_receipt": {
+    "best": {
+      "epoch": 6,
+      "path": "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-PILOT-CASIA2-GN8-R512-S42-20260916-B/best.pth",
+      "score": 0.43340528334352496,
+      "sha256": "120234496c036513e92ce0e4d7f4d2da6850baee0fd2a3ab787412dc44cc173f"
     },
-    "image_loss": 0.1375741958618164,
-    "joint_ref_mse": 0.0013123892713338137,
-    "loss": 0.9737105369567871,
-    "mask_loss": 0.8361363410949707,
-    "micro_batch": 36,
-    "micro_batches_per_epoch": 171,
-    "optimizer_step": 720,
-    "peak_memory_bytes": 19805605888,
+    "checkpoint": {
+      "epoch": 9,
+      "path": "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-PILOT-CASIA2-GN8-R512-S42-20260916-B/last.pth",
+      "sha256": "2a369f5313c5612051b2c7014e427981f81434cc9308f72bbc817291d92bc335"
+    },
+    "completed_at": "2026-09-15T20:36:22Z",
+    "config_hash": "174434a273212505913ed20b5469e9309776e656bf07f2da30e94eee8b9c36b8",
+    "costs": {
+      "confirmation_seconds": 0.0,
+      "evaluation_seconds": 470.32831232994795,
+      "quick_evaluation_seconds": 470.32831232994795,
+      "training_seconds": 2114.313395023346
+    },
+    "elapsed_seconds": 2751.8716017082334,
+    "full_data_training_started": false,
+    "gate": {
+      "all_foreground_baselines": {
+        "Casiav1": 0.150247880686799,
+        "Columbia": 0.41777137733678826
+      },
+      "authentic_expected_count": 64,
+      "consecutive_epochs": [
+        7,
+        8,
+        9
+      ],
+      "epoch_failures": {
+        "7": [
+          "macro_f1_below_minimum",
+          "Columbia:foreground_margin_below_minimum",
+          "Columbia:recall_below_minimum",
+          "authentic_pixel_fp_above_maximum"
+        ],
+        "8": [
+          "macro_f1_below_minimum",
+          "Columbia:foreground_margin_below_minimum",
+          "Columbia:recall_below_minimum",
+          "authentic_pixel_fp_above_maximum"
+        ],
+        "9": [
+          "macro_f1_below_minimum",
+          "Columbia:f1_below_minimum",
+          "Columbia:foreground_margin_below_minimum",
+          "Columbia:recall_below_minimum"
+        ]
+      },
+      "expected_counts": {
+        "Casiav1": 128,
+        "Columbia": 128
+      },
+      "passed": false,
+      "reasons": [
+        "epoch_7:macro_f1_below_minimum",
+        "epoch_7:Columbia:foreground_margin_below_minimum",
+        "epoch_7:Columbia:recall_below_minimum",
+        "epoch_7:authentic_pixel_fp_above_maximum",
+        "epoch_8:macro_f1_below_minimum",
+        "epoch_8:Columbia:foreground_margin_below_minimum",
+        "epoch_8:Columbia:recall_below_minimum",
+        "epoch_8:authentic_pixel_fp_above_maximum",
+        "epoch_9:macro_f1_below_minimum",
+        "epoch_9:Columbia:f1_below_minimum",
+        "epoch_9:Columbia:foreground_margin_below_minimum",
+        "epoch_9:Columbia:recall_below_minimum"
+      ],
+      "selection_protocol": "test_selected",
+      "thresholds": {
+        "authentic_fp_rate_max": 0.01,
+        "consecutive_epochs": 3,
+        "dataset_f1_min": 0.35,
+        "foreground_margin_min": 0.1,
+        "macro_f1_min": 0.5,
+        "recall_min": 0.4,
+        "specificity_min": 0.9
+      }
+    },
+    "optimizer_step": 1710,
+    "outcome": "NO_GO",
+    "protocol_id": "TECT-PILOT-CASIA2-GN8-R512-S42-DATA2-V1",
+    "selection_protocol": "test_selected",
+    "source_commit": "2ea2f5b855ef4d917fae4265e9e6d2ca7c1a6382",
+    "status": "COMPLETED"
+  },
+  "progress": {
+    "average_test2": 0.34081703831603294,
+    "elapsed_seconds": 2750.326974928379,
+    "epoch": 9,
+    "image_counts": {
+      "Casiav1": 128,
+      "Columbia": 128
+    },
+    "optimizer_step": 1710,
     "pid": 904013,
-    "prefix": 4,
-    "q_mean": 0.22436276078224182,
-    "q_zero_fraction": 0.0233001708984375,
+    "pixel_f1": {
+      "Casiav1": 0.40332420741788005,
+      "Columbia": 0.27830986921418577
+    },
     "rank": 0,
-    "sampling_step": 8,
-    "stage": "PILOT_TRAINING",
-    "updated_at": "2026-09-15T20:10:04Z"
+    "stage": "PILOT_EPOCH_COMPLETE",
+    "updated_at": "2026-09-15T20:36:21Z"
   },
   "protocol_id": "TECT-PILOT-CASIA2-GN8-R512-S42-DATA2-V1",
   "resolution": 512,
@@ -303,7 +367,7 @@
   "selection_notice": "selection_protocol=test_selected\uff1aCasiav1/Columbia \u7528\u4e8e\u5f00\u53d1\u3001checkpoint \u9009\u62e9\u548c\u63a8\u8fdb\u5224\u65ad\uff0c\u4e0d\u662f\u72ec\u7acb\u6cdb\u5316\u8bc4\u4f30\u3002READY_FOR_FULL \u53ea\u8868\u793a\u5c0f\u89c4\u6a21\u9a8c\u8bc1\u901a\u8fc7\uff0c\u5b8c\u6574\u8bad\u7ec3\u5c1a\u672a\u6267\u884c\u3002",
   "selection_protocol": "test_selected",
   "source_snapshot": "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-PILOT-CASIA2-GN8-R512-S42-20260916-B/source",
-  "stage": "PILOT",
-  "status": "RUNNING",
-  "updated_at": "2026-09-15T20:10:22Z"
+  "stage": "COMPLETE",
+  "status": "COMPLETED",
+  "updated_at": "2026-09-15T20:36:33Z"
 }

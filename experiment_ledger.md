@@ -130,5 +130,5 @@ Historical runs are summarized separately in [pre-rebuild audit](docs/history/pr
 <!-- pilot:TECT-PILOT-CASIA2-GN8-R512-S42-20260916-A:end -->
 
 <!-- pilot:TECT-PILOT-CASIA2-GN8-R512-S42-20260916-B:begin -->
-- [TECT pilot TECT-PILOT-CASIA2-GN8-R512-S42-20260916-B](analysis_reports/runs/TECT-PILOT-CASIA2-GN8-R512-S42-20260916-B/report.md): RUNNING / PENDING; selection_protocol=test_selected; complete epochs=4; full training not started.
+- [TECT pilot TECT-PILOT-CASIA2-GN8-R512-S42-20260916-B](analysis_reports/runs/TECT-PILOT-CASIA2-GN8-R512-S42-20260916-B/report.md): COMPLETED / NO_GO; selection_protocol=test_selected; complete epochs=10; full training not started.
 <!-- pilot:TECT-PILOT-CASIA2-GN8-R512-S42-20260916-B:end -->
