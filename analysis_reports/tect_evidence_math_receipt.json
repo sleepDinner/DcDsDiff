@@ -1,0 +1,23 @@
+{
+  "scope": "CPU-only synthetic mathematics and artifact integrity; no trained-reference or scientific result claim",
+  "phi_identity_max_abs": 2.86102294921875e-06,
+  "u_stat_direct_max_abs": 1.3113021850585938e-06,
+  "null_negative_fraction": 0.5015699863433838,
+  "delta_expected": 0.03750000521540642,
+  "delta_measured": 0.036567315459251404,
+  "prefix_stream_vs_vector_max_abs": {
+    "1": 4.76837158203125e-07,
+    "2": 2.384185791015625e-07,
+    "3": 2.384185791015625e-07,
+    "4": 2.384185791015625e-07
+  },
+  "fitted_pixel_counts": {
+    "normal_pixels": 512,
+    "tampered_pixels": 512
+  },
+  "nonempty_fitted_mu_norm": 0.1563320904970169,
+  "artifact_roundtrip_sha256": "0ab53fd7f6aad976be81d42d30fde7d3cf950825736833902f475fa99984af56",
+  "frozen_mutation_rejected": true,
+  "corrupt_artifact_rejected": true,
+  "status": "PASS"
+}
