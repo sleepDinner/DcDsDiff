@@ -414,7 +414,9 @@ class Worker:
         seed_all(self.config['seed'])
         reference = self.reference_model(reference_artifact)
         reference.freeze()
-        network = TECTNetwork(self.config['pretrained_path'], self.config['model']['gradient_checkpointing']).to(self.device)
+        network = TECTNetwork(self.config['pretrained_path'], self.config['model']['gradient_checkpointing'],
+            normalization=self.config['model'].get('normalization', 'batchnorm'),
+            architecture_version=self.config['model'].get('architecture_version', 'tect-diff-full-v1')).to(self.device)
         model = TECTDiffusion(network, reference, calibration, self.config).to(self.device)
         del reference_artifact
         frozen_hash = tensor_hash(reference)

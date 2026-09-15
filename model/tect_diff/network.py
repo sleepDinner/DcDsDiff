@@ -15,6 +15,9 @@ from mmcv.cnn import ConvModule
 from model.net import (MMFF, MSFF, ResnetBlock, Upsample1, net as BaselineNet,
                        pvt_v2_b2, timestep_embedding)
 from model.tect_diff.reference import TimeResidual, time_embedding
+from model.tect_diff.normalization import (
+    MAIN_ARCHITECTURE_V1, configure_main_normalization, require_main_normalization,
+)
 
 
 class WindowCrossAttention(nn.Module):
@@ -149,10 +152,15 @@ class MaskInputOutput(nn.Module):
 
 
 class TECTNetwork(nn.Module):
-    architecture_version = "tect-diff-full-v1"
+    architecture_version = MAIN_ARCHITECTURE_V1
 
-    def __init__(self, pretrained_path, gradient_checkpointing: bool = False):
+    def __init__(self, pretrained_path, gradient_checkpointing: bool = False, *,
+                 normalization: str = "batchnorm",
+                 architecture_version: str = MAIN_ARCHITECTURE_V1):
         super().__init__()
+        require_main_normalization(normalization, architecture_version)
+        self.architecture_version = architecture_version
+        self.normalization = normalization
         self.gradient_checkpointing = bool(gradient_checkpointing)
         self.backbone = pvt_v2_b2(in_chans=3, mask_chans=1)
         self.backbone_t = pvt_v2_b2(in_chans=3, mask_chans=1)
@@ -170,6 +178,7 @@ class TECTNetwork(nn.Module):
         self.image_to_mask = WindowCrossAttention()
         self.register_buffer("rgb_mean", torch.tensor([0.485, 0.456, 0.406])[None, :, None, None])
         self.register_buffer("rgb_std", torch.tensor([0.229, 0.224, 0.225])[None, :, None, None])
+        configure_main_normalization(self, normalization, architecture_version)
 
     def _pvt(self, backbone, logsnr, image):
         # PVT has LayerNorm/DropPath, no BN buffers; checkpointing preserves

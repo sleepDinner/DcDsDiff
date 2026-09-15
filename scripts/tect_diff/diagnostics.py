@@ -311,7 +311,9 @@ def preflight(worker):
     start = time.monotonic()
     worker.status('PREFLIGHT', synthetic_engineering_only=True, substage='constructing_models')
     seed_all(worker.config['seed'])
-    network = TECTNetwork(worker.config['pretrained_path'], worker.config['model']['gradient_checkpointing']).to(worker.device)
+    network = TECTNetwork(worker.config['pretrained_path'], worker.config['model']['gradient_checkpointing'],
+        normalization=worker.config['model'].get('normalization', 'batchnorm'),
+        architecture_version=worker.config['model'].get('architecture_version', 'tect-diff-full-v1')).to(worker.device)
     reference = worker.reference_model()
     probe = _SyntheticEngineeringProbe(network, reference, worker.config).to(worker.device)
     ddp = DDP(probe, device_ids=[worker.device.index], find_unused_parameters=True, broadcast_buffers=False)
