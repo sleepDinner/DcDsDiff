@@ -24,3 +24,7 @@ $PY tools/queue_benchmark.py resume --run-id DCDSDIFF-CASIA2-SEL3-ALL8-20260914-
 Result directory: `runs/DCDSDIFF-CASIA2-SEL3-ALL8-20260914-B/followups/all8-best/evaluation/` (`report.md`, `results.json`, `per_image.csv`). Only follow-up `status.json=COMPLETED` establishes successful evaluation completion. [Dedicated-environment validation](validation_early_stop.json) records bounded CPU checks; temporary test scripts/checkpoints are removed after validation.
 
 GPU 0 was already completed before this request: fixed epoch-99 GIT10K evaluation and its separately selected best-checkpoint All8 evaluation both finished on 2026-09-15. Neither is rerun or changed by this request.
+
+## Completed evaluation
+
+All8 completed on 2026-09-15 at 14:36:01 Asia/Shanghai using evaluation commit `8deb7dc4f505632ca1ac82a93477e9bed30d6231`. All 4295 images were evaluated: macro F1 `2.4819740338628007e-7`, pooled F1 `7.576679125569692e-7`; six datasets have zero F1. Only two images have positive F1. This negative result is retained without reselection. The evaluator and controller exited and all owned locks were released. [Results and interpretation](results/README.md), [verification receipt](results/completion_receipt.json).

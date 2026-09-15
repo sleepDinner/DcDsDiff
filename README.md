@@ -6,6 +6,8 @@
 
 先读 [复现协议](docs/reproduction_protocol.md)、[论文核对](docs/paper_protocol_audit.md)、[代码审查](docs/code_audit.md)、[实验台账](experiment_ledger.md)。旧项目审查保存在 [历史记录](docs/history/pre-rebuild-audit.md)，清理记录见 [cleanup](docs/cleanup.md)。
 
+2026-09-15 的训练终点、八库测试与逐图指标统一收录于 [实验结果](docs/results/README.md)。
+
 ## 服务器布局
 
 | 内容 | 路径 |
@@ -64,9 +66,9 @@ $PY tools/manage_experiment.py launch --run-id NEW_AUTHORIZED_RUN_ID --gpu 0 \
 
 ## CASIA2 与八数据集扩展
 
-**2026-09-15 最新变更：GPU 1 已按用户要求提前结束，完整完成 epoch 0–84（85 轮）；使用已有 epoch-52 best 进行八集评估，不再恢复训练。详见 [提前结束与八集测试](docs/casia2_early_stop.md)。以下 100-epoch 续训描述保留为历史。GPU 0 的固定末轮和八集 best 评估均已完成。
+**2026-09-15 最新变更**：GPU 1 已按用户要求提前结束，完整完成 epoch 0–84（85 轮）；使用已有 epoch-52 best 的八集评估已完成，不再恢复训练。详见 [提前结束与八集测试](docs/casia2_early_stop.md)。以下 100-epoch 续训描述保留为历史。GPU 0 的固定末轮和八集 best 评估均已完成。
 
-**当前 GPU 1 协议已修改**：每轮仅测试 Casiav1、Columbia、NIST16（1,664 张），仍以逐图平均 MAE 选择 best；训练结束后对全部八集（4,295 张）报告 F1。旧 A 已停止，使用最后完整 epoch-2 状态在 `DCDSDIFF-CASIA2-SEL3-ALL8-20260914-B` 继续至 epoch 99。旧 best 单独保留，新的 best 从变更后的轮次开始选择。启动/恢复说明见 [三集选择与检查点续训](docs/casia2_sel3_continuation.md)。以下 All8-per-epoch 配置与 A 命令保留为历史协议，不要重新启动或恢复 A。
+**2026-09-14 的续训登记（历史）**：每轮仅测试 Casiav1、Columbia、NIST16（1,664 张），仍以逐图平均 MAE 选择 best；训练结束后对全部八集（4,295 张）报告 F1。旧 A 已停止，使用最后完整 epoch-2 状态在 `DCDSDIFF-CASIA2-SEL3-ALL8-20260914-B` 继续至 epoch 99。旧 best 单独保留，新的 best 从变更后的轮次开始选择。启动/恢复说明见 [三集选择与检查点续训](docs/casia2_sel3_continuation.md)。以下 All8-per-epoch 配置与 A 命令保留为历史协议，不要重新启动或恢复 A。
 
 2026-09-14 用户授权的新实验见 [CASIA2/All8 协议](docs/casia2_all8_protocol.md)。训练使用 CASIA2 的 5,123 对 Tp/Gt；测试使用指定八集，共 4,295 张。模型和训练参数继承原基线。数据路径、配对后缀和数量固定在 `config/benchmark_all8.json`，处理数据为 `data/casia2-all8-v1`，完整清单提交到 `manifests/casia2-all8-v1.csv`。
 

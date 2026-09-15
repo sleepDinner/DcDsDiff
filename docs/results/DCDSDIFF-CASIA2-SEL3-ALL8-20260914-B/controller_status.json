@@ -1,0 +1,24 @@
+{
+  "run_id": "DCDSDIFF-CASIA2-SEL3-ALL8-20260914-B",
+  "controller_pid": 3903032,
+  "started_at": "2026-09-14T14:04:57.880468+00:00",
+  "gpu": 1,
+  "status": "INTERRUPTED",
+  "updated_at": "2026-09-15T06:13:12.228882+00:00",
+  "child_pid": null,
+  "command": [
+    "/data0/hl/conda_envs/dcdsdiff/bin/python",
+    "train.py",
+    "--config",
+    "config/experiments/casia2_sel3_all8.yaml",
+    "--results_folder",
+    "/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-CASIA2-SEL3-ALL8-20260914-B",
+    "--log_with",
+    "none",
+    "--resume",
+    "/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-CASIA2-SEL3-ALL8-20260914-B/model-last.pt"
+  ],
+  "error": "Controller received signal 15",
+  "cleanup_error": null,
+  "finished_at": "2026-09-15T06:13:12.228861+00:00"
+}

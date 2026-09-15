@@ -1,0 +1,179 @@
+{
+  "status": "COMPLETED",
+  "completed_at": "2026-09-15T06:36:01.077871+00:00",
+  "training_run_id": "DCDSDIFF-CASIA2-SEL3-ALL8-20260914-B",
+  "training_protocol_id": "CASIA2-SEL3-ALL8-V1",
+  "training_commit": "01db26c96581818499120240dc01ffaa5e71e3a9",
+  "suite_id": "ALL8-20260914-V1",
+  "dataset_manifest_sha256": "b5d7c329a957bb62e39d22bbef79f4b3d3bb071487fc97212ca2e99455c1bd8b",
+  "checkpoint": "/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-CASIA2-SEL3-ALL8-20260914-B/model-best.pt",
+  "checkpoint_sha256": "a280c3d7db017d9af81fe5aa18e754024de95115dc7aaae7519ce9902bbef2c5",
+  "epoch": 52,
+  "selection": "SAVED_BEST_TEST_MAE",
+  "selection_mae": 0.10169355626924069,
+  "selection_population": "Casiav1/Columbia/NIST16 pooled 1664 images",
+  "selection_note": "Best uses pooled MAE on these three datasets after the registered continuation boundary. Their scores are test-selected; the other five datasets are reporting-only after that boundary. The parent previously monitored All8; this is not a fresh three-set-only selection history.",
+  "continuation": {
+    "kind": "USER_AUTHORIZED_SELECTION_CHANGE",
+    "registered_at": "2026-09-14T14:04:24.353127+00:00",
+    "parent_run_id": "DCDSDIFF-CASIA2-ALL8-20260914-A",
+    "parent_commit": "cd0df49f07a9bf250a62e9ba80e65f079c5b8e0f",
+    "parent_checkpoint": "/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-CASIA2-ALL8-20260914-A/model-last.pt",
+    "parent_checkpoint_sha256": "845e53184fa8b73ee3f0bc907f243cdc50350b2e7c38bba8aebb1311494b06ee",
+    "parent_controller_stop": {
+      "run_id": "DCDSDIFF-CASIA2-ALL8-20260914-A",
+      "controller_pid": 3843754,
+      "started_at": "2026-09-14T12:39:52.556274+00:00",
+      "gpu": 1,
+      "status": "INTERRUPTED",
+      "updated_at": "2026-09-14T13:46:25.823985+00:00",
+      "child_pid": null,
+      "command": [
+        "/data0/hl/conda_envs/dcdsdiff/bin/python",
+        "train.py",
+        "--config",
+        "config/experiments/casia2_all8.yaml",
+        "--results_folder",
+        "/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-CASIA2-ALL8-20260914-A",
+        "--log_with",
+        "none"
+      ],
+      "error": "Controller received signal 15",
+      "cleanup_error": null,
+      "finished_at": "2026-09-14T13:46:25.823957+00:00"
+    },
+    "parent_epoch": 2,
+    "next_epoch": 3,
+    "global_step": 2562,
+    "preserved": [
+      "model",
+      "opt",
+      "scheduler",
+      "scaler",
+      "rng",
+      "epoch",
+      "next_epoch",
+      "global_step"
+    ],
+    "best_reset": true,
+    "previous_selection_datasets": [
+      "Casiav1",
+      "Columbia",
+      "NIST16",
+      "IMD2020",
+      "DSO-1",
+      "wild",
+      "coverage",
+      "Korus"
+    ],
+    "selection_datasets": [
+      "Casiav1",
+      "Columbia",
+      "NIST16"
+    ],
+    "selection_count": 1664,
+    "total_training_epochs": 100,
+    "imported_checkpoint_sha256": "c1ea062dede92e8e7c92d5f5fdd24a9641c15d2c44ce56d038c2d9a018ca7db2"
+  },
+  "training_endpoint": {
+    "protocol_id": "CASIA2-SEL3-ALL8-EARLYSTOP-V1",
+    "status": "EARLY_STOPPED_BY_USER",
+    "registered_at": "2026-09-15T06:20:49.142057+00:00",
+    "authorization": "User request on 2026-09-15: end GPU 1 training early and test all eight datasets.",
+    "run_id": "DCDSDIFF-CASIA2-SEL3-ALL8-20260914-B",
+    "training_commit": "01db26c96581818499120240dc01ffaa5e71e3a9",
+    "gpu": 1,
+    "planned_epochs": 100,
+    "completed_epochs": 85,
+    "last_complete_epoch": 84,
+    "last_complete_global_step": 72590,
+    "interrupted_epoch": 85,
+    "observed_global_step": 72794,
+    "best_epoch": 52,
+    "best_mae": 0.10169355626924069,
+    "checkpoint": "/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-CASIA2-SEL3-ALL8-20260914-B/model-best.pt",
+    "checkpoint_sha256": "a280c3d7db017d9af81fe5aa18e754024de95115dc7aaae7519ce9902bbef2c5",
+    "files_sha256": {
+      "provenance.json": "74a9293a266ac55de577f636559a65477b7a13fb6aef9c0467ba874330f891dd",
+      "resolved_config.yaml": "f8433a1dd989acd9e298966f56626f629c738102ee0c866b6596c056202ab675",
+      "controller_identity.json": "2087d866ffe58c27633a303b3e8dbbd986f235556e6a97e2a641a502e5b55c49",
+      "controller_status.json": "ad2ae4d8ff52009f6f164339bbe0a3e722638586dffa03729746836e3f4fe214",
+      "training_status.json": "01cf3f592f7856c52c7c32ce3d105c83656f6d88a7e6e19788cc92f2720ad03f",
+      "metrics.jsonl": "3aaa086cf33ee4862c8cea4777021e2951fa900243c7524c67deab496798b553",
+      "model-last.pt": "9618b5fd4d6600906af765150a26f87aea00f8342e09293fdae8603bb8f5b379",
+      "model-best.pt": "a280c3d7db017d9af81fe5aa18e754024de95115dc7aaae7519ce9902bbef2c5"
+    },
+    "note": "The incomplete epoch is excluded. Training was not completed to epoch 99; no final99 result exists for this continuation."
+  },
+  "sampling_seed": 0,
+  "sampling_steps": 10,
+  "threshold": 0.5,
+  "aggregation": "per-image F1/IoU/MAE; macro gives equal dataset weight, pooled gives equal image weight; empty/empty=1",
+  "input_file_verification": {
+    "verified_samples": 4295,
+    "verified_files": 17180,
+    "status": "PASS"
+  },
+  "metrics": {
+    "Casiav1": {
+      "count": 920,
+      "F1": 6.759913413020194e-07,
+      "IoU": 3.381008051307173e-07,
+      "MAE": 0.08714504310084284
+    },
+    "Columbia": {
+      "count": 180,
+      "F1": 0.0,
+      "IoU": 0.0,
+      "MAE": 0.2636972883923186
+    },
+    "NIST16": {
+      "count": 564,
+      "F1": 0.0,
+      "IoU": 0.0,
+      "MAE": 0.07372185473160237
+    },
+    "IMD2020": {
+      "count": 2010,
+      "F1": 1.3095878857882212e-06,
+      "IoU": 6.556568763981883e-07,
+      "MAE": 0.07575070348077984
+    },
+    "DSO-1": {
+      "count": 100,
+      "F1": 0.0,
+      "IoU": 0.0,
+      "MAE": 0.14072342217434197
+    },
+    "wild": {
+      "count": 201,
+      "F1": 0.0,
+      "IoU": 0.0,
+      "MAE": 0.17111381655790617
+    },
+    "coverage": {
+      "count": 100,
+      "F1": 0.0,
+      "IoU": 0.0,
+      "MAE": 0.11262095757527277
+    },
+    "Korus": {
+      "count": 220,
+      "F1": 0.0,
+      "IoU": 0.0,
+      "MAE": 0.05718628113073382
+    },
+    "All8_macro": {
+      "count": 4295,
+      "F1": 2.4819740338628007e-07,
+      "IoU": 1.242197101911132e-07,
+      "MAE": 0.12274492089297478
+    },
+    "All8_pooled": {
+      "count": 4295,
+      "F1": 7.576679125569692e-07,
+      "IoU": 3.7926031717825804e-07,
+      "MAE": 0.09168481689877672
+    }
+  }
+}

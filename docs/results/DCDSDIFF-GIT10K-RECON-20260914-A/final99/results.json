@@ -1,0 +1,70 @@
+{
+  "status": "COMPLETED",
+  "protocol_id": "GIT10K-PAPER-RECON-V1",
+  "checkpoint": "/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-GIT10K-RECON-20260914-A/model-final.pt",
+  "checkpoint_sha256": "c71f8ce2f98c72d0d2f65715f6844483f17c866a263788888c184181a8e2619a",
+  "epoch": 99,
+  "selection": "PREDECLARED_FINAL_EPOCH",
+  "sampling_seed": 0,
+  "sampling_steps": 10,
+  "threshold": 0.5,
+  "aggregation": "per-image F1/IoU then arithmetic mean; empty/empty=1",
+  "postprocessing": "upstream temporal mean, per-image minmax and positive-logit majority vote",
+  "scope": "reconstructed split; prefixes are filenames, not confirmed paper generator categories",
+  "metrics": {
+    "Mix": {
+      "count": 1000,
+      "F1": 0.1805838822467181,
+      "IoU": 0.10530443043682479,
+      "MAE": 0.4921142281591892
+    },
+    "BN": {
+      "count": 24,
+      "F1": 0.0807056431413202,
+      "IoU": 0.04384582100857672,
+      "MAE": 0.49443159128228825
+    },
+    "EI": {
+      "count": 225,
+      "F1": 0.2697209311996034,
+      "IoU": 0.15943204503766562,
+      "MAE": 0.4719702520635393
+    },
+    "IA": {
+      "count": 258,
+      "F1": 0.14437506910406092,
+      "IoU": 0.08375384528067363,
+      "MAE": 0.5286294243825499
+    },
+    "PP": {
+      "count": 217,
+      "F1": 0.2536737978238317,
+      "IoU": 0.14873686634546418,
+      "MAE": 0.45892713332231144
+    },
+    "RBN": {
+      "count": 237,
+      "F1": 0.10355579602296895,
+      "IoU": 0.05874587891914338,
+      "MAE": 0.5035709212475186
+    },
+    "e": {
+      "count": 15,
+      "F1": 0.02880158449864127,
+      "IoU": 0.014723187589373708,
+      "MAE": 0.4867213805516561
+    },
+    "t": {
+      "count": 5,
+      "F1": 0.02431481477844171,
+      "IoU": 0.012447095587091265,
+      "MAE": 0.47286330461502074
+    },
+    "z": {
+      "count": 19,
+      "F1": 0.029864938735841447,
+      "IoU": 0.015245890744822636,
+      "MAE": 0.47734411923508896
+    }
+  }
+}

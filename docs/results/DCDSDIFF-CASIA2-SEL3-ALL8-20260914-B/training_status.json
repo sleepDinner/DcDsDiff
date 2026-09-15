@@ -1,0 +1,82 @@
+{
+  "state": "RUNNING",
+  "updated_at": "2026-09-15T06:13:06.756431+00:00",
+  "pid": 3903033,
+  "cuda_visible_devices": "1",
+  "epoch": 85,
+  "next_epoch": 85,
+  "global_step": 72794,
+  "total_epochs": 100,
+  "best_mae": 0.10169355626924069,
+  "best_epoch": 52,
+  "primary_selection": "FIXED_FINAL_EPOCH",
+  "best_selection": "TEST_SELECTED_MAE_DIAGNOSTIC",
+  "architecture_version": "paper-aligned-v1",
+  "pretrained_load_report": {
+    "path": "/data1/hl/DcDsDiff-and-GIT10K/pretrained_weights/pvt_v2_b2.pth",
+    "sha256": "80711cd1b37ffba12bec6c7a2a7c54efe2315ed635e6d2055fd51c3e909ede4d",
+    "branches": {
+      "backbone": {
+        "required_feature_keys": 332,
+        "loaded_feature_keys": 332,
+        "feature_coverage": 1.0,
+        "loaded_feature_numel": 24849856,
+        "fresh_diffusion_keys": [
+          "patch_embed1.mask_proj.bias",
+          "patch_embed1.mask_proj.weight",
+          "time_embed.0.0.bias",
+          "time_embed.0.0.weight",
+          "time_embed.0.2.bias",
+          "time_embed.0.2.weight",
+          "time_embed.1.0.bias",
+          "time_embed.1.0.weight",
+          "time_embed.1.2.bias",
+          "time_embed.1.2.weight",
+          "time_embed.2.0.bias",
+          "time_embed.2.0.weight",
+          "time_embed.2.2.bias",
+          "time_embed.2.2.weight",
+          "time_embed.3.0.bias",
+          "time_embed.3.0.weight",
+          "time_embed.3.2.bias",
+          "time_embed.3.2.weight"
+        ]
+      },
+      "backbone_t": {
+        "required_feature_keys": 332,
+        "loaded_feature_keys": 332,
+        "feature_coverage": 1.0,
+        "loaded_feature_numel": 24849856,
+        "fresh_diffusion_keys": [
+          "patch_embed1.mask_proj.bias",
+          "patch_embed1.mask_proj.weight",
+          "time_embed.0.0.bias",
+          "time_embed.0.0.weight",
+          "time_embed.0.2.bias",
+          "time_embed.0.2.weight",
+          "time_embed.1.0.bias",
+          "time_embed.1.0.weight",
+          "time_embed.1.2.bias",
+          "time_embed.1.2.weight",
+          "time_embed.2.0.bias",
+          "time_embed.2.0.weight",
+          "time_embed.2.2.bias",
+          "time_embed.2.2.weight",
+          "time_embed.3.0.bias",
+          "time_embed.3.0.weight",
+          "time_embed.3.2.bias",
+          "time_embed.3.2.weight"
+        ]
+      }
+    }
+  },
+  "batch": 204,
+  "batches_per_epoch": 854,
+  "loss": 0.05709763243794441,
+  "lr": 5.54422411679103e-05,
+  "diagnostic_datasets": [
+    "Casiav1",
+    "Columbia",
+    "NIST16"
+  ]
+}

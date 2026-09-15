@@ -1,0 +1,30 @@
+{
+  "protocol_id": "CASIA2-SEL3-ALL8-EARLYSTOP-V1",
+  "status": "EARLY_STOPPED_BY_USER",
+  "registered_at": "2026-09-15T06:20:49.142057+00:00",
+  "authorization": "User request on 2026-09-15: end GPU 1 training early and test all eight datasets.",
+  "run_id": "DCDSDIFF-CASIA2-SEL3-ALL8-20260914-B",
+  "training_commit": "01db26c96581818499120240dc01ffaa5e71e3a9",
+  "gpu": 1,
+  "planned_epochs": 100,
+  "completed_epochs": 85,
+  "last_complete_epoch": 84,
+  "last_complete_global_step": 72590,
+  "interrupted_epoch": 85,
+  "observed_global_step": 72794,
+  "best_epoch": 52,
+  "best_mae": 0.10169355626924069,
+  "checkpoint": "/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-CASIA2-SEL3-ALL8-20260914-B/model-best.pt",
+  "checkpoint_sha256": "a280c3d7db017d9af81fe5aa18e754024de95115dc7aaae7519ce9902bbef2c5",
+  "files_sha256": {
+    "provenance.json": "74a9293a266ac55de577f636559a65477b7a13fb6aef9c0467ba874330f891dd",
+    "resolved_config.yaml": "f8433a1dd989acd9e298966f56626f629c738102ee0c866b6596c056202ab675",
+    "controller_identity.json": "2087d866ffe58c27633a303b3e8dbbd986f235556e6a97e2a641a502e5b55c49",
+    "controller_status.json": "ad2ae4d8ff52009f6f164339bbe0a3e722638586dffa03729746836e3f4fe214",
+    "training_status.json": "01cf3f592f7856c52c7c32ce3d105c83656f6d88a7e6e19788cc92f2720ad03f",
+    "metrics.jsonl": "3aaa086cf33ee4862c8cea4777021e2951fa900243c7524c67deab496798b553",
+    "model-last.pt": "9618b5fd4d6600906af765150a26f87aea00f8342e09293fdae8603bb8f5b379",
+    "model-best.pt": "a280c3d7db017d9af81fe5aa18e754024de95115dc7aaae7519ce9902bbef2c5"
+  },
+  "note": "The incomplete epoch is excluded. Training was not completed to epoch 99; no final99 result exists for this continuation."
+}

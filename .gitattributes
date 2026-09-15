@@ -5,7 +5,10 @@
 *.yml text eol=lf
 *.md text eol=lf
 *.json text eol=lf
+*.jsonl text eol=lf
 *.csv text eol=lf
 *.tsv text eol=lf
 *.txt text eol=lf
 *.pdf binary
+# Preserve original evaluator CSV bytes for the recorded artifact SHA-256.
+docs/results/**/per_image.csv -text

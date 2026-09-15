@@ -14,6 +14,8 @@ Diff_dataset/
 *.safetensors
 wandb/
 results/
+# Curated small reports and metrics; weight extensions remain excluded above.
+!docs/results/
 outputs/
 
 # Local environment files

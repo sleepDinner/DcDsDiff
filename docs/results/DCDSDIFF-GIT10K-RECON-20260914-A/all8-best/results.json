@@ -1,0 +1,87 @@
+{
+  "status": "COMPLETED",
+  "completed_at": "2026-09-15T03:26:50.424808+00:00",
+  "training_run_id": "DCDSDIFF-GIT10K-RECON-20260914-A",
+  "training_protocol_id": "GIT10K-PAPER-RECON-V1",
+  "training_commit": "20d44286b9354e0af189e179ba1bd162eac9b11e",
+  "suite_id": "ALL8-20260914-V1",
+  "dataset_manifest_sha256": "b5d7c329a957bb62e39d22bbef79f4b3d3bb071487fc97212ca2e99455c1bd8b",
+  "checkpoint": "/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-GIT10K-RECON-20260914-A/model-best.pt",
+  "checkpoint_sha256": "bcdce5e8469f0ac35e32edfc49ad28b2d5a46efa8e3588da3ac945f353188be7",
+  "epoch": 2,
+  "selection": "SAVED_BEST_TEST_MAE",
+  "selection_mae": 0.08910195598867722,
+  "selection_population": "GIT10K reconstructed Mix 1000 images",
+  "selection_note": "Saved best was selected on GIT10K Mix MAE; All8 is evaluated once and is not used to reselect this checkpoint.",
+  "sampling_seed": 0,
+  "sampling_steps": 10,
+  "threshold": 0.5,
+  "aggregation": "per-image F1/IoU/MAE; macro gives equal dataset weight, pooled gives equal image weight; empty/empty=1",
+  "input_file_verification": {
+    "verified_samples": 4295,
+    "verified_files": 17180,
+    "status": "PASS"
+  },
+  "metrics": {
+    "Casiav1": {
+      "count": 920,
+      "F1": 0.05501936487684878,
+      "IoU": 0.030465842673403545,
+      "MAE": 0.10114995257412691
+    },
+    "Columbia": {
+      "count": 180,
+      "F1": 0.08944376859983573,
+      "IoU": 0.051340295912972636,
+      "MAE": 0.2622741109381119
+    },
+    "NIST16": {
+      "count": 564,
+      "F1": 0.026797712404558062,
+      "IoU": 0.016137620652980553,
+      "MAE": 0.08037425544924526
+    },
+    "IMD2020": {
+      "count": 2010,
+      "F1": 0.05485877155334359,
+      "IoU": 0.03259640791586321,
+      "MAE": 0.08687166798160764
+    },
+    "DSO-1": {
+      "count": 100,
+      "F1": 0.060703293225637917,
+      "IoU": 0.03583987383423057,
+      "MAE": 0.15878100922331215
+    },
+    "wild": {
+      "count": 201,
+      "F1": 0.03458218470689997,
+      "IoU": 0.01980962382532872,
+      "MAE": 0.17582402572925412
+    },
+    "coverage": {
+      "count": 100,
+      "F1": 0.07793104352015603,
+      "IoU": 0.04514351936195713,
+      "MAE": 0.13024960595881566
+    },
+    "Korus": {
+      "count": 220,
+      "F1": 0.06645832695362285,
+      "IoU": 0.04013458284014693,
+      "MAE": 0.08423088758929886
+    },
+    "All8_macro": {
+      "count": 4295,
+      "F1": 0.05822430823011286,
+      "IoU": 0.03393347087711041,
+      "MAE": 0.13496943943047157
+    },
+    "All8_pooled": {
+      "count": 4295,
+      "F1": 0.0529762559682249,
+      "IoU": 0.03091965271626882,
+      "MAE": 0.10313967753501774
+    }
+  }
+}
