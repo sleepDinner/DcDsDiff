@@ -1,5 +1,17 @@
 # DcDsDiff reproduction rebuild
 
+## Active task: TECT-Diff, authorized 2026-09-15
+
+The complete user-supplied TECT_Diff_Codex_Prompt.md defines this new experiment. Its explicit dual-GPU batch8, FinalTrainData, All8 macro-F1 test selection, Image task and 100-epoch endpoint supersede old baseline settings only for this new protocol.
+
+1. [complete] Verify local/server/user GitHub, pinned scientific sources, environment and legal reference sources. Data decoding audits all 52924 pairs; 17 invalid training coordinate pairs are isolated, existing All8 PIL-L semantics retained.
+2. [complete] Implement isolated TECT model, training-only fitted calibration, DDP pipeline, recovery and automatic report publication.
+3. [in_progress] Review and bounded mathematics/data/gradient/sampling/DDP checks; publish and sync identical source commit. CPU mathematics, attention/gradient, data and source-role tests passed.
+4. [pending] Validate full 512 path, freeze run configuration, launch durable GPU0+GPU1 pipeline and verify actual finite progress.
+5. [pending] Publish startup evidence and leave server controller responsible for A -> B -> C -> final reports and GitHub sync.
+
+No additional seed, baseline or ablation training is authorized. Historical results and frozen sources remain protected.
+
 User-authorized scope: audit and clean local project, publish to the existing GitHub origin, create /data1/hl/DcDsDiff-and-GIT10K, create /data0/hl/conda_envs/dcdsdiff, reuse project resources, verify on the server and start the reproduction automatically. Keep other server projects untouched.
 
 ## Phases

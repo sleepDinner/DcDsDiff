@@ -95,7 +95,7 @@ class ImageTaskAdapter(nn.Module):
                                       mode="bilinear", align_corners=False) >= 0.5).to(features.dtype)
             available = (features.new_ones(batch) if has_previous is None else
                          torch.as_tensor(has_previous, device=features.device, dtype=features.dtype))
-            available = available.reshape(batch, 1, 1, 1).detach()
+            available = available.reshape(-1).expand(batch).reshape(batch, 1, 1, 1).detach()
             if bool(((available != 0) & (available != 1)).any()):
                 raise ValueError("has_previous must be binary")
         shape = self.shape(torch.cat((previous * available,

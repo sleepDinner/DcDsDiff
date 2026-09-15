@@ -32,3 +32,9 @@ data/
 GIT10K/
 *.log
 *.tmp
+
+# TECT-Diff task-owned artifacts stay server-authoritative
+cache/
+artifacts/
+.envs/
+pretrained_weights/
