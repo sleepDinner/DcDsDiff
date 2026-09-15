@@ -119,3 +119,7 @@ Historical runs are summarized separately in [pre-rebuild audit](docs/history/pr
 - 上述E启动状态是历史记录。E完整main epochs0–1的自然All8预测正像素99.8368%→99.9993%，真实7.7854%；持续严重退化触发受控停止，2026-09-15 18:22:48 UTC controller/worker均退出。保留完整epoch1/step8102 last、best0、冻结171文件；部分epoch2最后日志step10200不计入完整epoch。没有final99或健康收敛结论。
 - 16张登记训练图的只读前向对照：保存BN统计时原10步末输出99.6924%正像素，临时无更新批统计为4.9307%，GT7.2411%；j0尚无history/gamma校正已严重偏正。两rank15个BN计数均8102，完整模型/缓冲区/RNG/参考/校准/hash保持，未发现额外BN更新或源码偏离冻结协议。证据证明有界归一化敏感性，不证明GN修复有效或最终定位质量。
 - E保持`HELD_PENDING_NORMALIZATION_PROTOCOL_DECISION`，未启动新正式模型。已准备TECT-only15层GroupNorm8替代版本、训练图有界验证和fresh MAIN提案；架构修订仍需明确范围。详见[诊断及具体提案](analysis_reports/tect_diff/main_foreground_diagnostic_20260916.md)和[数值收据](analysis_reports/tect_diff/main_foreground_diagnostic_20260916.json)。selection_protocol=test_selected；没有新增All8推理或checkpoint重选。
+
+<!-- pilot:TECT-PILOT-CASIA2-GN8-R512-S42-20260916-A:begin -->
+- [TECT pilot TECT-PILOT-CASIA2-GN8-R512-S42-20260916-A](analysis_reports/runs/TECT-PILOT-CASIA2-GN8-R512-S42-20260916-A/report.md): FAILED / HOLD; selection_protocol=test_selected; complete epochs=0; full training not started.
+<!-- pilot:TECT-PILOT-CASIA2-GN8-R512-S42-20260916-A:end -->

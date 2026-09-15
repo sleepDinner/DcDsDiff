@@ -1,0 +1,13 @@
+{
+  "TECT-PILOT-CASIA2-GN8-R512-S42-20260916-A": {
+    "commit": "adf3102c329a5bc019355f14cb142c6de916acdc",
+    "complete_epoch_count": 0,
+    "config_hash": "0f9c2112331c542669cd27c6a83566ab78dbb7ea34ecdaebe80d8d911601e8cb",
+    "failure_reason": "ValueError: Data audit blocked by 2 semantic/test errors; see /data1/hl/DcDsDiff-and-GIT10K/cache/tect_diff/pilot-data-v1/audit/audit_errors.json",
+    "group_id": "TECT-PILOT-CASIA2-GN8",
+    "outcome": "HOLD",
+    "run_id": "TECT-PILOT-CASIA2-GN8-R512-S42-20260916-A",
+    "stage": "PREPARING",
+    "status": "FAILED"
+  }
+}
