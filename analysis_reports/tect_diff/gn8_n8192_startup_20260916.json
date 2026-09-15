@@ -1,0 +1,737 @@
+{
+  "status": "RUNNING_STARTUP_VERIFIED",
+  "at": "2026-09-15T21:52:56Z",
+  "run_id": "TECT-PILOT-CASIA2-GN8-N8192-R512-S42-20260916-C",
+  "source_commit": "02691917da17016f64f26ef820d5ccfa175e18ab",
+  "config_hash": "c42769f4f4fedc18f5ae21ae4c6525bb551a416e2e5ffd98ed067bc6877bd702",
+  "verified_source_files": 207,
+  "state": {
+    "commit": "02691917da17016f64f26ef820d5ccfa175e18ab",
+    "controller_identity": {
+      "cmdline": "/data0/hl/conda_envs/dcdsdiff/bin/python -B -s /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-PILOT-CASIA2-GN8-N8192-R512-S42-20260916-C/source/scripts/tect_diff/pilot_controller.py supervise --run-dir /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-PILOT-CASIA2-GN8-N8192-R512-S42-20260916-C ",
+      "pid": 961685,
+      "start_ticks": "2710875423"
+    },
+    "controller_pgid": 961685,
+    "controller_pid": 961685,
+    "elapsed_seconds": 135.6715983748436,
+    "failure_reason": null,
+    "resource_block": null,
+    "run_id": "TECT-PILOT-CASIA2-GN8-N8192-R512-S42-20260916-C",
+    "stage": "PILOT",
+    "status": "RUNNING",
+    "updated_at": "2026-09-15T21:52:51Z",
+    "worker_command": [
+      "/data0/hl/conda_envs/dcdsdiff/bin/python",
+      "-B",
+      "-s",
+      "-m",
+      "torch.distributed.run",
+      "--standalone",
+      "--nnodes=1",
+      "--nproc-per-node=2",
+      "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-PILOT-CASIA2-GN8-N8192-R512-S42-20260916-C/source/scripts/tect_diff/pilot_worker.py",
+      "--run-dir",
+      "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-PILOT-CASIA2-GN8-N8192-R512-S42-20260916-C"
+    ],
+    "worker_identity": {
+      "cmdline": "",
+      "pid": 961753,
+      "start_ticks": "2710877015"
+    },
+    "worker_pgid": 961753,
+    "worker_pid": 961753,
+    "controller_alive": true,
+    "worker_alive": true,
+    "run_dir": "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-PILOT-CASIA2-GN8-N8192-R512-S42-20260916-C",
+    "config_hash": "c42769f4f4fedc18f5ae21ae4c6525bb551a416e2e5ffd98ed067bc6877bd702",
+    "progress": {
+      "A_mean": 0.12265042960643768,
+      "A_negative_fraction": 0.15712103247642517,
+      "amp_skipped": false,
+      "control_logit_change": 0.0008181421435438097,
+      "elapsed_seconds": 97.01277597993612,
+      "ell_mean": -0.011241219937801361,
+      "epoch": 0,
+      "gamma": 0.08929292112588882,
+      "gradient_norm": 1.1538033485412598,
+      "gradient_sync": {
+        "at": "2026-09-15T21:52:41Z",
+        "coverage_pass_by_rank": [
+          true,
+          true
+        ],
+        "gradient_norm_by_rank": [
+          1.1538033485412598,
+          1.1538033485412598
+        ],
+        "gradient_tensors_by_rank": [
+          856,
+          856
+        ],
+        "passed": true
+      },
+      "image_loss": 0.08213722705841064,
+      "joint_ref_mse": 0.0033092829398810863,
+      "loss": 1.2713185548782349,
+      "mask_loss": 1.1891813278198242,
+      "micro_batch": 60,
+      "micro_batches_per_epoch": 683,
+      "optimizer_step": 60,
+      "peak_memory_bytes": 19805605888,
+      "pid": 961759,
+      "prefix": 4,
+      "q_mean": 0.2943747937679291,
+      "q_zero_fraction": 0.0233001708984375,
+      "rank": 0,
+      "sampling_step": 8,
+      "stage": "PILOT_TRAINING",
+      "updated_at": "2026-09-15T21:52:41Z"
+    }
+  },
+  "locks": {
+    "gpu-0.lock": "HELD",
+    "gpu-1.lock": "HELD",
+    "run-TECT-PILOT-CASIA2-GN8-N8192-R512-S42-20260916-C.lock": "HELD",
+    "tect-controller-TECT-PILOT-CASIA2-GN8-N8192-R512-S42-20260916-C.lock": "HELD"
+  },
+  "data_expansion": {
+    "all_parent_rows_identical": true,
+    "at": "2026-09-15T21:50:51Z",
+    "calibration_sha256": "bb349a143385b25798fe0a9c7c43904ba08c26f38ed7a6aee991add7ed16f59c",
+    "manifest_id": "7b66b009323325ebbe1f",
+    "parent_config_hash": "174434a273212505913ed20b5469e9309776e656bf07f2da30e94eee8b9c36b8",
+    "parent_data_bundle_path": "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-PILOT-CASIA2-GN8-R512-S42-20260916-B/data_bundle.json",
+    "parent_data_bundle_sha256": "5a2c357bfe741922eec250a1874d0e6b44914a6d02a6f134cbf17fe33f65976a",
+    "parent_manifest_id": "3a3fabf77e37e0c77585",
+    "parent_outcome": "NO_GO",
+    "parent_run": "TECT-PILOT-CASIA2-GN8-R512-S42-20260916-B",
+    "parent_source_commit": "2ea2f5b855ef4d917fae4265e9e6d2ca7c1a6382",
+    "parent_summary_hash": "d1a6d215f0e31485b392cbe406752728e12afd05fbb166362bacf451688ace7a",
+    "parent_terminal_sha256": "77fa9b7e5f300479affe6787114167460eff16175baaaea1a53a3565de5f2487",
+    "parent_train_count": 2048,
+    "parent_train_hash": "934626cbbdba9713b79b2660bafabc56843792d83975c57ec94b4347e961b0b7",
+    "parent_weights_loaded": false,
+    "quarantined_pair_count": 2,
+    "reference_sha256": "800f50c392a275fde3ec249c6f52275c6db79813e6f8b7e8b534f9ddb52a523f",
+    "retained_parent_train_count": 2048,
+    "run_id": "TECT-PILOT-CASIA2-GN8-N8192-R512-S42-20260916-C",
+    "status": "PASSED",
+    "test_probe_source_and_rgb_disjoint": true,
+    "train_count": 8192,
+    "train_hash": "01c693b53947ea26118561e1296c9b023d26d36e5f16772bbccf2c2dd759e404",
+    "unchanged_manifest_hashes": {
+      "authentic_probe": "f8f80cda5371d011bb2d6951238f76f7129985a845c9c0ae382d41c910c5b919",
+      "calibration": "a22183506365f042e141c16b09a8c9e369c3f7886864c2a1d5326a4ada5e38c5",
+      "reference": "0a501e3f0570b245ac594941fcbf2328d1bed195835825de8b7a758f62a13f79",
+      "test_Casiav1": "ba9a00d8868dff5d44fb60d535ea54504b071d8c9802aa55b5a787a09d645f6c",
+      "test_Columbia": "8c41cbe4733f3feef3c5bd1169d46dea7f247b0ffdad4446779eb19077cfc56e",
+      "test_full_Casiav1": "a51508ac9da6618b685c807415674a78cd99b0681af7d4dae59b9947d187bc73",
+      "test_full_Columbia": "dfcd1d818b0ec1250023b94e1b92c7292fb3ed107a47cbcf19d2050742594307"
+    }
+  },
+  "engineering": {
+    "adam_hashes": [
+      "4b9258547875c3f300421bc785476d0db5c44e5c863816720abcbfc9cfcc1792",
+      "4b9258547875c3f300421bc785476d0db5c44e5c863816720abcbfc9cfcc1792"
+    ],
+    "completed_at": "2026-09-15T21:51:27Z",
+    "config_hash": "c42769f4f4fedc18f5ae21ae4c6525bb551a416e2e5ffd98ed067bc6877bd702",
+    "elapsed_seconds": 12.81772318482399,
+    "formal_optimizer_steps": 0,
+    "fp32_batch_independence": {
+      "budget": 1e-05,
+      "formal_precision_unchanged": true,
+      "max_probability_difference": 1.2516975402832031e-06,
+      "passed": true,
+      "training_ids": [
+        "CASIA2:Au_pla_30270",
+        "CASIA2:Au_art_30439"
+      ]
+    },
+    "fresh_initialization_restored": true,
+    "no_diagnostic_weights_saved": true,
+    "peak_allocated_bytes": 19583434240,
+    "protocol_id": "TECT-PILOT-CASIA2-GN8-R512-S42-DATA2-N8192-V1",
+    "ranks": [
+      {
+        "adam_hashes": [
+          "4b9258547875c3f300421bc785476d0db5c44e5c863816720abcbfc9cfcc1792",
+          "4b9258547875c3f300421bc785476d0db5c44e5c863816720abcbfc9cfcc1792"
+        ],
+        "elapsed_seconds": 12.81772318482399,
+        "fp32_batch_independence": {
+          "budget": 1e-05,
+          "formal_precision_unchanged": true,
+          "max_probability_difference": 1.2516975402832031e-06,
+          "passed": true,
+          "training_ids": [
+            "CASIA2:Au_pla_30270",
+            "CASIA2:Au_art_30439"
+          ]
+        },
+        "peak_allocated_bytes": 19583434240,
+        "updates": [
+          {
+            "gradient_norm": 3.7887585163116455,
+            "gradient_sync": {
+              "at": "2026-09-15T21:51:16Z",
+              "coverage_pass_by_rank": [
+                true,
+                true
+              ],
+              "gradient_norm_by_rank": [
+                3.7887585163116455,
+                3.7887585163116455
+              ],
+              "gradient_tensors_by_rank": [
+                856,
+                856
+              ],
+              "passed": true
+            },
+            "loss": 1.9436919689178467,
+            "step": 1
+          },
+          {
+            "gradient_norm": 2.3214759826660156,
+            "gradient_sync": {
+              "at": "2026-09-15T21:51:18Z",
+              "coverage_pass_by_rank": [
+                true,
+                true
+              ],
+              "gradient_norm_by_rank": [
+                2.3214759826660156,
+                2.3214759826660156
+              ],
+              "gradient_tensors_by_rank": [
+                856,
+                856
+              ],
+              "passed": true
+            },
+            "loss": 1.7573515176773071,
+            "step": 2
+          },
+          {
+            "gradient_norm": 2.8965237140655518,
+            "gradient_sync": {
+              "at": "2026-09-15T21:51:19Z",
+              "coverage_pass_by_rank": [
+                true,
+                true
+              ],
+              "gradient_norm_by_rank": [
+                2.8965237140655518,
+                2.8965237140655518
+              ],
+              "gradient_tensors_by_rank": [
+                856,
+                856
+              ],
+              "passed": true
+            },
+            "loss": 1.7302348613739014,
+            "step": 3
+          },
+          {
+            "gradient_norm": 2.2094247341156006,
+            "gradient_sync": {
+              "at": "2026-09-15T21:51:20Z",
+              "coverage_pass_by_rank": [
+                true,
+                true
+              ],
+              "gradient_norm_by_rank": [
+                2.2094247341156006,
+                2.2094247341156006
+              ],
+              "gradient_tensors_by_rank": [
+                856,
+                856
+              ],
+              "passed": true
+            },
+            "loss": 1.69873046875,
+            "step": 4
+          },
+          {
+            "gradient_norm": 2.5207600593566895,
+            "gradient_sync": {
+              "at": "2026-09-15T21:51:21Z",
+              "coverage_pass_by_rank": [
+                true,
+                true
+              ],
+              "gradient_norm_by_rank": [
+                2.5207600593566895,
+                2.5207600593566895
+              ],
+              "gradient_tensors_by_rank": [
+                856,
+                856
+              ],
+              "passed": true
+            },
+            "loss": 1.6919724941253662,
+            "step": 5
+          },
+          {
+            "gradient_norm": 2.151870012283325,
+            "gradient_sync": {
+              "at": "2026-09-15T21:51:22Z",
+              "coverage_pass_by_rank": [
+                true,
+                true
+              ],
+              "gradient_norm_by_rank": [
+                2.151870012283325,
+                2.151870012283325
+              ],
+              "gradient_tensors_by_rank": [
+                856,
+                856
+              ],
+              "passed": true
+            },
+            "loss": 1.6903715133666992,
+            "step": 6
+          },
+          {
+            "gradient_norm": 2.29022479057312,
+            "gradient_sync": {
+              "at": "2026-09-15T21:51:24Z",
+              "coverage_pass_by_rank": [
+                true,
+                true
+              ],
+              "gradient_norm_by_rank": [
+                2.29022479057312,
+                2.29022479057312
+              ],
+              "gradient_tensors_by_rank": [
+                856,
+                856
+              ],
+              "passed": true
+            },
+            "loss": 1.6735446453094482,
+            "step": 7
+          },
+          {
+            "gradient_norm": 2.125335931777954,
+            "gradient_sync": {
+              "at": "2026-09-15T21:51:25Z",
+              "coverage_pass_by_rank": [
+                true,
+                true
+              ],
+              "gradient_norm_by_rank": [
+                2.125335931777954,
+                2.125335931777954
+              ],
+              "gradient_tensors_by_rank": [
+                856,
+                856
+              ],
+              "passed": true
+            },
+            "loss": 1.6267509460449219,
+            "step": 8
+          }
+        ]
+      },
+      {
+        "adam_hashes": [
+          "4b9258547875c3f300421bc785476d0db5c44e5c863816720abcbfc9cfcc1792",
+          "4b9258547875c3f300421bc785476d0db5c44e5c863816720abcbfc9cfcc1792"
+        ],
+        "elapsed_seconds": 12.821873292326927,
+        "fp32_batch_independence": {
+          "budget": 1e-05,
+          "formal_precision_unchanged": true,
+          "max_probability_difference": 1.7583370208740234e-06,
+          "passed": true,
+          "training_ids": [
+            "CASIA2:Au_sec_30002",
+            "CASIA2:Au_ind_30051"
+          ]
+        },
+        "peak_allocated_bytes": 19807478784,
+        "updates": [
+          {
+            "gradient_norm": 3.7887585163116455,
+            "gradient_sync": {
+              "at": "2026-09-15T21:51:16Z",
+              "coverage_pass_by_rank": [
+                true,
+                true
+              ],
+              "gradient_norm_by_rank": [
+                3.7887585163116455,
+                3.7887585163116455
+              ],
+              "gradient_tensors_by_rank": [
+                856,
+                856
+              ],
+              "passed": true
+            },
+            "loss": 1.9033088684082031,
+            "step": 1
+          },
+          {
+            "gradient_norm": 2.3214759826660156,
+            "gradient_sync": {
+              "at": "2026-09-15T21:51:18Z",
+              "coverage_pass_by_rank": [
+                true,
+                true
+              ],
+              "gradient_norm_by_rank": [
+                2.3214759826660156,
+                2.3214759826660156
+              ],
+              "gradient_tensors_by_rank": [
+                856,
+                856
+              ],
+              "passed": true
+            },
+            "loss": 1.7296974658966064,
+            "step": 2
+          },
+          {
+            "gradient_norm": 2.8965237140655518,
+            "gradient_sync": {
+              "at": "2026-09-15T21:51:19Z",
+              "coverage_pass_by_rank": [
+                true,
+                true
+              ],
+              "gradient_norm_by_rank": [
+                2.8965237140655518,
+                2.8965237140655518
+              ],
+              "gradient_tensors_by_rank": [
+                856,
+                856
+              ],
+              "passed": true
+            },
+            "loss": 1.7262492179870605,
+            "step": 3
+          },
+          {
+            "gradient_norm": 2.2094247341156006,
+            "gradient_sync": {
+              "at": "2026-09-15T21:51:20Z",
+              "coverage_pass_by_rank": [
+                true,
+                true
+              ],
+              "gradient_norm_by_rank": [
+                2.2094247341156006,
+                2.2094247341156006
+              ],
+              "gradient_tensors_by_rank": [
+                856,
+                856
+              ],
+              "passed": true
+            },
+            "loss": 1.7447901964187622,
+            "step": 4
+          },
+          {
+            "gradient_norm": 2.5207600593566895,
+            "gradient_sync": {
+              "at": "2026-09-15T21:51:21Z",
+              "coverage_pass_by_rank": [
+                true,
+                true
+              ],
+              "gradient_norm_by_rank": [
+                2.5207600593566895,
+                2.5207600593566895
+              ],
+              "gradient_tensors_by_rank": [
+                856,
+                856
+              ],
+              "passed": true
+            },
+            "loss": 1.7460252046585083,
+            "step": 5
+          },
+          {
+            "gradient_norm": 2.151870012283325,
+            "gradient_sync": {
+              "at": "2026-09-15T21:51:22Z",
+              "coverage_pass_by_rank": [
+                true,
+                true
+              ],
+              "gradient_norm_by_rank": [
+                2.151870012283325,
+                2.151870012283325
+              ],
+              "gradient_tensors_by_rank": [
+                856,
+                856
+              ],
+              "passed": true
+            },
+            "loss": 1.6984636783599854,
+            "step": 6
+          },
+          {
+            "gradient_norm": 2.29022479057312,
+            "gradient_sync": {
+              "at": "2026-09-15T21:51:24Z",
+              "coverage_pass_by_rank": [
+                true,
+                true
+              ],
+              "gradient_norm_by_rank": [
+                2.29022479057312,
+                2.29022479057312
+              ],
+              "gradient_tensors_by_rank": [
+                856,
+                856
+              ],
+              "passed": true
+            },
+            "loss": 1.6468366384506226,
+            "step": 7
+          },
+          {
+            "gradient_norm": 2.125335931777954,
+            "gradient_sync": {
+              "at": "2026-09-15T21:51:25Z",
+              "coverage_pass_by_rank": [
+                true,
+                true
+              ],
+              "gradient_norm_by_rank": [
+                2.125335931777954,
+                2.125335931777954
+              ],
+              "gradient_tensors_by_rank": [
+                856,
+                856
+              ],
+              "passed": true
+            },
+            "loss": 1.6111657619476318,
+            "step": 8
+          }
+        ]
+      }
+    ],
+    "status": "COMPLETED",
+    "updates": [
+      {
+        "gradient_norm": 3.7887585163116455,
+        "gradient_sync": {
+          "at": "2026-09-15T21:51:16Z",
+          "coverage_pass_by_rank": [
+            true,
+            true
+          ],
+          "gradient_norm_by_rank": [
+            3.7887585163116455,
+            3.7887585163116455
+          ],
+          "gradient_tensors_by_rank": [
+            856,
+            856
+          ],
+          "passed": true
+        },
+        "loss": 1.9436919689178467,
+        "step": 1
+      },
+      {
+        "gradient_norm": 2.3214759826660156,
+        "gradient_sync": {
+          "at": "2026-09-15T21:51:18Z",
+          "coverage_pass_by_rank": [
+            true,
+            true
+          ],
+          "gradient_norm_by_rank": [
+            2.3214759826660156,
+            2.3214759826660156
+          ],
+          "gradient_tensors_by_rank": [
+            856,
+            856
+          ],
+          "passed": true
+        },
+        "loss": 1.7573515176773071,
+        "step": 2
+      },
+      {
+        "gradient_norm": 2.8965237140655518,
+        "gradient_sync": {
+          "at": "2026-09-15T21:51:19Z",
+          "coverage_pass_by_rank": [
+            true,
+            true
+          ],
+          "gradient_norm_by_rank": [
+            2.8965237140655518,
+            2.8965237140655518
+          ],
+          "gradient_tensors_by_rank": [
+            856,
+            856
+          ],
+          "passed": true
+        },
+        "loss": 1.7302348613739014,
+        "step": 3
+      },
+      {
+        "gradient_norm": 2.2094247341156006,
+        "gradient_sync": {
+          "at": "2026-09-15T21:51:20Z",
+          "coverage_pass_by_rank": [
+            true,
+            true
+          ],
+          "gradient_norm_by_rank": [
+            2.2094247341156006,
+            2.2094247341156006
+          ],
+          "gradient_tensors_by_rank": [
+            856,
+            856
+          ],
+          "passed": true
+        },
+        "loss": 1.69873046875,
+        "step": 4
+      },
+      {
+        "gradient_norm": 2.5207600593566895,
+        "gradient_sync": {
+          "at": "2026-09-15T21:51:21Z",
+          "coverage_pass_by_rank": [
+            true,
+            true
+          ],
+          "gradient_norm_by_rank": [
+            2.5207600593566895,
+            2.5207600593566895
+          ],
+          "gradient_tensors_by_rank": [
+            856,
+            856
+          ],
+          "passed": true
+        },
+        "loss": 1.6919724941253662,
+        "step": 5
+      },
+      {
+        "gradient_norm": 2.151870012283325,
+        "gradient_sync": {
+          "at": "2026-09-15T21:51:22Z",
+          "coverage_pass_by_rank": [
+            true,
+            true
+          ],
+          "gradient_norm_by_rank": [
+            2.151870012283325,
+            2.151870012283325
+          ],
+          "gradient_tensors_by_rank": [
+            856,
+            856
+          ],
+          "passed": true
+        },
+        "loss": 1.6903715133666992,
+        "step": 6
+      },
+      {
+        "gradient_norm": 2.29022479057312,
+        "gradient_sync": {
+          "at": "2026-09-15T21:51:24Z",
+          "coverage_pass_by_rank": [
+            true,
+            true
+          ],
+          "gradient_norm_by_rank": [
+            2.29022479057312,
+            2.29022479057312
+          ],
+          "gradient_tensors_by_rank": [
+            856,
+            856
+          ],
+          "passed": true
+        },
+        "loss": 1.6735446453094482,
+        "step": 7
+      },
+      {
+        "gradient_norm": 2.125335931777954,
+        "gradient_sync": {
+          "at": "2026-09-15T21:51:25Z",
+          "coverage_pass_by_rank": [
+            true,
+            true
+          ],
+          "gradient_norm_by_rank": [
+            2.125335931777954,
+            2.125335931777954
+          ],
+          "gradient_tensors_by_rank": [
+            856,
+            856
+          ],
+          "passed": true
+        },
+        "loss": 1.6267509460449219,
+        "step": 8
+      }
+    ]
+  },
+  "gpu_snapshot": "0, NVIDIA GeForce RTX 4090, 21260, 24564, 39, 5, 189.05\n1, NVIDIA GeForce RTX 4090, 21396, 24564, 33, 5, 162.11",
+  "manifest_hashes": {
+    "authentic_probe": "f8f80cda5371d011bb2d6951238f76f7129985a845c9c0ae382d41c910c5b919",
+    "calibration": "a22183506365f042e141c16b09a8c9e369c3f7886864c2a1d5326a4ada5e38c5",
+    "preflight_train": "9dc3270f5d2656e44bfe21654041eb6023c64c0af3294aaf93104d6a86444407",
+    "reference": "0a501e3f0570b245ac594941fcbf2328d1bed195835825de8b7a758f62a13f79",
+    "test_Casiav1": "ba9a00d8868dff5d44fb60d535ea54504b071d8c9802aa55b5a787a09d645f6c",
+    "test_Columbia": "8c41cbe4733f3feef3c5bd1169d46dea7f247b0ffdad4446779eb19077cfc56e",
+    "test_full_Casiav1": "a51508ac9da6618b685c807415674a78cd99b0681af7d4dae59b9947d187bc73",
+    "test_full_Columbia": "dfcd1d818b0ec1250023b94e1b92c7292fb3ed107a47cbcf19d2050742594307",
+    "train": "01c693b53947ea26118561e1296c9b023d26d36e5f16772bbccf2c2dd759e404"
+  },
+  "manifest_id": "7b66b009323325ebbe1f",
+  "input_file_sha256": {
+    "provenance.json": "dbe7b488cb22d3f6283cbee12198373a4b8dc5aa2d0f97672b4dea522442ae4c",
+    "resolved_config.json": "191238190a5519b776c53d41f945b6a4e842274dd3c72e60a7e834b13ae18b81",
+    "data_bundle.json": "ab8bec8091f387b1fc0edbd12fd918ceb6ef9f5a0681e2aa22158c3cb7bbc03e",
+    "data_expansion.json": "b52ad5a934fd67b2ed7d064e36272c3f4beb5bee88e478c66f3f0405193feb4f",
+    "engineering_receipt.json": "265261cb5c4b3f1a87c89405afd74497b7a50b26119cd6a901b4c15d2f5b6204",
+    "fitting_reuse.json": "6e67e4a352ddbcdb62378ce5f3553f790068623cd757f82cfd1c14f3002eedd1"
+  },
+  "validation": {
+    "local_cpu_tests": 41,
+    "server_environment_cpu_tests": 41,
+    "independent_review": "NO_BLOCKING_FINDINGS"
+  },
+  "boundaries": [
+    "Startup and short engineering checks only; no complete C epoch or convergence claim.",
+    "C remains CASIA2 development with unchanged Test2 promotion gates; coverage and updates changed together.",
+    "Source snapshot is frozen even if later report-only commits advance the checkout."
+  ]
+}

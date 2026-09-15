@@ -1,9 +1,10 @@
 # Experiment ledger
 
-## TECT-PILOT-CASIA2-GN8-R512-S42-DATA2-N8192-V1 — REGISTERED
+## TECT-PILOT-CASIA2-GN8-R512-S42-DATA2-N8192-V1 — RUNNING
 
 - Next run `TECT-PILOT-CASIA2-GN8-N8192-R512-S42-20260916-C`; [registered scope](configs/tect_diff/PILOT_N8192.md), [config](configs/tect_diff/pilot_casia2_gn8_data2_n8192_r512_s42.json). Registered before C results; actual startup/source/manifest receipts must be recorded after execution.
 - Fresh MAIN, same GN8/mechanisms/optimizer/batch/Test2/gates; fixed nested8192 train (4096Au+4096Tp), maximum10epochs/4h. Data coverage and total update budget change jointly. The [fixed B-final training diagnosis](analysis_reports/tect_diff/gn8_pilot_nogo_diagnostic_20260916.md) supports working conditioning and sampling, not proof of insufficient data or guaranteed improvement. C remains development; no premature Full/All8.
+- C实际于2026-09-15 21:50:36 UTC进入准备，21:51:30首个正式更新，冻结源码`02691917da17016f64f26ef820d5ccfa175e18ab`、配置hash`c42769f4f4fedc18f5ae21ae4c6525bb551a416e2e5ffd98ed067bc6877bd702`。21:52:56核验epoch0/step60，207冻结文件、8192包含原2048行、固定角色及拟合hash、双rank8次工程更新后fresh状态恢复均通过；856梯度同步，无AMP跳步，四个GPU/run/controller锁持有。显存当时21260/21396MiB；瞬时利用率不作为吞吐结论。见[启动收据](analysis_reports/tect_diff/gn8_n8192_startup_20260916.json)。尚无完整C epoch、Test2或收敛结论；tect-v2已ACTIVE绑定C，每30分钟检查。
 
 ## TECT-PILOT-CASIA2-GN8-R512-S42-DATA2-V1 — COMPLETED / NO_GO
 

@@ -31,3 +31,7 @@ B最佳Test2为0.433405，末轮0.340817，未通过原晋级门槛；训练mask
 通过后，仅对当前checkpoint进行一次完整两库确认，复用其已完成256图，额外推理844图。确认通过才产生READY_FOR_FULL，由监督登记另一个fresh MAIN完整运行；本C仍是CASIA2开发验证。确认未过、连续退化或10轮结束未通过时NO_GO，不自动追加样本/epoch；执行超时按现有控制器FAILED/HOLD保留最后完整状态，不伪报10轮完成。监督据新证据判断下一步，不盲目重跑。
 
 每轮保留DINOv3式JSONL、`average_test2`和明确selection字段，自动报告并白名单发布。`selection_protocol=test_selected`：两个测试库参与开发、选模和晋级，不是独立泛化评估。C与B的分数不构成只改变一个因素的对照实验。
+
+## 实际启动
+
+2026-09-15 21:50:36 UTC controller开始准备；冻结执行提交`02691917da17016f64f26ef820d5ccfa175e18ab`，配置hash`c42769f4f4fedc18f5ae21ae4c6525bb551a416e2e5ffd98ed067bc6877bd702`。21:52:56已核验epoch0/step60、207个来源文件和完整嵌套数据关系；两rank工程更新、fresh初始化恢复及正式梯度同步通过。[启动收据](../../analysis_reports/tect_diff/gn8_n8192_startup_20260916.json)保留细节。此处仅是正常启动，不是完整一轮、晋级或收敛结论。
