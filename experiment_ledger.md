@@ -100,3 +100,5 @@ Historical runs are summarized separately in [pre-rebuild audit](docs/history/pr
 - 用户进一步明确每卡6张，工程测量通过：micro6/accum1/global12、LR1e-4，10.0515 images/s，比micro4快10.68%、原micro2快58.98%，张量峰值16.76GiB/卡；完整856梯度及双rank参数/优化器hash检查通过。测试选每卡8张、CPU指标线程4/队列8，64张训练图的端到端6.9186 images/s，为batch1/线程0的2.0366倍。更大测试batch更慢。
 - 登记唯一替代运行 `TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E`，复用C固定参考epoch19与2048训练图校准，主模型seed42/ImageNet重新初始化epochs0–99。global batch8→12会改变优化轨迹；BF16测试批次按版本化数值预算验收，存在小幅概率/二值指标差异，不称exact continuation或数值完全等价。不增科学臂，不用All8调参。见[修订协议](configs/tect_diff/MEMORY_BATCH_RESTART.md)、[工程实测](analysis_reports/tect_diff/memory_batch_performance_20260915.md)。
 - 本条为发布前登记，正式执行提交、配置hash、启动及初始健康状态待实际收据补充。30分钟tect-v2监督跟随E完整main0–2及其All8正常后暂停，训练继续到99；selection_protocol=test_selected。
+
+- [TECT-Diff TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E](analysis_reports/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E/report.md); test_selected All8 F1; fixed final reported separately.
