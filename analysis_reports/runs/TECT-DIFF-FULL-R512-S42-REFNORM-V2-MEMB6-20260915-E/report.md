@@ -1,6 +1,6 @@
 # TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E
 
-状态：**RUNNING**；阶段：MAIN。尚未完成正式主训练与固定终点汇总。
+状态：**INTERRUPTED**；阶段：MAIN。尚未完成正式主训练与固定终点汇总。
 
 按八测试集逐 epoch F1 选择 checkpoint；这些测试集参与模型选择，不是独立泛化评估。selection_protocol=test_selected。固定终点 final.pth 与 test-selected best.pth 分开报告。
 
@@ -67,24 +67,24 @@
 
 ```json
 {
-  "A_mean": 0.24855145812034607,
-  "A_negative_fraction": 0.1650714874267578,
+  "A_mean": 0.47452718019485474,
+  "A_negative_fraction": 0.2145099639892578,
   "amp_skipped": false,
-  "control_logit_change": 0.0005428004078567028,
-  "elapsed_seconds": 12.170204997062683,
-  "ell_mean": -0.00852382555603981,
-  "epoch": 0,
-  "gamma": 0.055555559694767,
-  "gradient_norm": 3.3980534076690674,
+  "control_logit_change": 0.0,
+  "elapsed_seconds": 15051.884952761233,
+  "ell_mean": -0.004101177677512169,
+  "epoch": 2,
+  "gamma": 0.0,
+  "gradient_norm": 1.0622400045394897,
   "gradient_sync": {
-    "at": "2026-09-15T14:11:52Z",
+    "at": "2026-09-15T18:22:32Z",
     "coverage_pass_by_rank": [
       true,
       true
     ],
     "gradient_norm_by_rank": [
-      3.3980534076690674,
-      3.3980534076690674
+      1.0622400045394897,
+      1.0622400045394897
     ],
     "gradient_tensors_by_rank": [
       856,
@@ -92,28 +92,43 @@
     ],
     "passed": true
   },
-  "image_loss": 0.21575239300727844,
-  "joint_ref_mse": 0.14418530464172363,
-  "loss": 1.779725193977356,
-  "mask_loss": 1.5639728307724,
-  "micro_batch": 1,
+  "image_loss": 0.04916076362133026,
+  "joint_ref_mse": 0.0008083865395747125,
+  "loss": 0.2870669960975647,
+  "mask_loss": 0.23790624737739563,
+  "micro_batch": 2098,
   "micro_batches_per_epoch": 4051,
-  "optimizer_step": 1,
-  "peak_memory_bytes": 17215086080,
+  "optimizer_step": 10200,
+  "peak_memory_bytes": 18007270400,
   "pid": 702761,
-  "prefix": 3,
-  "q_mean": 0.3043288588523865,
+  "prefix": 1,
+  "q_mean": 0.1888730525970459,
   "q_zero_fraction": 0.0233001708984375,
   "rank": 0,
-  "sampling_step": 5,
+  "sampling_step": 1,
   "stage": "MAIN_TRAINING",
-  "updated_at": "2026-09-15T14:11:52Z"
+  "updated_at": "2026-09-15T18:22:32Z"
 }
 ```
 
 ### Test-selected best
 
-尚无此终点的完整 checkpoint / 八集结果。
+Epoch: 0。
+All8 macro Pixel-F1: 0.20318136。
+
+| Dataset | Images | Pixel-F1 | IoU | Boundary-F1 |
+| --- | ---: | ---: | ---: | ---: |
+| Casiav1 | 920 | 0.15333971 | 0.088327892 | 0.12805718 |
+| Columbia | 180 | 0.41030271 | 0.26502152 | 0.36023989 |
+| DSO-1 | 100 | 0.23764159 | 0.14071884 | 0.13765774 |
+| IMD2020 | 2010 | 0.13125169 | 0.075916097 | 0.064087755 |
+| Korus | 220 | 0.10305755 | 0.05716893 | 0.058080212 |
+| NIST16 | 564 | 0.12058792 | 0.073665316 | 0.046901143 |
+| coverage | 100 | 0.19744292 | 0.11273626 | 0.016818541 |
+| wild | 201 | 0.27182683 | 0.17122139 | 0.095730423 |
+
+Server checkpoint: `/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E/best.pth`
+SHA256: `NA`。权重仅保存在服务器。
 
 ### Fixed final endpoint
 
@@ -1156,9 +1171,10 @@
     "validation_source_sha256": "27d7c201f25bb44d06686d7d0732c962b060cbd186c5f69b914d6ca8396843d3"
   },
   "operational_hold": {
-    "active": false,
-    "at": "2026-09-15T14:10:24Z",
-    "reason": "Measured microbatch6/global12 restart registered; healthy fitting artifacts reused; MAIN starts fresh"
+    "active": true,
+    "at": "2026-09-15T18:22:35Z",
+    "authority": "user authorized stop on confirmed training abnormality",
+    "reason": "EARLY_MONITOR_CONFIRMED_FOREGROUND_SATURATION: epochs0/1 predicted-positive fractions 0.9983681757525111 and 0.9999929905032854; GT 0.07785399098752006. Preserve completed states; hold for bounded training-image engineering diagnosis. No automatic resume."
   },
   "calibration": {
     "artifact_hash": "bcb2f80690dff8632a5af39c3c3263f29460aede883f93335fbf45c36b470f43",
@@ -1330,8 +1346,8 @@ q 全零、gamma 退化、Image 退化或控制损害定位以 diagnostics_summa
     "all_observed_joint_ref_mse_below_1e_minus12": false
   },
   "peak_allocated_bytes_by_rank": {
-    "0": 17215086080,
-    "1": 17429630464
+    "0": 18007270400,
+    "1": 18005599232
   },
   "sample_profiles": [
     {
@@ -1358,29 +1374,29 @@ q 全零、gamma 退化、Image 退化或控制损害定位以 diagnostics_summa
     }
   ],
   "sampled_training": {
-    "records": 1,
+    "records": 205,
     "malformed_lines": 0,
     "metrics": {
       "A_mean": {
-        "count": 1,
+        "count": 205,
         "nonfinite_count": 0,
-        "mean": 0.24855145812034607,
-        "minimum": 0.24855145812034607,
-        "maximum": 0.24855145812034607,
-        "last": 0.24855145812034607,
+        "mean": 0.3738248872320828,
+        "minimum": 0.1832752674818039,
+        "maximum": 0.7256617546081543,
+        "last": 0.47452718019485474,
         "kind": "scalar"
       },
       "A_negative_fraction": {
-        "count": 1,
+        "count": 205,
         "nonfinite_count": 0,
-        "mean": 0.1650714874267578,
-        "minimum": 0.1650714874267578,
-        "maximum": 0.1650714874267578,
-        "last": 0.1650714874267578,
+        "mean": 0.1565303942415774,
+        "minimum": 0.10241063684225082,
+        "maximum": 0.2903359830379486,
+        "last": 0.2145099639892578,
         "kind": "scalar"
       },
       "amp_skipped": {
-        "count": 1,
+        "count": 205,
         "nonfinite_count": 0,
         "mean": 0.0,
         "minimum": 0,
@@ -1389,138 +1405,138 @@ q 全零、gamma 退化、Image 退化或控制损害定位以 diagnostics_summa
         "kind": "boolean_frequency"
       },
       "control_logit_change": {
-        "count": 1,
+        "count": 205,
         "nonfinite_count": 0,
-        "mean": 0.0005428004078567028,
-        "minimum": 0.0005428004078567028,
-        "maximum": 0.0005428004078567028,
-        "last": 0.0005428004078567028,
+        "mean": 0.0005901918782733336,
+        "minimum": 0.0,
+        "maximum": 0.001784556545317173,
+        "last": 0.0,
         "kind": "scalar"
       },
       "ell_mean": {
-        "count": 1,
+        "count": 205,
         "nonfinite_count": 0,
-        "mean": -0.00852382555603981,
-        "minimum": -0.00852382555603981,
-        "maximum": -0.00852382555603981,
-        "last": -0.00852382555603981,
+        "mean": -0.0006411536156076366,
+        "minimum": -0.013927406631410122,
+        "maximum": 0.011944061145186424,
+        "last": -0.004101177677512169,
         "kind": "scalar"
       },
       "epoch": {
-        "count": 1,
+        "count": 205,
         "nonfinite_count": 0,
-        "mean": 0.0,
+        "mean": 0.8048780487804876,
         "minimum": 0,
-        "maximum": 0,
-        "last": 0,
+        "maximum": 2,
+        "last": 2,
         "kind": "scalar"
       },
       "gamma": {
-        "count": 1,
+        "count": 205,
         "nonfinite_count": 0,
-        "mean": 0.055555559694767,
-        "minimum": 0.055555559694767,
-        "maximum": 0.055555559694767,
-        "last": 0.055555559694767,
+        "mean": 0.07292054448185897,
+        "minimum": 0.0,
+        "maximum": 0.14641058444976807,
+        "last": 0.0,
         "kind": "scalar"
       },
       "gradient_norm": {
-        "count": 1,
+        "count": 205,
         "nonfinite_count": 0,
-        "mean": 3.3980534076690674,
-        "minimum": 3.3980534076690674,
-        "maximum": 3.3980534076690674,
-        "last": 3.3980534076690674,
+        "mean": 1.918152790353065,
+        "minimum": 0.07430268824100494,
+        "maximum": 23.59438705444336,
+        "last": 1.0622400045394897,
         "kind": "scalar"
       },
       "image_loss": {
-        "count": 1,
+        "count": 205,
         "nonfinite_count": 0,
-        "mean": 0.21575239300727844,
-        "minimum": 0.21575239300727844,
+        "mean": 0.09804463729989242,
+        "minimum": 0.027830395847558975,
         "maximum": 0.21575239300727844,
-        "last": 0.21575239300727844,
+        "last": 0.04916076362133026,
         "kind": "scalar"
       },
       "joint_ref_mse": {
-        "count": 1,
+        "count": 205,
         "nonfinite_count": 0,
-        "mean": 0.14418530464172363,
-        "minimum": 0.14418530464172363,
+        "mean": 0.0025618829134079367,
+        "minimum": 0.000497759145218879,
         "maximum": 0.14418530464172363,
-        "last": 0.14418530464172363,
+        "last": 0.0008083865395747125,
         "kind": "scalar"
       },
       "loss": {
-        "count": 1,
+        "count": 205,
         "nonfinite_count": 0,
-        "mean": 1.779725193977356,
-        "minimum": 1.779725193977356,
+        "mean": 0.648535276295208,
+        "minimum": 0.12424787133932114,
         "maximum": 1.779725193977356,
-        "last": 1.779725193977356,
+        "last": 0.2870669960975647,
         "kind": "scalar"
       },
       "mask_loss": {
-        "count": 1,
+        "count": 205,
         "nonfinite_count": 0,
-        "mean": 1.5639728307724,
-        "minimum": 1.5639728307724,
+        "mean": 0.5504906365943213,
+        "minimum": 0.0072935777716338634,
         "maximum": 1.5639728307724,
-        "last": 1.5639728307724,
+        "last": 0.23790624737739563,
         "kind": "scalar"
       },
       "optimizer_step": {
-        "count": 1,
+        "count": 205,
         "nonfinite_count": 0,
-        "mean": 1.0,
+        "mean": 5100.004878048781,
         "minimum": 1,
-        "maximum": 1,
-        "last": 1,
+        "maximum": 10200,
+        "last": 10200,
         "kind": "scalar"
       },
       "peak_memory_bytes": {
-        "count": 1,
+        "count": 205,
         "nonfinite_count": 0,
-        "mean": 17215086080.0,
+        "mean": 17998434099.20001,
         "minimum": 17215086080,
-        "maximum": 17215086080,
-        "last": 17215086080,
+        "maximum": 18007270400,
+        "last": 18007270400,
         "kind": "scalar"
       },
       "prefix": {
-        "count": 1,
+        "count": 205,
         "nonfinite_count": 0,
-        "mean": 3.0,
-        "minimum": 3,
-        "maximum": 3,
-        "last": 3,
+        "mean": 2.7512195121951217,
+        "minimum": 1,
+        "maximum": 4,
+        "last": 1,
         "kind": "scalar"
       },
       "q_mean": {
-        "count": 1,
+        "count": 205,
         "nonfinite_count": 0,
-        "mean": 0.3043288588523865,
-        "minimum": 0.3043288588523865,
-        "maximum": 0.3043288588523865,
-        "last": 0.3043288588523865,
+        "mean": 0.23157466918956934,
+        "minimum": 0.139212965965271,
+        "maximum": 0.33851635456085205,
+        "last": 0.1888730525970459,
         "kind": "scalar"
       },
       "q_zero_fraction": {
-        "count": 1,
+        "count": 205,
         "nonfinite_count": 0,
-        "mean": 0.0233001708984375,
+        "mean": 0.023300170898437497,
         "minimum": 0.0233001708984375,
         "maximum": 0.0233001708984375,
         "last": 0.0233001708984375,
         "kind": "scalar"
       },
       "sampling_step": {
-        "count": 1,
+        "count": 205,
         "nonfinite_count": 0,
-        "mean": 5.0,
-        "minimum": 5,
-        "maximum": 5,
-        "last": 5,
+        "mean": 5.541463414634144,
+        "minimum": 0,
+        "maximum": 9,
+        "last": 1,
         "kind": "scalar"
       }
     }
@@ -1535,8 +1551,12 @@ Exact hashes and available name-level source IDs cannot exclude transformed or u
 
 ```bash
 /data0/hl/conda_envs/dcdsdiff/bin/python -s /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E/source/scripts/tect_diff/controller.py status --run-dir /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E
-/data0/hl/conda_envs/dcdsdiff/bin/python -s /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E/source/scripts/tect_diff/controller.py resume --run-dir /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E
+# Resume is blocked by the recorded user-requested operational hold.
 ```
 
 Source snapshot: `/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E/source`; logs/status/checkpoints: `/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E`.
 模型权重、训练原图和诊断可视化不上传 GitHub。
+
+## Failure
+
+Controller terminated only its registered worker process group
