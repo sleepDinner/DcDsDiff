@@ -1,0 +1,510 @@
+{
+  "run_id": "TECT-DIFF-FULL-R512-S42-REFNORM-V2-AMPFIX-20260915-D",
+  "config_hash": "0b0358aa4908b852bb53113467184483fbb11d4be517eb58548ba80757052f88",
+  "source_commit": "84fcf47e5721317d99fe186feec08d365fc3f72c",
+  "source_files_verified": 159,
+  "selection_protocol": "test_selected",
+  "artifact_continuation": {
+    "at": "2026-09-15T11:51:01Z",
+    "calibration_refitted": false,
+    "calibration_sha256": "bb349a143385b25798fe0a9c7c43904ba08c26f38ed7a6aee991add7ed16f59c",
+    "changed_python_files": [
+      "model/tect_diff/amp_context.py",
+      "model/tect_diff/diffusion.py",
+      "scripts/tect_diff/artifact_continuation.py",
+      "scripts/tect_diff/controller.py",
+      "scripts/tect_diff/diagnostics.py",
+      "scripts/tect_diff/gradient_safety.py",
+      "scripts/tect_diff/report.py",
+      "scripts/tect_diff/test_artifact_continuation.py",
+      "scripts/tect_diff/test_main_gradient_safety.py",
+      "scripts/tect_diff/worker.py"
+    ],
+    "config_hash": "0b0358aa4908b852bb53113467184483fbb11d4be517eb58548ba80757052f88",
+    "copied_receipt_sha256": {
+      "calibration_receipt.json": "89562ed608254b9d99412b5b914b9a5266d2442cca6f9949d26d4f351829a99b",
+      "data_bundle.json": "157cdc70e1a317203a08f02a35b075c2ec7de277de70b71febc21997b6045186",
+      "reference_final_health.json": "c1600fc6eda466b211629d60c2596cb107755719384bdcd90b3184099a1cbf9a",
+      "reference_health.json": "36f3010c2377b87715be27e14670cffd2139ae18d0ccfc704c3c12f96207ddda",
+      "reference_metrics.jsonl": "d69517a38211e9edb29cc410bb3ffbde01aa60bc7c1846f401e9cb5eaed0ff15",
+      "reference_receipt.json": "fdf3793d063d5a529a470307f4bb10ccca1d89797c04be9a0de21e503b303ff1"
+    },
+    "main_seed": 42,
+    "main_start_epoch": 0,
+    "main_start_optimizer_step": 0,
+    "manifest_hashes": {
+      "calibration": "a22183506365f042e141c16b09a8c9e369c3f7886864c2a1d5326a4ada5e38c5",
+      "reference": "0a501e3f0570b245ac594941fcbf2328d1bed195835825de8b7a758f62a13f79",
+      "test_Casiav1": "a51508ac9da6618b685c807415674a78cd99b0681af7d4dae59b9947d187bc73",
+      "test_Columbia": "dfcd1d818b0ec1250023b94e1b92c7292fb3ed107a47cbcf19d2050742594307",
+      "test_DSO-1": "5265d478ca803e135518f2f9f5b0ecfadaaedf5a54dda022db310e92ee985fd6",
+      "test_IMD2020": "5a74e0978c0ac97160eff982abc03ade617844dec53355671ace86b8a05eb766",
+      "test_Korus": "22af2a4ce976c31a2881a87090878ecfbf9e08dc25a6baba3c9bbd1bfe38c222",
+      "test_NIST16": "33c9b85a5facdc76722fc64a36f557dff457ad72f45530250e970e1c9e649a2f",
+      "test_coverage": "e37249f77cd4de583a77a4d2887ffcb5fc0623fe31174535ab3b4c42dafa1783",
+      "test_wild": "25a688eb600bc1dd9720c18c8eaff6fb6877549b3a041a691f3d17b14021fcb3",
+      "train": "ba5c7de4a3988f1abe6fa34dd3d2424abd2712fde4754a2adab6aa9637ea74cc"
+    },
+    "mode": "reuse_completed_reference_calibration_restart_invalid_main",
+    "parent_main_checkpoint_reused": false,
+    "parent_partial_main_valid": false,
+    "parent_run": "TECT-DIFF-FULL-R512-S42-REFNORM-V2-PERF-20260915-C",
+    "parent_source_commit": "f9c1b90d2fc19c914dd3998f49c2c6665d580ca2",
+    "reference_epochs_retrained": 0,
+    "reference_sha256": "800f50c392a275fde3ec249c6f52275c6db79813e6f8b7e8b534f9ddb52a523f",
+    "selection_protocol": "test_selected",
+    "source_commit": "84fcf47e5721317d99fe186feec08d365fc3f72c",
+    "status": "COMPLETED"
+  },
+  "preflight_status": "COMPLETED",
+  "main_probe_status": "COMPLETED",
+  "main_gradient_coverage": [
+    {
+      "full_gradient_coverage": true,
+      "initial_state_and_rng_restored": true,
+      "rank": 0,
+      "registered_unused_count": 8,
+      "status": "PASS"
+    },
+    {
+      "full_gradient_coverage": true,
+      "initial_state_and_rng_restored": true,
+      "rank": 1,
+      "registered_unused_count": 8,
+      "status": "PASS"
+    }
+  ],
+  "worker_identities": [
+    {
+      "cmdline": "/data0/hl/conda_envs/dcdsdiff/bin/python -u /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-AMPFIX-20260915-D/source/scripts/tect_diff/worker.py --run-dir /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-AMPFIX-20260915-D --stage main ",
+      "pid": 600611,
+      "start_ticks": "2707284443"
+    },
+    {
+      "cmdline": "/data0/hl/conda_envs/dcdsdiff/bin/python -u /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-AMPFIX-20260915-D/source/scripts/tect_diff/worker.py --run-dir /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-AMPFIX-20260915-D --stage main ",
+      "pid": 600612,
+      "start_ticks": "2707284443"
+    }
+  ],
+  "locks": {
+    "gpu-0.lock": "HELD",
+    "gpu-1.lock": "HELD",
+    "run-TECT-DIFF-FULL-R512-S42-REFNORM-V2-AMPFIX-20260915-D.lock": "HELD",
+    "tect-controller-TECT-DIFF-FULL-R512-S42-REFNORM-V2-AMPFIX-20260915-D.lock": "HELD"
+  },
+  "parent_statuses": [
+    {
+      "controller_alive": false,
+      "hold_active": true,
+      "run_id": "TECT-DIFF-FULL-R512-S42-REFNORM-V2-PERF-20260915-C",
+      "status": "INTERRUPTED",
+      "worker_alive": false
+    },
+    {
+      "controller_alive": false,
+      "hold_active": true,
+      "run_id": "TECT-DIFF-FULL-R512-S42-REFNORM-V2-20260915-B",
+      "status": "INTERRUPTED",
+      "worker_alive": false
+    },
+    {
+      "controller_alive": false,
+      "hold_active": true,
+      "run_id": "TECT-DIFF-FULL-R512-S42-20260915-A",
+      "status": "INTERRUPTED",
+      "worker_alive": false
+    }
+  ],
+  "recorded_at": "2026-09-15T11:55:21Z",
+  "startup_at": "2026-09-15T11:53:18Z",
+  "controller_status": {
+    "commit": "84fcf47e5721317d99fe186feec08d365fc3f72c",
+    "config_hash": "0b0358aa4908b852bb53113467184483fbb11d4be517eb58548ba80757052f88",
+    "controller_alive": true,
+    "controller_identity": {
+      "cmdline": "/data0/hl/conda_envs/dcdsdiff/bin/python -s /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-AMPFIX-20260915-D/source/scripts/tect_diff/controller.py supervise --run-dir /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-AMPFIX-20260915-D ",
+      "pid": 599808,
+      "start_ticks": "2707277931"
+    },
+    "controller_pgid": 599808,
+    "controller_pid": 599808,
+    "elapsed_seconds": 240.9990948997438,
+    "failure_reason": null,
+    "last_returncode": 0,
+    "progress": {
+      "A_mean": 0.3553144931793213,
+      "A_negative_fraction": 0.13811874389648438,
+      "amp_skipped": false,
+      "control_logit_change": 0.0005711392150260508,
+      "elapsed_seconds": 143.11982575803995,
+      "ell_mean": 0.012068269774317741,
+      "epoch": 0,
+      "gamma": 0.0783112645149231,
+      "gradient_norm": 0.7197176814079285,
+      "gradient_sync": {
+        "at": "2026-09-15T11:54:39Z",
+        "coverage_pass_by_rank": [
+          true,
+          true
+        ],
+        "gradient_norm_by_rank": [
+          0.7197176814079285,
+          0.7197176814079285
+        ],
+        "gradient_tensors_by_rank": [
+          856,
+          856
+        ],
+        "passed": true
+      },
+      "image_loss": 0.11784498393535614,
+      "joint_ref_mse": 0.0021704589016735554,
+      "loss": 1.3511003255844116,
+      "mask_loss": 1.233255386352539,
+      "micro_batch": 200,
+      "micro_batches_per_epoch": 12153,
+      "optimizer_step": 100,
+      "peak_memory_bytes": 7109057024,
+      "pid": 600611,
+      "prefix": 3,
+      "q_mean": 0.17846202850341797,
+      "q_zero_fraction": 0.0233001708984375,
+      "rank": 0,
+      "sampling_step": 7,
+      "stage": "MAIN_TRAINING",
+      "updated_at": "2026-09-15T11:54:39Z"
+    },
+    "reference_source_mode": "authentic",
+    "run_dir": "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-AMPFIX-20260915-D",
+    "run_id": "TECT-DIFF-FULL-R512-S42-REFNORM-V2-AMPFIX-20260915-D",
+    "stage": "MAIN",
+    "stage_costs": {
+      "preflight_seconds": 60.0024257004261
+    },
+    "status": "RUNNING",
+    "updated_at": "2026-09-15T11:55:02Z",
+    "worker_alive": true,
+    "worker_command": [
+      "/data0/hl/conda_envs/dcdsdiff/bin/python",
+      "-s",
+      "-m",
+      "torch.distributed.run",
+      "--standalone",
+      "--nnodes=1",
+      "--nproc-per-node=2",
+      "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-AMPFIX-20260915-D/source/scripts/tect_diff/worker.py",
+      "--run-dir",
+      "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-AMPFIX-20260915-D",
+      "--stage",
+      "main"
+    ],
+    "worker_identity": {
+      "cmdline": "/data0/hl/conda_envs/dcdsdiff/bin/python -s -m torch.distributed.run --standalone --nnodes=1 --nproc-per-node=2 /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-AMPFIX-20260915-D/source/scripts/tect_diff/worker.py --run-dir /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-AMPFIX-20260915-D --stage main ",
+      "pid": 600544,
+      "start_ticks": "2707284054"
+    },
+    "worker_pgid": 600544,
+    "worker_pid": 600544
+  },
+  "progress": [
+    {
+      "A_mean": 0.3553144931793213,
+      "A_negative_fraction": 0.13811874389648438,
+      "amp_skipped": false,
+      "control_logit_change": 0.0005711392150260508,
+      "elapsed_seconds": 143.11982575803995,
+      "ell_mean": 0.012068269774317741,
+      "epoch": 0,
+      "gamma": 0.0783112645149231,
+      "gradient_norm": 0.7197176814079285,
+      "gradient_sync": {
+        "at": "2026-09-15T11:54:39Z",
+        "coverage_pass_by_rank": [
+          true,
+          true
+        ],
+        "gradient_norm_by_rank": [
+          0.7197176814079285,
+          0.7197176814079285
+        ],
+        "gradient_tensors_by_rank": [
+          856,
+          856
+        ],
+        "passed": true
+      },
+      "image_loss": 0.11784498393535614,
+      "joint_ref_mse": 0.0021704589016735554,
+      "loss": 1.3511003255844116,
+      "mask_loss": 1.233255386352539,
+      "micro_batch": 200,
+      "micro_batches_per_epoch": 12153,
+      "optimizer_step": 100,
+      "peak_memory_bytes": 7109057024,
+      "pid": 600611,
+      "prefix": 3,
+      "q_mean": 0.17846202850341797,
+      "q_zero_fraction": 0.0233001708984375,
+      "rank": 0,
+      "sampling_step": 7,
+      "stage": "MAIN_TRAINING",
+      "updated_at": "2026-09-15T11:54:39Z"
+    },
+    {
+      "A_mean": 0.27462923526763916,
+      "A_negative_fraction": 0.1471691131591797,
+      "amp_skipped": false,
+      "control_logit_change": 0.0007169101154431701,
+      "elapsed_seconds": 143.11996780708432,
+      "ell_mean": -0.010943618603050709,
+      "epoch": 0,
+      "gamma": 0.08949858695268631,
+      "gradient_norm": 0.7197176814079285,
+      "gradient_sync": {
+        "at": "2026-09-15T11:54:39Z",
+        "coverage_pass_by_rank": [
+          true,
+          true
+        ],
+        "gradient_norm_by_rank": [
+          0.7197176814079285,
+          0.7197176814079285
+        ],
+        "gradient_tensors_by_rank": [
+          856,
+          856
+        ],
+        "passed": true
+      },
+      "image_loss": 0.1247897744178772,
+      "joint_ref_mse": 0.002848765579983592,
+      "loss": 1.5158095359802246,
+      "mask_loss": 1.3910197019577026,
+      "micro_batch": 200,
+      "micro_batches_per_epoch": 12153,
+      "optimizer_step": 100,
+      "peak_memory_bytes": 7116528128,
+      "pid": 600612,
+      "prefix": 4,
+      "q_mean": 0.23908135294914246,
+      "q_zero_fraction": 0.0233001708984375,
+      "rank": 1,
+      "sampling_step": 8,
+      "stage": "MAIN_TRAINING",
+      "updated_at": "2026-09-15T11:54:39Z"
+    }
+  ],
+  "throughput_windows": [
+    {
+      "images_per_second": 6.674397074484318,
+      "seconds_per_update": 1.1986101382225751,
+      "step_from": 50,
+      "step_to": 100
+    }
+  ],
+  "resource": {
+    "cpu_busy_percent": 6.236180580898611,
+    "cpu_iowait_percent": 0.05796105875533993,
+    "gpu_mean_memory_mib": [
+      8106.0,
+      8008.0
+    ],
+    "gpu_mean_util_percent": [
+      57.875,
+      69.75
+    ],
+    "samples": [
+      {
+        "at": "2026-09-15T11:55:07Z",
+        "gpus": [
+          [
+            0.0,
+            42.0,
+            19.0,
+            8106.0,
+            157.14
+          ],
+          [
+            1.0,
+            45.0,
+            19.0,
+            8008.0,
+            154.16
+          ]
+        ]
+      },
+      {
+        "at": "2026-09-15T11:55:09Z",
+        "gpus": [
+          [
+            0.0,
+            50.0,
+            18.0,
+            8106.0,
+            151.65
+          ],
+          [
+            1.0,
+            66.0,
+            16.0,
+            8008.0,
+            153.34
+          ]
+        ]
+      },
+      {
+        "at": "2026-09-15T11:55:11Z",
+        "gpus": [
+          [
+            0.0,
+            77.0,
+            20.0,
+            8106.0,
+            148.45
+          ],
+          [
+            1.0,
+            76.0,
+            18.0,
+            8008.0,
+            138.79
+          ]
+        ]
+      },
+      {
+        "at": "2026-09-15T11:55:13Z",
+        "gpus": [
+          [
+            0.0,
+            76.0,
+            13.0,
+            8106.0,
+            152.46
+          ],
+          [
+            1.0,
+            100.0,
+            10.0,
+            8008.0,
+            150.91
+          ]
+        ]
+      },
+      {
+        "at": "2026-09-15T11:55:15Z",
+        "gpus": [
+          [
+            0.0,
+            56.0,
+            17.0,
+            8106.0,
+            148.52
+          ],
+          [
+            1.0,
+            46.0,
+            21.0,
+            8008.0,
+            141.8
+          ]
+        ]
+      },
+      {
+        "at": "2026-09-15T11:55:17Z",
+        "gpus": [
+          [
+            0.0,
+            36.0,
+            15.0,
+            8106.0,
+            138.25
+          ],
+          [
+            1.0,
+            50.0,
+            19.0,
+            8008.0,
+            157.37
+          ]
+        ]
+      },
+      {
+        "at": "2026-09-15T11:55:19Z",
+        "gpus": [
+          [
+            0.0,
+            60.0,
+            15.0,
+            8106.0,
+            150.55
+          ],
+          [
+            1.0,
+            98.0,
+            18.0,
+            8008.0,
+            151.86
+          ]
+        ]
+      },
+      {
+        "at": "2026-09-15T11:55:21Z",
+        "gpus": [
+          [
+            0.0,
+            66.0,
+            11.0,
+            8106.0,
+            145.7
+          ],
+          [
+            1.0,
+            77.0,
+            19.0,
+            8008.0,
+            131.57
+          ]
+        ]
+      }
+    ],
+    "window_seconds": 14.557494923472404
+  },
+  "gradient_failures": [],
+  "diagnostic_cleanup": {
+    "at": "2026-09-15T11:55:07Z",
+    "candidate_directory": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-ddp-sync-repair-20260915/source",
+    "candidate_source_file_count": 157,
+    "no_diagnostic_weights_saved": true,
+    "removed_scripts": {
+      "candidate.zip": "fd9e40d0a17abdb7ff6a37079425e2907a1fab4138b53701308997a90e57efc2",
+      "validate_amp_ddp.py": "f06dc2b008c4358508abdb2b53883a888f21bebca81895a13a4d8639871d6981",
+      "validate_final_candidate.py": "d37bb0b55a9912a042485f432f6102f5fd92f76c7c965035c2a63e643ba7deac"
+    },
+    "task_marker": "TECT-DDP-SYNC-DIAG-20260915"
+  },
+  "raw_receipts": {
+    "repair_startup_check.json": {
+      "server_path": "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-AMPFIX-20260915-D/early_supervision/repair_startup_check.json",
+      "sha256": "7ab63b49594b61e923420db145148c4bfcd61bbd2c35de56956b0d29ded694c4"
+    },
+    "repair_handoff_check.json": {
+      "server_path": "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-AMPFIX-20260915-D/early_supervision/repair_handoff_check.json",
+      "sha256": "d6186ad42ab6c58655f3e174e105e8485f397fdb735860fe617017f25311cf1f"
+    }
+  },
+  "early_supervision": {
+    "automation_id": "tect-v2",
+    "status": "ACTIVE",
+    "interval_minutes": 30,
+    "target_run": "TECT-DIFF-FULL-R512-S42-REFNORM-V2-AMPFIX-20260915-D",
+    "end_after_complete_main_epochs": [
+      0,
+      1,
+      2
+    ],
+    "requires_complete_finite_all8_each_epoch": true,
+    "early_supervision_complete": false,
+    "main_training_continues_to_epoch": 99
+  },
+  "interpretation": "Verified startup and complete gradients through recorded step100; no completed main epoch or convergence conclusion yet. One 50-update throughput window and 14.6-second resource sample do not establish a bottleneck or an end-to-end speedup. Invalid parent partial main is excluded as a speed baseline."
+}

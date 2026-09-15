@@ -88,5 +88,8 @@ Historical runs are summarized separately in [pre-rebuild audit](docs/history/pr
 - C的参考20轮、epoch19实际最终权重probe及2048图训练集校准已通过；主epoch0的两rank梯度范数多次不一致，11:24:25 UTC确认控制器/worker退出、两GPU资源释放并保持hold。C无完整主epoch/checkpoint/All8，部分主训练无效，日志和冻结来源保留。
 - CPU及实际512/BF16双卡复现定位为no_grad自条件预测污染外层AMP权重缓存，造成梯度张量从856降至263，并触发旧DDP累积同步问题。缓存隔离恢复完整反传；原实现8-update对照出现参数分歧，修复版8次均保持两rank梯度/参数hash一致。见 [修复边界](configs/tect_diff/AMP_DDP_REPAIR.md)。
 - 登记修复D：`TECT-DIFF-FULL-R512-S42-REFNORM-V2-AMPFIX-20260915-D`；配置hash不变，复用C原hash参考/校准，main按seed42重新初始化并执行epoch0–99。发布及正式派发以实际启动收据为准；A/B/C均不恢复，不增加科学对照臂。selection_protocol=test_selected。
+- D于2026-09-15 19:51:01 Asia/Shanghai完成依赖导入并派发，执行提交`84fcf47e5721317d99fe186feec08d365fc3f72c`，159个冻结文件校验通过。最终保护版本另8次双卡更新的梯度和参数hash均一致，末次优化器hash一致；30项CPU测试通过，独立复核无阻断项。全部24次诊断更新不保存训练权重，参考epoch19和2048图校准原artifact hashes保持不变。
+- D双卡preflight、实际main probe完整梯度覆盖通过；19:54:39主epoch0/step100两rank梯度张量均856、范数一致、无AMP跳步。控制器599808、torchrun600544、rank600611/600612存活，两GPU/run/controller锁持有；A/B/C均停止。step50–100实测6.6744 images/s；14.56秒GPU利用率均值57.875%/69.75%，CPU I/O等待0.058%，不据短窗口或失效C主训练宣称加速。见[启动与资源收据](analysis_reports/tect_diff/ampfix_startup.json)及[修复证据](analysis_reports/tect_diff/amp_ddp_repair_20260915.json)。
+- `tect-v2`已更新并核验为ACTIVE，每30分钟跟随D；完成健康main0–2及各轮All8后暂停监督，服务器继续main至99。目前没有完整主epoch或收敛结论。临时验证脚本和候选源码归属/hash核验后已清理，小型证据保留。
 
 - [TECT-Diff TECT-DIFF-FULL-R512-S42-REFNORM-V2-AMPFIX-20260915-D](analysis_reports/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-AMPFIX-20260915-D/report.md); test_selected All8 F1; fixed final reported separately.

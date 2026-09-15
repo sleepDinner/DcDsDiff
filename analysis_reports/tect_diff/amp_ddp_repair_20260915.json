@@ -784,7 +784,7 @@
       "window_seconds": 14.496941901743412
     }
   },
-  "launch_status": "PENDING_PUBLISHED_SOURCE_AND_VERIFIED_IMPORT",
+  "launch_status": "RUNNING_MAIN_VERIFIED",
   "selection_protocol": "test_selected",
   "sources": [
     "https://github.com/pytorch/pytorch/issues/160438",
@@ -794,5 +794,55 @@
     "status": "NO_BLOCKING_FINDINGS",
     "scope": "Independent read-only review of local implementation, tests, protocol and checkpoint/import boundaries",
     "limits": "Server regression not independently rerun by reviewer; norm/count guards are not a per-step full tensor equality proof, so full parameter hashes are checked at checkpoint boundaries."
+  },
+  "updated_at": "2026-09-15T12:01:45.262753+00:00",
+  "execution_source_commit": "84fcf47e5721317d99fe186feec08d365fc3f72c",
+  "startup_receipt": "analysis_reports/tect_diff/ampfix_startup.json",
+  "post_repair_state": {
+    "recorded_at": "2026-09-15T11:55:21Z",
+    "status": "RUNNING",
+    "stage": "MAIN",
+    "epoch": 0,
+    "optimizer_step": 100,
+    "gradient_tensors_by_rank": [
+      856,
+      856
+    ],
+    "gradient_sync_passed": true,
+    "main_probe_full_gradient_coverage": true,
+    "source_files_verified": 159,
+    "controller_pid": 599808,
+    "worker_rank_pids": [
+      600611,
+      600612
+    ],
+    "early_supervision_complete": false,
+    "automation_id": "tect-v2",
+    "automation_status": "ACTIVE",
+    "automation_interval_minutes": 30
+  },
+  "performance_after_repair": {
+    "throughput_windows": [
+      {
+        "images_per_second": 6.674397074484318,
+        "seconds_per_update": 1.1986101382225751,
+        "step_from": 50,
+        "step_to": 100
+      }
+    ],
+    "resource": {
+      "cpu_busy_percent": 6.236180580898611,
+      "cpu_iowait_percent": 0.05796105875533993,
+      "gpu_mean_memory_mib": [
+        8106.0,
+        8008.0
+      ],
+      "gpu_mean_util_percent": [
+        57.875,
+        69.75
+      ],
+      "window_seconds": 14.557494923472404
+    },
+    "scope": "Valid MAIN real-loader window; short sample, no speedup claim against invalid C main."
   }
 }
