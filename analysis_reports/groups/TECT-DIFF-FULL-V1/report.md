@@ -4,4 +4,4 @@
 
 各 run 的数值只读取机器可读结果。未完成 run 不提供最终成绩。
 
-- [TECT-DIFF-FULL-R512-S42-20260915-A](../../runs/TECT-DIFF-FULL-R512-S42-20260915-A/report.md): RUNNING
+- [TECT-DIFF-FULL-R512-S42-20260915-A](../../runs/TECT-DIFF-FULL-R512-S42-20260915-A/report.md): INTERRUPTED

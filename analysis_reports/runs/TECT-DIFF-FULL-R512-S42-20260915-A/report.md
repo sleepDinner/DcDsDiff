@@ -1,6 +1,6 @@
 # TECT-DIFF-FULL-R512-S42-20260915-A
 
-状态：**RUNNING**；阶段：REFERENCE。尚未完成正式主训练与固定终点汇总。
+状态：**INTERRUPTED**；阶段：REFERENCE。尚未完成正式主训练与固定终点汇总。
 
 按八测试集逐 epoch F1 选择 checkpoint；这些测试集参与模型选择，不是独立泛化评估。selection_protocol=test_selected。固定终点 final.pth 与 test-selected best.pth 分开报告。
 
@@ -67,19 +67,37 @@
 
 ```json
 {
-  "amp_skipped": false,
-  "elapsed_seconds": 286.0782602503896,
-  "epoch": 2,
-  "gradient_norm": 1.8476111888885498,
-  "loss": 0.15094396471977234,
-  "micro_batch": 216,
-  "micro_batches_per_epoch": 2991,
-  "optimizer_step": 1550,
-  "peak_memory_bytes": 970050048,
+  "elapsed_seconds": 2188.676743142307,
+  "epoch": 15,
+  "epoch_complete": true,
+  "metrics": {
+    "epoch": 15,
+    "mse_by_scale": [
+      1.0000682057285342,
+      1.000042382788395,
+      1.0001206689357598,
+      1.0001019891071223
+    ],
+    "optimizer_step": 11968,
+    "padded_training_samples": 0,
+    "samples_by_scale": [
+      2991,
+      2991,
+      2991,
+      2991
+    ],
+    "zero_predictor_mse_by_scale": [
+      0.9999733821319841,
+      0.9999473835464625,
+      1.0000256597497559,
+      1.0000062183327836
+    ]
+  },
+  "optimizer_step": 11968,
   "pid": 448690,
   "rank": 0,
   "stage": "REFERENCE_TRAINING",
-  "updated_at": "2026-09-15T08:24:05Z"
+  "updated_at": "2026-09-15T08:55:48Z"
 }
 ```
 
@@ -119,8 +137,8 @@ q 全零、gamma 退化、Image 退化或控制损害定位以 diagnostics_summa
     "all_observed_joint_ref_mse_below_1e_minus12": null
   },
   "peak_allocated_bytes_by_rank": {
-    "0": 970050048,
-    "1": 970050048
+    "0": null,
+    "1": null
   },
   "sample_profiles": [],
   "sampled_training": {}
@@ -139,3 +157,7 @@ Exact hashes and available name-level source IDs cannot exclude transformed or u
 
 Source snapshot: `/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-20260915-A/source`; logs/status/checkpoints: `/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-20260915-A`.
 模型权重、训练原图和诊断可视化不上传 GitHub。
+
+## Failure
+
+Controller terminated only its registered worker process group

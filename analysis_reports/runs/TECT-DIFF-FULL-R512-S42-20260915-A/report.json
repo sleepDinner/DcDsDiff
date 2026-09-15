@@ -36,8 +36,8 @@
     },
     "main_probe": {},
     "peak_allocated_bytes_by_rank": {
-      "0": 970050048,
-      "1": 970050048
+      "0": null,
+      "1": null
     },
     "preflight": {
       "completed_at": "2026-09-15T08:18:27Z",
@@ -456,7 +456,7 @@
     "streams": {}
   },
   "environment": "/data0/hl/conda_envs/dcdsdiff",
-  "failure_reason": null,
+  "failure_reason": "Controller terminated only its registered worker process group",
   "final": {},
   "gpus": [
     0,
@@ -478,19 +478,37 @@
   },
   "pretrained_load_report": {},
   "progress": {
-    "amp_skipped": false,
-    "elapsed_seconds": 286.0782602503896,
-    "epoch": 2,
-    "gradient_norm": 1.8476111888885498,
-    "loss": 0.15094396471977234,
-    "micro_batch": 216,
-    "micro_batches_per_epoch": 2991,
-    "optimizer_step": 1550,
-    "peak_memory_bytes": 970050048,
+    "elapsed_seconds": 2188.676743142307,
+    "epoch": 15,
+    "epoch_complete": true,
+    "metrics": {
+      "epoch": 15,
+      "mse_by_scale": [
+        1.0000682057285342,
+        1.000042382788395,
+        1.0001206689357598,
+        1.0001019891071223
+      ],
+      "optimizer_step": 11968,
+      "padded_training_samples": 0,
+      "samples_by_scale": [
+        2991,
+        2991,
+        2991,
+        2991
+      ],
+      "zero_predictor_mse_by_scale": [
+        0.9999733821319841,
+        0.9999473835464625,
+        1.0000256597497559,
+        1.0000062183327836
+      ]
+    },
+    "optimizer_step": 11968,
     "pid": 448690,
     "rank": 0,
     "stage": "REFERENCE_TRAINING",
-    "updated_at": "2026-09-15T08:24:05Z"
+    "updated_at": "2026-09-15T08:55:48Z"
   },
   "protocol_id": "TECT-DIFF-FULL-R512-S42",
   "reference": {},
@@ -507,7 +525,7 @@
     "main_epochs": 100,
     "reference_epochs": 20
   },
-  "status": "RUNNING",
+  "status": "INTERRUPTED",
   "train_exclusions": {
     "counts_may_overlap": true,
     "exact_rgb_overlap_count": 0,
@@ -516,5 +534,5 @@
     "records": 17,
     "rule": "exclude train records with exact decoded RGB or known namespaced source IDs present in tests; quarantine image-mask dimension mismatches as invalid training pairs; test anomalies block; no source files changed"
   },
-  "updated_at": "2026-09-15T08:24:10Z"
+  "updated_at": "2026-09-15T08:55:57Z"
 }
