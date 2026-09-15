@@ -1,0 +1,16 @@
+{
+  "at": "2026-09-15T08:26:32Z",
+  "kind": "PUBLICATION_REPAIR",
+  "reason": "Initial Git commit failed because the server project had no author identity; copied existing project author into repository-local Git config only. No model/data/source-snapshot change.",
+  "removed_failed_owned_publisher_worktree": true,
+  "run_id": "TECT-DIFF-FULL-R512-S42-20260915-A",
+  "status": "RECOVERED",
+  "verified_publication": {
+    "at": "2026-09-15T08:24:18Z",
+    "branch": "feature/tect-diff",
+    "commit": "a31a47e140f829dfcdae12b75619cd6db4d7a3b5",
+    "repository": "git@github.com:sleepDinner/DcDsDiff.git",
+    "run_id": "TECT-DIFF-FULL-R512-S42-20260915-A",
+    "status": "SYNCED"
+  }
+}
