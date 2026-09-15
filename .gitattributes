@@ -11,4 +11,4 @@
 *.txt text eol=lf
 *.pdf binary
 # Preserve original evaluator CSV bytes for the recorded artifact SHA-256.
-docs/results/**/per_image.csv -text
+docs/results/**/per_image.csv -text whitespace=cr-at-eol
