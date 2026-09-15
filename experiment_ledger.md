@@ -82,3 +82,9 @@ Historical runs are summarized separately in [pre-rebuild audit](docs/history/pr
 - [TECT-Diff TECT-DIFF-FULL-R512-S42-REFNORM-V2-20260915-B](analysis_reports/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-20260915-B/report.md); test_selected All8 F1; fixed final reported separately.
 
 - [TECT-Diff TECT-DIFF-FULL-R512-S42-REFNORM-V2-PERF-20260915-C](analysis_reports/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-PERF-20260915-C/report.md); test_selected All8 F1; fixed final reported separately.
+
+## 2026-09-15 early monitor AMP/DDP main repair
+
+- C的参考20轮、epoch19实际最终权重probe及2048图训练集校准已通过；主epoch0的两rank梯度范数多次不一致，11:24:25 UTC确认控制器/worker退出、两GPU资源释放并保持hold。C无完整主epoch/checkpoint/All8，部分主训练无效，日志和冻结来源保留。
+- CPU及实际512/BF16双卡复现定位为no_grad自条件预测污染外层AMP权重缓存，造成梯度张量从856降至263，并触发旧DDP累积同步问题。缓存隔离恢复完整反传；原实现8-update对照出现参数分歧，修复版8次均保持两rank梯度/参数hash一致。见 [修复边界](configs/tect_diff/AMP_DDP_REPAIR.md)。
+- 登记修复D：`TECT-DIFF-FULL-R512-S42-REFNORM-V2-AMPFIX-20260915-D`；配置hash不变，复用C原hash参考/校准，main按seed42重新初始化并执行epoch0–99。发布及正式派发以实际启动收据为准；A/B/C均不恢复，不增加科学对照臂。selection_protocol=test_selected。

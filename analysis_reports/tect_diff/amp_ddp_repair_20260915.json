@@ -1,0 +1,798 @@
+{
+  "recorded_at": "2026-09-15T11:48:29.433059+00:00",
+  "parent_run": "TECT-DIFF-FULL-R512-S42-REFNORM-V2-PERF-20260915-C",
+  "repair_run": "TECT-DIFF-FULL-R512-S42-REFNORM-V2-AMPFIX-20260915-D",
+  "parent_source_commit": "f9c1b90d2fc19c914dd3998f49c2c6665d580ca2",
+  "config_hash": "0b0358aa4908b852bb53113467184483fbb11d4be517eb58548ba80757052f88",
+  "root_cause": "PyTorch 2.1 autocast reused trainable-weight casts created by no_grad self-conditioning, suppressing gradients; dynamic missing gradients during DDP no_sync accumulation produced rank parameter divergence.",
+  "server_torch_version": "2.1.2+cu121",
+  "observed_mismatches": [
+    {
+      "step": 900,
+      "gradient_norm_by_rank": [
+        0.3684830665588379,
+        0.11314210295677185
+      ]
+    },
+    {
+      "step": 1000,
+      "gradient_norm_by_rank": [
+        0.6292630434036255,
+        0.5506235361099243
+      ]
+    },
+    {
+      "step": 1150,
+      "gradient_norm_by_rank": [
+        0.48543402552604675,
+        1.0716137886047363
+      ]
+    },
+    {
+      "step": 1200,
+      "gradient_norm_by_rank": [
+        0.07725086063146591,
+        0.36001577973365784
+      ]
+    },
+    {
+      "step": 1400,
+      "gradient_norm_by_rank": [
+        0.7730104923248291,
+        0.10962671786546707
+      ]
+    }
+  ],
+  "parent_stop": {
+    "confirmed_at": "2026-09-15T11:24:25Z",
+    "status": "INTERRUPTED",
+    "controller_alive": false,
+    "worker_alive": false,
+    "resources_released": true,
+    "gpu_processes": [],
+    "operational_hold": true,
+    "complete_main_epochs": 0,
+    "main_checkpoint_exists": false,
+    "partial_main_valid": false
+  },
+  "retained_dependencies": {
+    "reference_epoch": 19,
+    "reference_optimizer_steps": 14960,
+    "reference_sha256": "800f50c392a275fde3ec249c6f52275c6db79813e6f8b7e8b534f9ddb52a523f",
+    "calibration_sha256": "bb349a143385b25798fe0a9c7c43904ba08c26f38ed7a6aee991add7ed16f59c",
+    "calibration_images": 2048,
+    "reference_final_probe_passed": true,
+    "calibration_recomputed": false
+  },
+  "bounded_regression": {
+    "scope": "bounded engineering only; 8 updates per implementation; no weights saved",
+    "resolution": 512,
+    "world_size": 2,
+    "micro_batch": 2,
+    "accumulation": 2,
+    "data": "8 registered training images, authentic and tampered; repeated bounded diagnostic batches",
+    "original_and_cache_fix": [
+      {
+        "case": "original",
+        "initial_parameter_hash": "695b1c23373f7c9518c64f7bbb77e06bb7921b8418c0d1b1d60a7e25f482650f",
+        "optimizer_hashes": null,
+        "steps": [
+          {
+            "step": 0,
+            "gradient_hash_equal": true,
+            "parameter_hash_equal": true,
+            "norm_by_rank": [
+              0.17024505138397217,
+              0.17024505138397217
+            ],
+            "gradient_count_by_rank": [
+              [
+                263,
+                263
+              ],
+              [
+                263,
+                263
+              ]
+            ],
+            "gradient_hash_by_rank": [
+              "95da73f15c7f8fd7e00d3edaef873c15598e087a5586ec77f82cc123ba11def8",
+              "95da73f15c7f8fd7e00d3edaef873c15598e087a5586ec77f82cc123ba11def8"
+            ],
+            "parameter_hash_by_rank": [
+              "d1978d460837419046c6631a66328c7e026a035c8297f47f5f699e9391bab0fe",
+              "d1978d460837419046c6631a66328c7e026a035c8297f47f5f699e9391bab0fe"
+            ]
+          },
+          {
+            "step": 1,
+            "gradient_hash_equal": false,
+            "parameter_hash_equal": false,
+            "norm_by_rank": [
+              1.7283025979995728,
+              0.16855642199516296
+            ],
+            "gradient_count_by_rank": [
+              [
+                856,
+                856
+              ],
+              [
+                263,
+                263
+              ]
+            ],
+            "gradient_hash_by_rank": [
+              "9a18d96e0b630375bb10b069bcc447c90c70368235945cf540e549700c0e8085",
+              "d9c655baf76c850ba0fd5fb09d0f66ec82e480473e26ea02acb9c0ef60602d62"
+            ],
+            "parameter_hash_by_rank": [
+              "d0255fb52550542dd22ec8608fdf7aa817db53ef17d06a5f54141179bdf986cb",
+              "d4731268b7b916e03c35795cf3a2cd7ce2761efa1386de1d97431dffe2c2f0ed"
+            ]
+          },
+          {
+            "step": 2,
+            "gradient_hash_equal": false,
+            "parameter_hash_equal": false,
+            "norm_by_rank": [
+              0.8593981862068176,
+              0.15447382628917694
+            ],
+            "gradient_count_by_rank": [
+              [
+                856,
+                856
+              ],
+              [
+                263,
+                263
+              ]
+            ],
+            "gradient_hash_by_rank": [
+              "5a567d1523708b665146acb4c98f205b5e23dab38656b09f670800343f973160",
+              "8ba58036aac05a89400c04fa659f79c539af470743bd12e597faf9a725380573"
+            ],
+            "parameter_hash_by_rank": [
+              "e3af1725095612f528193b92e74466a25748ab10a4f175dffd4b8420637d7a1d",
+              "15fb1edd80e33a77a9c269726d9bce60be2452e2de4a87d5db7395048b64950d"
+            ]
+          },
+          {
+            "step": 3,
+            "gradient_hash_equal": true,
+            "parameter_hash_equal": false,
+            "norm_by_rank": [
+              2.2735977172851562,
+              2.2735977172851562
+            ],
+            "gradient_count_by_rank": [
+              [
+                856,
+                856
+              ],
+              [
+                856,
+                856
+              ]
+            ],
+            "gradient_hash_by_rank": [
+              "3ebd81f6dcab657c666f6a4a4d62d2b96ef56d91111f208813c67d28af56ac7a",
+              "3ebd81f6dcab657c666f6a4a4d62d2b96ef56d91111f208813c67d28af56ac7a"
+            ],
+            "parameter_hash_by_rank": [
+              "c9acd3f9f4992669989480064b95fc76e258ac1dcbe354bdd4e26f24239c4d75",
+              "7450d9a51e2ce308bbf239e793d4fef534a9f4836a77fcec5de438ddb4235727"
+            ]
+          },
+          {
+            "step": 4,
+            "gradient_hash_equal": true,
+            "parameter_hash_equal": false,
+            "norm_by_rank": [
+              0.6503632664680481,
+              0.6503632664680481
+            ],
+            "gradient_count_by_rank": [
+              [
+                856,
+                856
+              ],
+              [
+                263,
+                856
+              ]
+            ],
+            "gradient_hash_by_rank": [
+              "c3d1dc9229a017ac2f1616576408ec21cb74540ecdeff2fd5727adaeed3dbf3f",
+              "c3d1dc9229a017ac2f1616576408ec21cb74540ecdeff2fd5727adaeed3dbf3f"
+            ],
+            "parameter_hash_by_rank": [
+              "a7b7fc026e477876b84ca8f7fb5d1deea008bd23f3e2f51c9915826bc681e952",
+              "ab014c16f62aa18aa8c9e1f7cac40f79d972aa935993ec04653792da2921dc30"
+            ]
+          },
+          {
+            "step": 5,
+            "gradient_hash_equal": true,
+            "parameter_hash_equal": false,
+            "norm_by_rank": [
+              0.41905683279037476,
+              0.41905683279037476
+            ],
+            "gradient_count_by_rank": [
+              [
+                263,
+                856
+              ],
+              [
+                263,
+                856
+              ]
+            ],
+            "gradient_hash_by_rank": [
+              "8b40548ec8e5c60cc3b057aa917256473300076d04a7bb8c3388171f509ac291",
+              "8b40548ec8e5c60cc3b057aa917256473300076d04a7bb8c3388171f509ac291"
+            ],
+            "parameter_hash_by_rank": [
+              "2028f8de507039e617c1c9885f4986048da675898469a008abea4695bf71b94c",
+              "50e31b9cf085c95166e34cfa958322af0f93ca7a4ad451e54ae56a2a3ea19278"
+            ]
+          },
+          {
+            "step": 6,
+            "gradient_hash_equal": true,
+            "parameter_hash_equal": false,
+            "norm_by_rank": [
+              0.9709733128547668,
+              0.9709733128547668
+            ],
+            "gradient_count_by_rank": [
+              [
+                263,
+                856
+              ],
+              [
+                856,
+                856
+              ]
+            ],
+            "gradient_hash_by_rank": [
+              "4edfc6536b5bdc5cb9726572ee599a5df397d1433cb46fec9f4efd61eb324755",
+              "4edfc6536b5bdc5cb9726572ee599a5df397d1433cb46fec9f4efd61eb324755"
+            ],
+            "parameter_hash_by_rank": [
+              "907271774e23f0cb350eb728d0d7a1a7b3062ee2609909698317de4a37d44658",
+              "23b050d5bf4493a6a48bf235034693fc098fa7daa5e50315eff00cb4ec9005b1"
+            ]
+          },
+          {
+            "step": 7,
+            "gradient_hash_equal": true,
+            "parameter_hash_equal": false,
+            "norm_by_rank": [
+              1.404181957244873,
+              1.404181957244873
+            ],
+            "gradient_count_by_rank": [
+              [
+                856,
+                856
+              ],
+              [
+                856,
+                856
+              ]
+            ],
+            "gradient_hash_by_rank": [
+              "8ed1919abd8bd7d8e9d7abf3c5d0076b40f80558c30b35224b80e3cf2ea0f7bb",
+              "8ed1919abd8bd7d8e9d7abf3c5d0076b40f80558c30b35224b80e3cf2ea0f7bb"
+            ],
+            "parameter_hash_by_rank": [
+              "e98db97d6dec18f7ba33f775f0783c06fb6878af13b21842a3d90ad252d8a372",
+              "d6447d3462d7b8141cdc930c116aca7494f32991a905233d2d4d12352acef3c4"
+            ]
+          }
+        ]
+      },
+      {
+        "case": "pilot_cache_disabled",
+        "initial_parameter_hash": "695b1c23373f7c9518c64f7bbb77e06bb7921b8418c0d1b1d60a7e25f482650f",
+        "optimizer_hashes": null,
+        "steps": [
+          {
+            "step": 0,
+            "gradient_hash_equal": true,
+            "parameter_hash_equal": true,
+            "norm_by_rank": [
+              3.4263250827789307,
+              3.4263250827789307
+            ],
+            "gradient_count_by_rank": [
+              [
+                856,
+                856
+              ],
+              [
+                856,
+                856
+              ]
+            ],
+            "gradient_hash_by_rank": [
+              "4538207e14b3f93668e120c9b622908c5ee471a5f2782e5991f21117e83324b1",
+              "4538207e14b3f93668e120c9b622908c5ee471a5f2782e5991f21117e83324b1"
+            ],
+            "parameter_hash_by_rank": [
+              "0c653b5022f82acffd2ad40b3e9a259c96c4b3055d22b46abca4aa6a46c97168",
+              "0c653b5022f82acffd2ad40b3e9a259c96c4b3055d22b46abca4aa6a46c97168"
+            ]
+          },
+          {
+            "step": 1,
+            "gradient_hash_equal": true,
+            "parameter_hash_equal": true,
+            "norm_by_rank": [
+              1.504645824432373,
+              1.504645824432373
+            ],
+            "gradient_count_by_rank": [
+              [
+                856,
+                856
+              ],
+              [
+                856,
+                856
+              ]
+            ],
+            "gradient_hash_by_rank": [
+              "a777b63d0ba8cd85bda57ce747be9827dd63379603f099b60600ed2fe5532978",
+              "a777b63d0ba8cd85bda57ce747be9827dd63379603f099b60600ed2fe5532978"
+            ],
+            "parameter_hash_by_rank": [
+              "1efabf3a2a5912d3838a9b34da927f68dc6b3b3e35562304ddae39960a8cc52d",
+              "1efabf3a2a5912d3838a9b34da927f68dc6b3b3e35562304ddae39960a8cc52d"
+            ]
+          },
+          {
+            "step": 2,
+            "gradient_hash_equal": true,
+            "parameter_hash_equal": true,
+            "norm_by_rank": [
+              1.4026089906692505,
+              1.4026089906692505
+            ],
+            "gradient_count_by_rank": [
+              [
+                856,
+                856
+              ],
+              [
+                856,
+                856
+              ]
+            ],
+            "gradient_hash_by_rank": [
+              "53057f1104bbf21348b7c71a20246fc807ba8f7b379c6c07094c1dd09a5f8448",
+              "53057f1104bbf21348b7c71a20246fc807ba8f7b379c6c07094c1dd09a5f8448"
+            ],
+            "parameter_hash_by_rank": [
+              "6eda891ac598e0490e2ee6450d2261bbd1116212d77c3a457b97cd4463cf5b62",
+              "6eda891ac598e0490e2ee6450d2261bbd1116212d77c3a457b97cd4463cf5b62"
+            ]
+          },
+          {
+            "step": 3,
+            "gradient_hash_equal": true,
+            "parameter_hash_equal": true,
+            "norm_by_rank": [
+              1.4153553247451782,
+              1.4153553247451782
+            ],
+            "gradient_count_by_rank": [
+              [
+                856,
+                856
+              ],
+              [
+                856,
+                856
+              ]
+            ],
+            "gradient_hash_by_rank": [
+              "a4a8ad2f4d90807ac0b831a05e630c583c6ce854c2cd37c630b22d066a578ead",
+              "a4a8ad2f4d90807ac0b831a05e630c583c6ce854c2cd37c630b22d066a578ead"
+            ],
+            "parameter_hash_by_rank": [
+              "9e40a832a270def3176f4b403e941760537709770f98dd13476260fd289134e4",
+              "9e40a832a270def3176f4b403e941760537709770f98dd13476260fd289134e4"
+            ]
+          },
+          {
+            "step": 4,
+            "gradient_hash_equal": true,
+            "parameter_hash_equal": true,
+            "norm_by_rank": [
+              1.4759979248046875,
+              1.4759979248046875
+            ],
+            "gradient_count_by_rank": [
+              [
+                856,
+                856
+              ],
+              [
+                856,
+                856
+              ]
+            ],
+            "gradient_hash_by_rank": [
+              "b77eb8b629253eb6d52439ae1ac454d89c419f9b030b4e8dbaaee08026c6cdbd",
+              "b77eb8b629253eb6d52439ae1ac454d89c419f9b030b4e8dbaaee08026c6cdbd"
+            ],
+            "parameter_hash_by_rank": [
+              "bfc47dce3ba4edc0aa9fef35bbf7d03a3371a53e1b5e00175015b582a572743c",
+              "bfc47dce3ba4edc0aa9fef35bbf7d03a3371a53e1b5e00175015b582a572743c"
+            ]
+          },
+          {
+            "step": 5,
+            "gradient_hash_equal": true,
+            "parameter_hash_equal": true,
+            "norm_by_rank": [
+              1.4289218187332153,
+              1.4289218187332153
+            ],
+            "gradient_count_by_rank": [
+              [
+                856,
+                856
+              ],
+              [
+                856,
+                856
+              ]
+            ],
+            "gradient_hash_by_rank": [
+              "3e6cdd4b135b417829227ed8445f7ba998eb2c86292d6fce3311b3e93177fae0",
+              "3e6cdd4b135b417829227ed8445f7ba998eb2c86292d6fce3311b3e93177fae0"
+            ],
+            "parameter_hash_by_rank": [
+              "a5b638445ef3986488d81e486277625fa836c9653c4795a013cf6ad7216c4945",
+              "a5b638445ef3986488d81e486277625fa836c9653c4795a013cf6ad7216c4945"
+            ]
+          },
+          {
+            "step": 6,
+            "gradient_hash_equal": true,
+            "parameter_hash_equal": true,
+            "norm_by_rank": [
+              1.1017194986343384,
+              1.1017194986343384
+            ],
+            "gradient_count_by_rank": [
+              [
+                856,
+                856
+              ],
+              [
+                856,
+                856
+              ]
+            ],
+            "gradient_hash_by_rank": [
+              "945c820fdcb5aa8307a5cb27051a703f39132387f4ee98198d0292d5c9414550",
+              "945c820fdcb5aa8307a5cb27051a703f39132387f4ee98198d0292d5c9414550"
+            ],
+            "parameter_hash_by_rank": [
+              "51dfd9ceeea92ecc27ed4a4284343dade47e1e2b47ca2e04bc636c3e58f89f11",
+              "51dfd9ceeea92ecc27ed4a4284343dade47e1e2b47ca2e04bc636c3e58f89f11"
+            ]
+          },
+          {
+            "step": 7,
+            "gradient_hash_equal": true,
+            "parameter_hash_equal": true,
+            "norm_by_rank": [
+              1.0762346982955933,
+              1.0762346982955933
+            ],
+            "gradient_count_by_rank": [
+              [
+                856,
+                856
+              ],
+              [
+                856,
+                856
+              ]
+            ],
+            "gradient_hash_by_rank": [
+              "93b96a31dbb96e07c224bbaf1740eab3929671ea0f418ee274ecb36701f62d0a",
+              "93b96a31dbb96e07c224bbaf1740eab3929671ea0f418ee274ecb36701f62d0a"
+            ],
+            "parameter_hash_by_rank": [
+              "8778ddc0d8cf05005740cfeb611bdd0d612c3f2e65ebcae655ac90e9738a2992",
+              "8778ddc0d8cf05005740cfeb611bdd0d612c3f2e65ebcae655ac90e9738a2992"
+            ]
+          }
+        ]
+      }
+    ],
+    "final_guard_version": [
+      {
+        "case": "final_candidate",
+        "initial_parameter_hash": "695b1c23373f7c9518c64f7bbb77e06bb7921b8418c0d1b1d60a7e25f482650f",
+        "optimizer_hashes": [
+          "f2c4c7325fd162e4a1e9fabd42cf33154560d6858990b267bf3c4a5449cdde9f",
+          "f2c4c7325fd162e4a1e9fabd42cf33154560d6858990b267bf3c4a5449cdde9f"
+        ],
+        "steps": [
+          {
+            "step": 0,
+            "gradient_hash_equal": true,
+            "parameter_hash_equal": true,
+            "norm_by_rank": [
+              3.426264762878418,
+              3.426264762878418
+            ],
+            "gradient_count_by_rank": [
+              [
+                856,
+                856
+              ],
+              [
+                856,
+                856
+              ]
+            ],
+            "gradient_hash_by_rank": [
+              "e8d80ed8ab8358db0ae6aedf4a8b2cbb6feb2bdfa8ca37aafa68b62a0bc48f4a",
+              "e8d80ed8ab8358db0ae6aedf4a8b2cbb6feb2bdfa8ca37aafa68b62a0bc48f4a"
+            ],
+            "parameter_hash_by_rank": [
+              "bc2999fa14654b1713ac0eb8031c0b259f414ab6bf818018fc77eb39883c0f7c",
+              "bc2999fa14654b1713ac0eb8031c0b259f414ab6bf818018fc77eb39883c0f7c"
+            ]
+          },
+          {
+            "step": 1,
+            "gradient_hash_equal": true,
+            "parameter_hash_equal": true,
+            "norm_by_rank": [
+              1.5051062107086182,
+              1.5051062107086182
+            ],
+            "gradient_count_by_rank": [
+              [
+                856,
+                856
+              ],
+              [
+                856,
+                856
+              ]
+            ],
+            "gradient_hash_by_rank": [
+              "4c805a9f1f2af4867b6e7d265a973f0ca1a3fe73f634a2db2c44d03b0425134e",
+              "4c805a9f1f2af4867b6e7d265a973f0ca1a3fe73f634a2db2c44d03b0425134e"
+            ],
+            "parameter_hash_by_rank": [
+              "4d06a8d0dd21aa629865ea9d036f61a72d53b07bb46774c9ade4918d4165d528",
+              "4d06a8d0dd21aa629865ea9d036f61a72d53b07bb46774c9ade4918d4165d528"
+            ]
+          },
+          {
+            "step": 2,
+            "gradient_hash_equal": true,
+            "parameter_hash_equal": true,
+            "norm_by_rank": [
+              1.4006376266479492,
+              1.4006376266479492
+            ],
+            "gradient_count_by_rank": [
+              [
+                856,
+                856
+              ],
+              [
+                856,
+                856
+              ]
+            ],
+            "gradient_hash_by_rank": [
+              "f357f6df10d9be26d83f239c6b28d6fd0448bc9e948c803129d213631386455d",
+              "f357f6df10d9be26d83f239c6b28d6fd0448bc9e948c803129d213631386455d"
+            ],
+            "parameter_hash_by_rank": [
+              "85d086d8e3e57a7fdb10d4e84748a34746bc3e42830debbdaff05068e9af2459",
+              "85d086d8e3e57a7fdb10d4e84748a34746bc3e42830debbdaff05068e9af2459"
+            ]
+          },
+          {
+            "step": 3,
+            "gradient_hash_equal": true,
+            "parameter_hash_equal": true,
+            "norm_by_rank": [
+              1.416133999824524,
+              1.416133999824524
+            ],
+            "gradient_count_by_rank": [
+              [
+                856,
+                856
+              ],
+              [
+                856,
+                856
+              ]
+            ],
+            "gradient_hash_by_rank": [
+              "ec9395738bffc1cd838a5f709484d08413e06203f76499e2b066b64387ac162d",
+              "ec9395738bffc1cd838a5f709484d08413e06203f76499e2b066b64387ac162d"
+            ],
+            "parameter_hash_by_rank": [
+              "c50b85d2e91d59f6c40599af10d45bdff8149778842a982e03b2acf6b07fc8d8",
+              "c50b85d2e91d59f6c40599af10d45bdff8149778842a982e03b2acf6b07fc8d8"
+            ]
+          },
+          {
+            "step": 4,
+            "gradient_hash_equal": true,
+            "parameter_hash_equal": true,
+            "norm_by_rank": [
+              1.4845296144485474,
+              1.4845296144485474
+            ],
+            "gradient_count_by_rank": [
+              [
+                856,
+                856
+              ],
+              [
+                856,
+                856
+              ]
+            ],
+            "gradient_hash_by_rank": [
+              "3669e1960ff4355e2062f750c3d56990550dc3553df01630151d8f2a73d04f18",
+              "3669e1960ff4355e2062f750c3d56990550dc3553df01630151d8f2a73d04f18"
+            ],
+            "parameter_hash_by_rank": [
+              "3b5a1952d232ad3877eed091c17fb2d93a4313a4516266bf903ade8578ae3af3",
+              "3b5a1952d232ad3877eed091c17fb2d93a4313a4516266bf903ade8578ae3af3"
+            ]
+          },
+          {
+            "step": 5,
+            "gradient_hash_equal": true,
+            "parameter_hash_equal": true,
+            "norm_by_rank": [
+              1.428108811378479,
+              1.428108811378479
+            ],
+            "gradient_count_by_rank": [
+              [
+                856,
+                856
+              ],
+              [
+                856,
+                856
+              ]
+            ],
+            "gradient_hash_by_rank": [
+              "baf249916d7a74117a14e442393b8bb39a3434a40e1be7e12c1e04ea9461c082",
+              "baf249916d7a74117a14e442393b8bb39a3434a40e1be7e12c1e04ea9461c082"
+            ],
+            "parameter_hash_by_rank": [
+              "185705a4247fbd6cf560ff6b5c0e3cb33b30b135d4c638670fd121ed3be0ec66",
+              "185705a4247fbd6cf560ff6b5c0e3cb33b30b135d4c638670fd121ed3be0ec66"
+            ]
+          },
+          {
+            "step": 6,
+            "gradient_hash_equal": true,
+            "parameter_hash_equal": true,
+            "norm_by_rank": [
+              1.1010239124298096,
+              1.1010239124298096
+            ],
+            "gradient_count_by_rank": [
+              [
+                856,
+                856
+              ],
+              [
+                856,
+                856
+              ]
+            ],
+            "gradient_hash_by_rank": [
+              "84f9a6e3768cac0062296370935e85f8544047c775bb70df0a22c2dfa64cc5b8",
+              "84f9a6e3768cac0062296370935e85f8544047c775bb70df0a22c2dfa64cc5b8"
+            ],
+            "parameter_hash_by_rank": [
+              "17ac9e4a42bac7622350257efd6c155df52ca2673f84f5a093e7631fbd706303",
+              "17ac9e4a42bac7622350257efd6c155df52ca2673f84f5a093e7631fbd706303"
+            ]
+          },
+          {
+            "step": 7,
+            "gradient_hash_equal": true,
+            "parameter_hash_equal": true,
+            "norm_by_rank": [
+              1.0849272012710571,
+              1.0849272012710571
+            ],
+            "gradient_count_by_rank": [
+              [
+                856,
+                856
+              ],
+              [
+                856,
+                856
+              ]
+            ],
+            "gradient_hash_by_rank": [
+              "158c94fe59600f8e19de085254e0fea60f69f903103b38b1c701c692d0156155",
+              "158c94fe59600f8e19de085254e0fea60f69f903103b38b1c701c692d0156155"
+            ],
+            "parameter_hash_by_rank": [
+              "afc609726b41983ca4aadaa94f8382efa3eb05b8c4284d75f93f705d3e936905",
+              "afc609726b41983ca4aadaa94f8382efa3eb05b8c4284d75f93f705d3e936905"
+            ]
+          }
+        ]
+      }
+    ],
+    "first_forward_loss_equal_before_update": true,
+    "initial_parameter_hash_equal": true,
+    "no_diagnostic_weights_saved": true
+  },
+  "cpu_validation": {
+    "tests_passed": 30,
+    "tests": {
+      "test_main_gradient_safety": 3,
+      "test_reference_health": 20,
+      "test_artifact_continuation": 7
+    },
+    "scope": "AMP value/gradient and context restoration; two-process gradient/parameter failure guards; unchanged reference health policy; dependency import policy with mocked artifact content"
+  },
+  "performance_before_repair": {
+    "status": "INVALID_PARTIAL_MAIN_NOT_A_VALID_SPEED_BASELINE",
+    "step_window": [
+      1050,
+      1650
+    ],
+    "images_per_second_range": [
+      5.628867385739028,
+      6.6954461533990735
+    ],
+    "resource": {
+      "cpu_aggregate_busy_percent": 5.035249983830282,
+      "cpu_iowait_percent": 0.07545868098225643,
+      "gpu_mean_memory_mib": [
+        8048.0,
+        7928.0
+      ],
+      "gpu_mean_util_percent": [
+        70.875,
+        40.625
+      ],
+      "window_seconds": 14.496941901743412
+    }
+  },
+  "launch_status": "PENDING_PUBLISHED_SOURCE_AND_VERIFIED_IMPORT",
+  "selection_protocol": "test_selected",
+  "sources": [
+    "https://github.com/pytorch/pytorch/issues/160438",
+    "https://github.com/pytorch/pytorch/issues/69031"
+  ],
+  "code_review": {
+    "status": "NO_BLOCKING_FINDINGS",
+    "scope": "Independent read-only review of local implementation, tests, protocol and checkpoint/import boundaries",
+    "limits": "Server regression not independently rerun by reviewer; norm/count guards are not a per-step full tensor equality proof, so full parameter hashes are checked at checkpoint boundaries."
+  }
+}
