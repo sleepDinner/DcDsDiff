@@ -159,11 +159,17 @@ def freeze_source(root, source, commit):
 def start(args):
     root = args.project.resolve()
     run = run_path(root, args.run_id)
+    if args.command == 'resume' and (run / 'early_stop.json').exists():
+        raise SystemExit('Training was ended by user request; only its registered benchmark follow-up may resume.')
     if args.command == 'resume' and (run / 'superseded_by.json').exists():
         raise SystemExit('This run was superseded; resume the continuation recorded in superseded_by.json.')
     if args.command == 'resume' and args.gpu != read_json(run / 'provenance.json')['gpu']:
         raise SystemExit('Resume must use the GPU registered in this run\'s provenance.')
     locks = acquire_resources(root, args.run_id, args.gpu)
+    if args.command == 'resume' and (run / 'early_stop.json').exists():
+        for lock in locks:
+            lock.close()
+        raise SystemExit('Training was ended by user request; do not resume it.')
     # Recheck after acquisition: a continuation may have registered between
     # the first marker check and this successful resource reservation.
     if args.command == 'resume' and (run / 'superseded_by.json').exists():

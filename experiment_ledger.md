@@ -1,6 +1,6 @@
 # Experiment ledger
 
-## GIT10K-PAPER-RECON-V1 — RUNNING
+## GIT10K-PAPER-RECON-V1 — COMPLETED
 
 - Request date: 2026-09-14.
 - Scope: one fresh paper-aligned main model, one fixed epoch-99 evaluation; no ablation/sweep/additional seed.
@@ -13,7 +13,7 @@
 - Location/device: `/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-GIT10K-RECON-20260914-A`, dedicated `/data0/hl/conda_envs/dcdsdiff`, GPU 0 only.
 - Status at 2026-09-14 19:24:30 Asia/Shanghai: RUNNING, epoch 0, global step 829/1500; finite loss 0.33141148. Observed advancement from step 1. Controller PID 3787713 and training PID 3787714 run from the frozen source with user-site imports disabled. Project lock held; all 58 frozen source-file hashes match. [Startup receipt](docs/startup_receipt.json).
 - Automatic endpoint: 100 completed epochs followed by fixed epoch-99 evaluation of 1,000 test images. The detached server controller advances this sequence without an active SSH session.
-- Scientific status: no formal result yet. Running training and successful engineering checks do not establish agreement with paper scores. Final closure requires controller `COMPLETED`, final evaluation receipts, and publication of the small result files; weights remain on the server.
+- Historical scientific status at startup: no formal result yet. Running training and successful engineering checks do not establish agreement with paper scores. Final closure requires controller `COMPLETED`, final evaluation receipts, and publication of the small result files; weights remain on the server.
 
 Historical runs are summarized separately in [pre-rebuild audit](docs/history/pre-rebuild-audit.md). They do not fulfill this registered protocol.
 
@@ -30,7 +30,7 @@ Historical runs are summarized separately in [pre-rebuild audit](docs/history/pr
 - Engineering: new environment CPU lifecycle/lock guards and actual GPU 1 six-image backward / eight-set sample evaluation passed. The 5,123-image batch sampler covers every sample without padding duplicates (854 batches, last batch 5). Formal launch passed configuration/environment/weight checks and verified all 37,672 data files against the 9,418-sample manifest. Temporary validation code/data/checkpoints and preparation staging were removed; [cleanup receipt](docs/transfer_cleanup_receipt.json).
 - Superseded on user request at 2026-09-14 21:46:25 Asia/Shanghai: controller is INTERRUPTED with no cleanup error; controller/children exited and locks released. Last complete checkpoint is epoch 2 (3 completed epochs), step 2562. Partial epoch 3 is not retained. No formal All8 result exists for A; the authorized continuation below replaces its remaining training and final evaluation.
 
-## CASIA2-SEL3-ALL8-V1 — RUNNING
+## CASIA2-SEL3-ALL8-V1 — EARLY_STOPPED_BY_USER; ALL8_EVALUATION_PENDING
 
 - User revision: per-epoch testing uses only Casiav1/Columbia/NIST16 (920/180/564 = 1664 images); final best-checkpoint F1 covers all eight datasets (4295 images).
 - Run: `DCDSDIFF-CASIA2-SEL3-ALL8-20260914-B`; [protocol](docs/casia2_sel3_continuation.md), config `config/experiments/casia2_sel3_all8.yaml`.
@@ -42,3 +42,8 @@ Historical runs are summarized separately in [pre-rebuild audit](docs/history/pr
 - Continued advancement verified at 22:07:48 Asia/Shanghai: step 2770 to 2980, still RUNNING with finite loss and the same three-dataset status labels.
 - The parent's superseded marker is REGISTERED; A remains stopped. Child GPU/run locks and original GIT10K/follow-up locks are held, and original controller 3787713 / follow-up 3844284 remain alive. Both final All8 F1 reports remain pending under their server controllers.
 - GPU 0 original training and its frozen All8 saved-best follow-up remain active and unchanged.
+
+## 2026-09-15 authorized early endpoint and result closure
+
+- GPU 1 B stopped cleanly at 14:13:12 Asia/Shanghai; 85 complete epochs (0–84), last complete step 72590. Partial epoch 85 excluded. Existing best epoch 52, three-set pooled MAE 0.10169355626924069; checkpoint SHA-256 a280c3d7db017d9af81fe5aa18e754024de95115dc7aaae7519ce9902bbef2c5. No further training. [Early-stop protocol](docs/casia2_early_stop.md); All8 evaluation pending at registration.
+- GPU 0 original fixed epoch-99 evaluation completed at 11:10:39 Asia/Shanghai: GIT10K Mix1000 F1 0.1805838822467181, IoU 0.10530443043682479, MAE 0.4921142281591892. Its independent saved-best All8 follow-up completed at 11:26:51; pooled F1 0.0529762559682249, macro F1 0.05822430823011286. These existing results will be published without rerunning either evaluator. Earlier RUNNING statements above are historical startup evidence.

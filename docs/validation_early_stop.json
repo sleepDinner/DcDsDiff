@@ -1,0 +1,60 @@
+{
+  "status": "PASS",
+  "validated_at": "2026-09-15T06:18:45.120013+00:00",
+  "python": "/data0/hl/conda_envs/dcdsdiff/bin/python",
+  "torch": "2.1.2+cu121",
+  "checks": [
+    "actual_stopped_run_best_and_epoch_boundary_match",
+    "default_rejects_incomplete_training",
+    "default_accepts_complete_100_epoch_fixture",
+    "reject_checkpoint_not_saved_best",
+    "reject_early_best_mismatch",
+    "reject_receipt_hash_change",
+    "reject_bound_history_change",
+    "reject_live_training_controller",
+    "injected_registration_failure",
+    "registration_failure_releases_all_locks",
+    "retry_recovers_same_pinned_endpoint_without_reselection",
+    "duplicate_evaluation_registration_rejected",
+    "ordinary_training_resume_rejected",
+    "post_lock_training_resume_race_rejected",
+    "resume_race_releases_resources"
+  ],
+  "source_files_sha256": {
+    "tools/early_stop.py": "8e9971aa580886368b8fa7956854bbc289fd28c983a3ac9c6efc4e178dde51f0",
+    "tools/evaluate_benchmarks.py": "a9b76e397e7faa7515bb6b91919912382de033e35353964b3f43e2f83a80269c",
+    "tools/queue_benchmark.py": "fd8d086d3f55e1e8b14a855e2e4ae9b7c5def8cb77b55bd965bed541b36fc39e",
+    "tools/manage_experiment.py": "05721a384c55b962b5338b95acf80537d07615c33fbcf7be87121fa427ac7b44"
+  },
+  "actual_stop_boundary": {
+    "protocol_id": "CASIA2-SEL3-ALL8-EARLYSTOP-V1",
+    "status": "EARLY_STOPPED_BY_USER",
+    "registered_at": "2026-09-15T06:18:44.624382+00:00",
+    "authorization": "User request on 2026-09-15: end GPU 1 training early and test all eight datasets.",
+    "run_id": "DCDSDIFF-CASIA2-SEL3-ALL8-20260914-B",
+    "training_commit": "01db26c96581818499120240dc01ffaa5e71e3a9",
+    "gpu": 1,
+    "planned_epochs": 100,
+    "completed_epochs": 85,
+    "last_complete_epoch": 84,
+    "last_complete_global_step": 72590,
+    "interrupted_epoch": 85,
+    "observed_global_step": 72794,
+    "best_epoch": 52,
+    "best_mae": 0.10169355626924069,
+    "checkpoint": "/data1/hl/DcDsDiff-and-GIT10K/runs/DCDSDIFF-CASIA2-SEL3-ALL8-20260914-B/model-best.pt",
+    "checkpoint_sha256": "a280c3d7db017d9af81fe5aa18e754024de95115dc7aaae7519ce9902bbef2c5",
+    "files_sha256": {
+      "provenance.json": "74a9293a266ac55de577f636559a65477b7a13fb6aef9c0467ba874330f891dd",
+      "resolved_config.yaml": "f8433a1dd989acd9e298966f56626f629c738102ee0c866b6596c056202ab675",
+      "controller_identity.json": "2087d866ffe58c27633a303b3e8dbbd986f235556e6a97e2a641a502e5b55c49",
+      "controller_status.json": "ad2ae4d8ff52009f6f164339bbe0a3e722638586dffa03729746836e3f4fe214",
+      "training_status.json": "01cf3f592f7856c52c7c32ce3d105c83656f6d88a7e6e19788cc92f2720ad03f",
+      "metrics.jsonl": "3aaa086cf33ee4862c8cea4777021e2951fa900243c7524c67deab496798b553",
+      "model-last.pt": "9618b5fd4d6600906af765150a26f87aea00f8342e09293fdae8603bb8f5b379",
+      "model-best.pt": "a280c3d7db017d9af81fe5aa18e754024de95115dc7aaae7519ce9902bbef2c5"
+    },
+    "note": "The incomplete epoch is excluded. Training was not completed to epoch 99; no final99 result exists for this continuation."
+  },
+  "scope": "CPU lifecycle/endpoint validation; no extra training or formal inference; fixtures removed."
+}

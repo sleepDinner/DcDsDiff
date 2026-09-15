@@ -1,5 +1,7 @@
 # CASIA2: three-set selection, final All8 report
 
+**Superseded endpoint on 2026-09-15:** the user ended B early after 85 complete epochs (0–84). Use the existing epoch-52 best for All8 under the [early-stop protocol](casia2_early_stop.md). The 100-epoch continuation/resume instructions below describe the original registration and must not be used to restart B. Final B results are now under `followups/all8-best/evaluation/`.
+
 The user requested stopping GPU 1 and using only Casiav1, Columbia and NIST16 for every subsequent epoch test. Both the original GPU 0 run and the modified CASIA2 experiment must finish with eight-dataset F1 reports from their existing `model-best.pt` files.
 
 ## Boundary and preserved training

@@ -27,14 +27,21 @@ from torch.utils.data import DataLoader
 from dataset.data_val import test_dataset
 from tools.benchmark_protocol import SELECTION_THREE, load_benchmark, verify_benchmark_files
 from tools.evaluate_reproduction import binary_metrics, file_hash
+from tools.early_stop import validate_receipt
 from tools.manage_experiment import now, read_json, write_json
 from utils.collate_utils import collate
 from utils.import_utils import instantiate_from_config, recurse_instantiate_from_config, get_obj_from_str
 from utils.train_utils import set_random_seed
 
 
-def validate_best_checkpoint(checkpoint, training, cfg):
-    if training['state'] != 'COMPLETED' or training['next_epoch'] != 100:
+def validate_best_checkpoint(checkpoint, training, cfg, early_stop=None):
+    if early_stop is not None:
+        if (cfg.protocol_id != 'CASIA2-SEL3-ALL8-V1'
+                or checkpoint['best_epoch'] != early_stop['best_epoch']
+                or checkpoint['best_mae'] != early_stop['best_mae']
+                or checkpoint['epoch'] > early_stop['last_complete_epoch']):
+            raise ValueError('Best checkpoint differs from the registered early endpoint.')
+    elif training['state'] != 'COMPLETED' or training['next_epoch'] != 100:
         raise ValueError('Wait for all 100 training epochs before evaluating the saved best.')
     if (checkpoint.get('checkpoint_format') != 2
             or checkpoint.get('selection') != 'TEST_SELECTED_MAE_DIAGNOSTIC'
@@ -100,6 +107,7 @@ def main():
     parser.add_argument('--run', type=Path, required=True)
     parser.add_argument('--spec', type=Path, default=Path('config/benchmark_all8.json'))
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--early-stop-sha256', help='Hash of the explicitly registered run/early_stop.json.')
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     run = args.run.resolve()
@@ -115,6 +123,7 @@ def main():
     expected = {x['name']: x['count'] for x in spec['tests']}
     metadata = {r['name'] + '.png': r for r in manifest if r['split'] == 'test'}
     training = read_json(run / 'training_status.json')
+    early_stop = validate_receipt(run, args.early_stop_sha256) if args.early_stop_sha256 else None
     provenance = read_json(run / 'provenance.json')
     for name, digest in provenance['source_files_sha256'].items():
         if file_hash(run / 'source' / name) != digest:
@@ -124,7 +133,7 @@ def main():
             raise ValueError(f'Evaluation implementation differs from the frozen training implementation: {name}')
     checkpoint_hash = file_hash(run / 'model-best.pt')
     checkpoint = torch.load(run / 'model-best.pt', map_location='cpu', weights_only=False)
-    validate_best_checkpoint(checkpoint, training, cfg)
+    validate_best_checkpoint(checkpoint, training, cfg, early_stop)
     selection_population, selection_note = validate_selection_origin(checkpoint, cfg, provenance)
     checkpoint_path = run / 'model-best.pt'
     selected_epoch = checkpoint['epoch']
@@ -179,6 +188,7 @@ def main():
         'selection_population': selection_population,
         'selection_note': selection_note,
         'continuation': provenance.get('continuation'),
+        'training_endpoint': early_stop if early_stop else {'status': 'COMPLETED', 'completed_epochs': 100},
         'sampling_seed': 0, 'sampling_steps': 10, 'threshold': .5,
         'aggregation': 'per-image F1/IoU/MAE; macro gives equal dataset weight, pooled gives equal image weight; empty/empty=1',
         'input_file_verification': file_verification,
@@ -193,6 +203,9 @@ def main():
     lines = ['# Saved best checkpoint: eight benchmark datasets', '',
              f"Run: {provenance['run_id']}; best epoch: {selected_epoch}; selection: {report['selection_population']} MAE.",
              '', report['selection_note'], '', '| Dataset | Images | F1 | IoU | MAE |', '|---|---:|---:|---:|---:|']
+    if early_stop:
+        lines[2:2] = [f"Training ended early by user request: {early_stop['completed_epochs']}/100 complete epochs. "
+                      f"Last complete epoch: {early_stop['last_complete_epoch']}. This is not a final99 result.", '']
     for name, values in report['metrics'].items():
         lines.append(f'| {name} | {values["count"]} | {values["F1"]:.6f} | {values["IoU"]:.6f} | {values["MAE"]:.6f} |')
     (staging / 'report.md').write_text('\n'.join(lines) + '\n')

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+from contextlib import ExitStack
 import os
 from pathlib import Path
 import signal
@@ -18,6 +19,7 @@ if __name__ == '__main__':
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from tools.benchmark_protocol import load_benchmark
+from tools.early_stop import make_receipt, validate_receipt
 from tools.manage_experiment import (freeze_source, now, output, proc_identity, read_json, run_path,
                                     sha256, terminate_stage, validate_environment, validate_gpu, write_json)
 from tools.resource_locks import ResourceBusy, acquire_file, acquire_resources, inherit_file
@@ -41,29 +43,55 @@ def dependency_ready(run):
 
 
 def queue(args, root, run, job):
-    lock = acquire_file(root / 'runtime/locks' / f'followup-{args.run_id}.lock')
+    with ExitStack() as cleanup:
+        lock = cleanup.enter_context(acquire_file(root / 'runtime/locks' / f'followup-{args.run_id}.lock'))
+        return register_and_start(args, root, run, job, lock, cleanup)
+
+
+def register_and_start(args, root, run, job, lock, cleanup):
     if args.command == 'queue':
         if job.exists():
             raise SystemExit('Follow-up already exists; use status or resume rather than duplicating it.')
+        if (run / 'early_stop.json').exists() and not args.early_stop:
+            raise SystemExit('Recover this early endpoint with queue --early-stop, not the normal completion policy.')
         validate_environment(root, root)
         spec, _, receipt, _ = load_benchmark(root)
         if output(['git', 'status', '--porcelain', '--untracked-files=no'], root):
             raise SystemExit('Commit changes before freezing the follow-up.')
         original = read_json(run / 'provenance.json')
+        early_stop, resources = None, []
+        if args.early_stop:
+            resources = acquire_resources(root, args.run_id, original['gpu'])
+            for handle in resources:
+                cleanup.callback(handle.close)
+            validate_gpu(original['gpu'])
+            # A crash between pinning the endpoint and publishing the job is
+            # recoverable without reselecting a checkpoint or altering the receipt.
+            early_stop = (validate_receipt(run, sha256(run / 'early_stop.json'))
+                          if (run / 'early_stop.json').exists() else make_receipt(run))
         job.parent.mkdir(parents=True, exist_ok=True)
         commit = output(['git', 'rev-parse', 'HEAD'], root)
         # A failed archive/extraction must not leave a half-created permanent job.
         with tempfile.TemporaryDirectory(prefix='all8-best.preparing-', dir=job.parent) as draft:
             staging = Path(draft)
             hashes = freeze_source(root, staging / 'source', commit)
+            early_hash = None
+            if early_stop:
+                if not (run / 'early_stop.json').exists():
+                    write_json(run / 'early_stop.json', early_stop)
+                early_hash = sha256(run / 'early_stop.json')
             write_json(staging / 'provenance.json', {
                 'created_at': now(), 'training_run_id': args.run_id, 'training_commit': original['git_commit'],
                 'evaluation_commit': commit, 'gpu': original['gpu'], 'suite_id': spec['suite_id'],
                 'dataset_manifest_sha256': receipt['manifest_sha256'], 'source_files_sha256': hashes,
-                'checkpoint': 'model-best.pt', 'policy': 'wait for existing train/final-eval controller completion; evaluate saved best once',
+                'checkpoint': 'model-best.pt', 'early_stop_sha256': early_hash,
+                'policy': ('user-authorized early endpoint; evaluate pinned saved best once' if early_stop else
+                           'wait for existing train/final-eval controller completion; evaluate saved best once'),
             })
             write_json(staging / 'status.json', {'status': 'QUEUED', 'updated_at': now()})
             staging.rename(job)
+        for handle in resources:
+            handle.close()
     else:
         if read_json(job / 'status.json')['status'] == 'COMPLETED':
             raise SystemExit('Follow-up already completed; no repeat evaluation.')
@@ -102,9 +130,13 @@ def worker(args, root, run, job):
     signal.signal(signal.SIGTERM, stop)
     signal.signal(signal.SIGINT, stop)
     try:
-        while not dependency_ready(run):
-            update('WAITING_FOR_TRAINING', dependency=read_json(run / 'controller_status.json')['status'])
-            time.sleep(60)
+        early_hash = provenance.get('early_stop_sha256')
+        if early_hash:
+            validate_receipt(run, early_hash)
+        else:
+            while not dependency_ready(run):
+                update('WAITING_FOR_TRAINING', dependency=read_json(run / 'controller_status.json')['status'])
+                time.sleep(60)
         if read_json(run / 'provenance.json')['git_commit'] != provenance['training_commit']:
             raise RuntimeError('Training run identity changed.')
         validate_environment(root, job / 'source')
@@ -121,6 +153,8 @@ def worker(args, root, run, job):
                 try:
                     resources = acquire_resources(root, args.run_id, provenance['gpu'])
                     validate_gpu(provenance['gpu'])
+                    if early_hash:
+                        validate_receipt(run, early_hash)
                     break
                 except (ResourceBusy, SystemExit):
                     for handle in resources:
@@ -132,6 +166,8 @@ def worker(args, root, run, job):
             environment['CUDA_VISIBLE_DEVICES'] = str(provenance['gpu'])
             command = [sys.executable, 'tools/evaluate_benchmarks.py', '--run', str(run),
                        '--output', str(job / 'evaluation')]
+            if early_hash:
+                command.extend(['--early-stop-sha256', early_hash])
             with (job / 'evaluation.log').open('a') as log:
                 proc = subprocess.Popen(command, cwd=job / 'source', env=environment, stdin=subprocess.DEVNULL,
                                         stdout=log, stderr=log, start_new_session=True,
@@ -173,7 +209,10 @@ def main():
     parser.add_argument('--project', type=Path, default=Path(__file__).resolve().parents[1])
     parser.add_argument('--run-id', required=True)
     parser.add_argument('--lock-fd', type=int)
+    parser.add_argument('--early-stop', action='store_true', help='Register the user-authorized GPU 1 early endpoint.')
     args = parser.parse_args()
+    if args.early_stop and args.command != 'queue':
+        parser.error('--early-stop is only used when registering the follow-up.')
     root = args.project.resolve()
     run = run_path(root, args.run_id)
     job = run / 'followups/all8-best'
