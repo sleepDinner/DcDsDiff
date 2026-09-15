@@ -1,6 +1,11 @@
 # Experiment ledger
 
-## TECT-PILOT-CASIA2-GN8-R512-S42-V1 — REGISTERED
+## TECT-PILOT-CASIA2-GN8-R512-S42-DATA2-V1 — REGISTERED
+
+- Current run `TECT-PILOT-CASIA2-GN8-R512-S42-20260916-B`; [DATA2 repair](configs/tect_diff/PILOT_DATA2_REPAIR.md), [configuration](configs/tect_diff/pilot_casia2_gn8_data2_r512_s42.json).
+- A failed before GPU startup on two LA masks whose luminance/alpha channels disagree. B quarantines only those two exact hash-bound image/mask pairs; all unknown semantic errors still block. Same GN8 model, fitting dependencies, fresh initialization, sample/epoch budgets, precision and effectiveness gates. No pilot training result exists at this registration.
+
+## TECT-PILOT-CASIA2-GN8-R512-S42-V1 — FAILED_DATA_PREPARATION
 
 - User revision 2026-09-16 authorizes supervised framework/network repairs without repeat approval and smaller CASIA2/Casiav1/Columbia development experiments before full-data training.
 - Run `TECT-PILOT-CASIA2-GN8-R512-S42-20260916-A`; [registered pilot protocol](configs/tect_diff/PILOT_CASIA2_GN8.md), [configuration](configs/tect_diff/pilot_casia2_gn8_r512_s42.json).

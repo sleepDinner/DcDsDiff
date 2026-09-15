@@ -67,6 +67,46 @@ class PilotControllerTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             controller.validate_config(self.original_config, controller.FITTING_PARENT)
 
+    def test_data2_run_protocol_pairing_and_exact_quarantine_count(self):
+        amended = copy.deepcopy(self.original_config)
+        amended['protocol_id'] = controller.RUN_PROTOCOLS[controller.RUN_ID_DATA2]
+        amended['data']['quarantine_pairs'] = [
+            {'id': f'CASIA2:Tp_fixture_{index}', 'image_sha256': str(index) * 64,
+             'mask_sha256': 'a' * 64, 'reason': 'Unresolved LA annotation semantics'}
+            for index in (1, 2)]
+        controller.validate_config(self.original_config, controller.RUN_ID)
+        controller.validate_config(amended, controller.RUN_ID_DATA2)
+        for config, run_id in ((self.original_config, controller.RUN_ID_DATA2), (amended, controller.RUN_ID)):
+            with self.subTest(run_id=run_id), self.assertRaisesRegex(ValueError, 'protocol'):
+                controller.validate_config(config, run_id)
+        for pairs in (None, [], amended['data']['quarantine_pairs'][:1],
+                      amended['data']['quarantine_pairs'] * 2, {}):
+            invalid = copy.deepcopy(amended)
+            invalid['data']['quarantine_pairs'] = pairs
+            with self.subTest(pairs=pairs), self.assertRaisesRegex(ValueError, 'exactly two'):
+                controller.validate_config(invalid, controller.RUN_ID_DATA2)
+        missing = copy.deepcopy(amended)
+        del missing['data']['quarantine_pairs']
+        with self.assertRaisesRegex(ValueError, 'exactly two'):
+            controller.validate_config(missing, controller.RUN_ID_DATA2)
+        for pairs in ([], amended['data']['quarantine_pairs']):
+            changed_a = copy.deepcopy(self.original_config)
+            changed_a['data']['quarantine_pairs'] = pairs
+            with self.assertRaisesRegex(ValueError, 'Original pilot A'):
+                controller.validate_config(changed_a, controller.RUN_ID)
+
+    def test_historical_a_status_is_readable_and_remains_held(self):
+        held = {'status': 'FAILED', 'stage': 'PREPARING', 'outcome': 'HOLD',
+                'controller_alive': False, 'worker_alive': False}
+        hold = {'active': True, 'requires_repair': True, 'reason': 'Historical LA annotation ambiguity'}
+        atomic_json(self.run / 'operational_hold.json', hold)
+        with patch.object(controller, 'read_run', return_value=(self.run, self.root, self.original_config, self.provenance)), \
+                patch.object(controller, 'base_status', return_value=held):
+            current = controller.status(self.run)
+        self.assertEqual(current['status'], 'FAILED')
+        self.assertEqual(current['pilot_outcome'], 'HOLD')
+        self.assertEqual(read_json(self.run / 'operational_hold.json'), hold)
+
     def test_unpublished_head_fails_before_resource_or_registration_actions(self):
         responses = {('branch', '--show-current'): 'feature/tect-diff', ('rev-parse', 'HEAD'): 'local',
                      ('status', '--porcelain', '--untracked-files=no'): '',

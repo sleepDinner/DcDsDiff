@@ -7,7 +7,7 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 
-from scripts.tect_diff.data import _audit_one, canonical_hash, paired_records, read_mask
+from scripts.tect_diff.data import _audit_one, canonical_hash, paired_records, read_mask, sha256_file
 from scripts.tect_diff.pilot_data import prepare_pilot_bundle, load_pilot_bundle, select_pilot_records, _fit_overlap
 
 
@@ -147,6 +147,62 @@ class PilotBundleTests(unittest.TestCase):
         row = json.loads(Path(self.inherited["manifest_paths"]["test_Casiav1"]).read_text())[0]
         self.image(Path(row["image_path"]), 199)
         with self.assertRaisesRegex(ValueError, "changed"):
+            prepare_pilot_bundle(self.project, self.config, self.inherited, progress=None)
+
+    def quarantine_fixture(self):
+        mask = next((self.source/"Gt").iterdir())
+        values = np.zeros((4, 6, 2), dtype=np.uint8)
+        values[..., 1] = 255
+        Image.fromarray(values).save(mask)
+        stem = mask.stem[:-3]
+        image = self.source/"Tp"/(stem+".png")
+        return {"id":"CASIA2:"+stem, "image_sha256":sha256_file(image),
+                "mask_sha256":sha256_file(mask), "reason":"Registered fixture LA-channel ambiguity"}
+
+    def test_exact_registered_quarantine_precedes_mask_decode_and_preserves_sources(self):
+        exception = self.quarantine_fixture()
+        before = {str(p):sha256_file(p) for p in self.source.rglob("*") if p.is_file()}
+        with self.assertRaisesRegex(ValueError, "Data audit blocked"):
+            prepare_pilot_bundle(self.project, self.config, self.inherited, progress=None)
+        historical_error_path = self.project/"cache/tect_diff/pilot-data-v1/audit/audit_errors.json"
+        historical_errors = historical_error_path.read_bytes()
+        self.config["data"]["quarantine_pairs"] = [exception]
+        bundle = prepare_pilot_bundle(self.project, self.config, self.inherited, progress=None)
+        summary = bundle["summary"]
+        self.assertEqual(summary["train_before_exclusions"], 20)
+        self.assertEqual(summary["train_after_quarantine"], 19)
+        self.assertEqual(summary["quarantined_pair_count"], 1)
+        self.assertEqual(summary["audited_train_count"], 19)
+        self.assertEqual(summary["current_audit_status"], "COMPLETED")
+        self.assertEqual(summary["current_blocking_audit_error_count"], 0)
+        self.assertEqual(historical_error_path.read_bytes(), historical_errors)
+        self.assertFalse(any(row["id"] == exception["id"] for row in bundle["train"]))
+        excluded = json.loads((Path(bundle["summary_path"]).parent/"exclusions.json").read_text())
+        quarantine = [row for row in excluded if row["reason"] == "registered_training_pair_quarantine"]
+        self.assertEqual(quarantine[0]["image_sha256"], exception["image_sha256"])
+        self.assertEqual(quarantine[0]["mask_sha256"], exception["mask_sha256"])
+        self.assertEqual(quarantine[0]["quarantine_reason"], exception["reason"])
+        self.assertEqual(before, {str(p):sha256_file(p) for p in self.source.rglob("*") if p.is_file()})
+
+    def test_quarantine_rejects_unknown_duplicate_missing_reason_and_bad_hash(self):
+        exception = self.quarantine_fixture()
+        cases = [([{**exception, "id":"CASIA2:unknown"}], "Unknown"),
+                 ([exception, exception], "Duplicate"),
+                 ([{key:value for key,value in exception.items() if key != "reason"}], "fields"),
+                 ([{**exception, "reason":"  "}], "reason"),
+                 ([{**exception, "image_sha256":"0"*64}], "hash mismatch"),
+                 ([{**exception, "mask_sha256":"0"*64}], "hash mismatch"),
+                 ([{**exception, "image_sha256":"not-a-sha"}], "SHA256"),
+                 ({"unexpected":"mapping"}, "list")]
+        for entries, error in cases:
+            with self.subTest(error=error, entries=entries):
+                self.config["data"]["quarantine_pairs"] = entries
+                with self.assertRaisesRegex(ValueError, error):
+                    prepare_pilot_bundle(self.project, self.config, self.inherited, progress=None)
+
+    def test_unregistered_ambiguous_mask_still_blocks(self):
+        self.quarantine_fixture()
+        with self.assertRaisesRegex(ValueError, "Data audit blocked"):
             prepare_pilot_bundle(self.project, self.config, self.inherited, progress=None)
 
 

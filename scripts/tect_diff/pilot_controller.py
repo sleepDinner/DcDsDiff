@@ -25,6 +25,11 @@ from scripts.tect_diff.controller import (
 from tools.resource_locks import ResourceBusy, acquire_file
 
 RUN_ID = "TECT-PILOT-CASIA2-GN8-R512-S42-20260916-A"
+RUN_ID_DATA2 = "TECT-PILOT-CASIA2-GN8-R512-S42-20260916-B"
+RUN_PROTOCOLS = {
+    RUN_ID: "TECT-PILOT-CASIA2-GN8-R512-S42-V1",
+    RUN_ID_DATA2: "TECT-PILOT-CASIA2-GN8-R512-S42-DATA2-V1",
+}
 GROUP_ID = "TECT-PILOT-CASIA2-GN8"
 FITTING_PARENT = "TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E"
 REFERENCE_HASH = "800f50c392a275fde3ec249c6f52275c6db79813e6f8b7e8b534f9ddb52a523f"
@@ -32,8 +37,16 @@ CALIBRATION_HASH = "bb349a143385b25798fe0a9c7c43904ba08c26f38ed7a6aee991add7ed16
 
 
 def validate_config(config, run_id):
-    if run_id != RUN_ID or config.get("group_id") != GROUP_ID:
-        raise ValueError("Only the registered new CASIA2/GN8 pilot is accepted")
+    if run_id not in RUN_PROTOCOLS or config.get("group_id") != GROUP_ID:
+        raise ValueError("Only registered CASIA2/GN8 pilot run IDs are accepted")
+    if config.get("protocol_id") != RUN_PROTOCOLS[run_id]:
+        raise ValueError("Pilot run ID and registered protocol do not match")
+    data = config["data"]
+    if run_id == RUN_ID:
+        if "quarantine_pairs" in data:
+            raise ValueError("Original pilot A does not permit a quarantine amendment")
+    elif type(data.get("quarantine_pairs")) is not list or len(data["quarantine_pairs"]) != 2:
+        raise ValueError("Pilot B DATA2 requires exactly two registered quarantine pairs")
     if config.get("project_root") != "/data1/hl/DcDsDiff-and-GIT10K" or config.get("environment") != "/data0/hl/conda_envs/dcdsdiff":
         raise ValueError("Pilot project/environment differs from the authorized server")
     if config.get("world_size") != 2 or config.get("gpus") != [0, 1] or config.get("seed") != 42 or config.get("resolution") != 512:

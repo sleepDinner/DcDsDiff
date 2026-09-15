@@ -9,6 +9,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 from collections import Counter, defaultdict
 from pathlib import Path
 
@@ -17,10 +18,11 @@ from PIL import Image
 
 from scripts.tect_diff.data import (
     _audit_records, _signature, _writable_directory, atomic_json, canonical_hash,
-    index_files, paired_records, source_metadata,
+    index_files, paired_records, source_metadata, sha256_file,
 )
 
-PILOT_DATA_VERSION = "TECT-CASIA2-PILOT-DATA-V1"
+PILOT_DATA_VERSION = "TECT-CASIA2-PILOT-DATA-V2-QUARANTINE"
+QUARANTINE_POLICY = "EXPLICIT_HASH_BOUND_TRAINING_PAIRS_V1"
 TEST_NAMES = ("Casiav1", "Columbia")
 DEFAULT_SIZES = {"train_authentic": 1024, "train_tampered": 1024,
                  "quick_test_per_dataset": 128, "authentic_probe": 64,
@@ -220,10 +222,49 @@ def _fit_overlap(probe, inherited):
     return result
 
 
+def _quarantine_records(records, exceptions):
+    """Exclude only exact registered training pairs before interpreting masks."""
+    if not isinstance(exceptions, list):
+        raise ValueError("quarantine_pairs must be a list")
+    by_id = {row["id"]:row for row in records}
+    if len(by_id) != len(records):
+        raise ValueError("Duplicate IDs in source records")
+    required = {"id", "image_sha256", "mask_sha256", "reason"}
+    seen, quarantined = set(), []
+    for entry in exceptions:
+        if not isinstance(entry, dict) or set(entry) != required:
+            raise ValueError("Quarantine fields must be exactly id/image_sha256/mask_sha256/reason")
+        sample_id = entry["id"]
+        if not isinstance(sample_id, str) or sample_id not in by_id:
+            raise ValueError(f"Unknown quarantine ID: {sample_id}")
+        if sample_id in seen:
+            raise ValueError(f"Duplicate quarantine ID: {sample_id}")
+        if not isinstance(entry["reason"], str) or not entry["reason"].strip():
+            raise ValueError("Quarantine reason must be a nonempty string")
+        row = by_id[sample_id]
+        if row.get("split") != "train" or row.get("dataset") != "CASIA2":
+            raise ValueError("Only CASIA2 training pairs may be quarantined")
+        for key in ("image_sha256", "mask_sha256"):
+            if not isinstance(entry[key], str) or re.fullmatch(r"[a-f0-9]{64}", entry[key]) is None:
+                raise ValueError(f"Quarantine {key} must be a lowercase SHA256 digest")
+        before = _signature(row)
+        actual = {kind+"_sha256":sha256_file(row[kind+"_path"]) for kind in ("image", "mask")}
+        if any(actual[key] != entry[key] for key in actual):
+            raise ValueError(f"Quarantine image/mask hash mismatch: {sample_id}")
+        if before != _signature(row):
+            raise ValueError(f"Quarantine pair changed during verification: {sample_id}")
+        seen.add(sample_id)
+        quarantined.append({"id":sample_id, "reason":"registered_training_pair_quarantine",
+                            "quarantine_reason":entry["reason"], "policy":QUARANTINE_POLICY,
+                            "image_path":row["image_path"], "mask_path":row["mask_path"], **actual})
+    return [row for row in records if row["id"] not in seen], sorted(quarantined, key=lambda row:row["id"])
+
+
 def prepare_pilot_bundle(project, config, inherited_bundle=None, progress=print):
     """Audit CASIA2 once, reuse verified tests, and freeze deterministic roles.
 
-    config.data: train_root, inherited_bundle, benchmark_spec, workers.
+    config.data: train_root, inherited_bundle, benchmark_spec, workers, and
+    optional quarantine_pairs [{id, image_sha256, mask_sha256, reason}].
     config.pilot: train_authentic, train_tampered, quick_test_per_dataset,
     authentic_probe, preflight_train. Defaults: 1024/1024/128/64/64.
     """
@@ -232,6 +273,8 @@ def prepare_pilot_bundle(project, config, inherited_bundle=None, progress=print)
     inherited, parent = _inherited_records(project, options, inherited_bundle)
     tests = {name:inherited["test_"+name] for name in TEST_NAMES}
     records = _casia_records(project, options.get("train_root", "/data1/data/datasets/CASIA2.0"))
+    train_before_exclusions = len(records)
+    records, quarantined = _quarantine_records(records, options.get("quarantine_pairs", []))
     cache = _writable_directory(project, "cache/tect_diff/pilot-data-v1/audit")
     audited, invalid = _audit_records(records, cache, max(1, min(16, int(options.get("workers", 12)))), progress)
     empty_tampered = [row["id"] for row in audited if not row["authentic_declared"] and row["empty_mask"]]
@@ -243,7 +286,7 @@ def prepare_pilot_bundle(project, config, inherited_bundle=None, progress=print)
     manifests.update({"test_"+name:selected["tests"][name] for name in TEST_NAMES})
     manifests.update({"test_full_"+name:tests[name] for name in TEST_NAMES})
     hashes = {key:canonical_hash(rows) for key, rows in manifests.items()}
-    exclusions = [*invalid, *selected["exclusions"]]
+    exclusions = [*quarantined, *invalid, *selected["exclusions"]]
     identity = {"version":PILOT_DATA_VERSION, "seed":int(config.get("seed", 42)),
                 "hashes":hashes, "sample_sizes":selected["sample_sizes"], "exclusions":canonical_hash(exclusions)}
     manifest_id = canonical_hash(identity)[:20]
@@ -255,8 +298,14 @@ def prepare_pilot_bundle(project, config, inherited_bundle=None, progress=print)
         paths[key] = str(path)
     summary = {"audit_version":PILOT_DATA_VERSION, "manifest_id":manifest_id,
                "manifest_hashes":hashes, "manifest_paths":paths, "seed":identity["seed"],
-               "sample_sizes":selected["sample_sizes"], "train_before_exclusions":len(records),
+               "sample_sizes":selected["sample_sizes"], "train_before_exclusions":train_before_exclusions,
+               "train_after_quarantine":len(records), "quarantine_policy":QUARANTINE_POLICY,
+               "quarantined_pair_count":len(quarantined), "quarantined_pairs":quarantined,
                "audited_train_count":len(audited), "invalid_training_pairs":invalid,
+               "current_audit_status":"COMPLETED", "current_blocking_audit_error_count":0,
+               "invalid_training_pair_count":len(invalid),
+               "audit_cache_history_path":str(cache/"audit_errors.json"),
+               "audit_cache_history_notice":"Shared audit_errors.json may retain earlier failed-attempt errors and is never a current-run status source. This frozen summary records current audit success, exact quarantines and remaining coordinate-invalid pairs; unknown semantic errors prevent creation of this summary.",
                "eligible_counts":selected["eligible_counts"], "train_count":len(selected["train"]),
                "train_authentic_count":sum(row["authentic_declared"] for row in selected["train"]),
                "test_counts":{name:len(selected["tests"][name]) for name in TEST_NAMES},
