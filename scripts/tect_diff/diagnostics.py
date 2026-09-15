@@ -26,7 +26,6 @@ from model.loss import structure_loss
 from model.tect_diff.diffusion import coefficients, ddim_step, stable_noise
 from model.tect_diff.evidence import measure, tensor_tree_hash
 from model.tect_diff.network import TECTNetwork
-from model.tect_diff.reference import ReferenceDenoiser
 from denoising_diffusion_pytorch.simple_diffusion import logsnr_schedule_cosine, logsnr_schedule_shifted
 from scripts.tect_diff.common import atomic_json, rng_state, restore_rng, timestamp, seed_all
 from scripts.tect_diff.data import ManifestDataset
@@ -312,7 +311,7 @@ def preflight(worker):
     worker.status('PREFLIGHT', synthetic_engineering_only=True, substage='constructing_models')
     seed_all(worker.config['seed'])
     network = TECTNetwork(worker.config['pretrained_path'], worker.config['model']['gradient_checkpointing']).to(worker.device)
-    reference = ReferenceDenoiser(worker.config['model']['gradient_checkpointing']).to(worker.device)
+    reference = worker.reference_model()
     probe = _SyntheticEngineeringProbe(network, reference, worker.config).to(worker.device)
     ddp = DDP(probe, device_ids=[worker.device.index], find_unused_parameters=True, broadcast_buffers=False)
     reference_hash = _hash(reference)

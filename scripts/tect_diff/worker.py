@@ -26,7 +26,10 @@ from scripts.tect_diff.common import (atomic_json, atomic_torch_save, append_jso
     sha256, json_hash, seed_all, rng_state, restore_rng, tensor_hash, timestamp)
 from scripts.tect_diff.data import load_bundle, ManifestDataset, ReferenceDataset, evaluation_collate
 from scripts.tect_diff.metrics import per_image_metrics, aggregate_dataset, aggregate_all8
-from model.tect_diff.reference import ReferenceDenoiser
+from scripts.tect_diff.reference_health import (
+    POLICY_ID, summarize_reference_epoch, require_healthy_reference, require_final_reference_probe,
+)
+from model.tect_diff.reference import ReferenceDenoiser, REFERENCE_ARCHITECTURE_V1
 from model.tect_diff.network import TECTNetwork
 from model.tect_diff.diffusion import TECTDiffusion, coefficients, stable_noise
 from model.tect_diff.evidence import CalibrationFitter, measure, save_calibration, FixedTrajectoryEvidence
@@ -53,6 +56,18 @@ class Worker:
 
     def amp(self):
         return torch.autocast('cuda', dtype=self.dtype)
+
+    def reference_model(self, artifact=None):
+        reference = ReferenceDenoiser(
+            self.config['model']['gradient_checkpointing'],
+            architecture_version=self.config['reference'].get('architecture_version', REFERENCE_ARCHITECTURE_V1),
+        ).to(self.device)
+        if artifact is not None:
+            reference.load_state_dict(artifact['model'], strict=True)
+            if self.config['reference'].get('health_policy'):
+                require_final_reference_probe(artifact.get('final_health_probe'), self.config['reference'],
+                                              tensor_hash(reference), self.bundle['manifest_hashes']['reference'])
+        return reference
 
     def status(self, stage, **values):
         value = {'updated_at': timestamp(), 'stage': stage, 'rank': self.rank,
@@ -88,7 +103,12 @@ class Worker:
         path = Path(receipt['artifact_path'])
         if sha256(path) != receipt['sha256']:
             raise ValueError(f'{name} artifact file hash mismatch')
-        return torch.load(path, map_location='cpu'), receipt
+        artifact = torch.load(path, map_location='cpu')
+        if name == 'reference':
+            expected = self.config['reference'].get('architecture_version', REFERENCE_ARCHITECTURE_V1)
+            if artifact.get('architecture_version', REFERENCE_ARCHITECTURE_V1) != expected:
+                raise ValueError('Reference architecture does not match this protocol')
+        return artifact, receipt
 
     def training_checkpoint(self, model, optimizer, scheduler, scaler, epoch, step,
                             evaluation_complete, **extra):
@@ -139,8 +159,11 @@ class Worker:
 
     def reference(self):
         config = self.config['reference']
+        health_policy = config.get('health_policy')
+        if health_policy not in (None, POLICY_ID):
+            raise ValueError('Unknown reference health policy')
         seed_all(self.config['seed'])
-        reference = ReferenceDenoiser(self.config['model']['gradient_checkpointing']).to(self.device)
+        reference = self.reference_model()
         initial_hash = tensor_hash(reference)
         optimizer = torch.optim.AdamW(reference.parameters(), lr=config['learning_rate'], weight_decay=config['weight_decay'])
         scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer, lambda _: 1.0)
@@ -153,13 +176,15 @@ class Worker:
             self.restore(last, reference, optimizer, scheduler, scaler)
             start_epoch, step, history = last['next_epoch'], last['optimizer_step'], last['history']
             initial_hash = last['initial_parameter_hash']
+            if health_policy and history:
+                require_healthy_reference(history[-1])
         model = DDP(reference, device_ids=[self.device.index], broadcast_buffers=False)
         seed_all(self.config['seed'] + self.rank) if start_epoch == 0 else None
         micro, accumulation = config['micro_batch'], config['accumulation_steps']
         for epoch in range(start_epoch, config['epochs']):
             reference.train()
             loader, sampler = self.loader(dataset, epoch, micro)
-            sums = torch.zeros(4, 3, device=self.device, dtype=torch.float64)
+            sums = torch.zeros(4, 5, device=self.device, dtype=torch.float64)
             for index, batch in enumerate(loader):
                 group_start = index // accumulation * accumulation
                 group_count = min(accumulation * micro, len(sampler)-group_start*micro) * self.world
@@ -181,11 +206,15 @@ class Worker:
                     scaler.scale(loss * (len(image)*self.world/group_count)).backward()
                 with torch.no_grad():
                     zero_mse = noise.square().flatten(1).mean(1)
+                    energy = predicted.float().square().flatten(1).mean(1)
+                    cross = (predicted.float()*noise).flatten(1).mean(1)
                     for k in range(4):
                         selected = scale_ids == k
                         sums[k, 0] += loss_per_image.detach()[selected].double().sum()
                         sums[k, 1] += zero_mse[selected].double().sum()
-                        sums[k, 2] += selected.sum()
+                        sums[k, 2] += energy[selected].double().sum()
+                        sums[k, 3] += cross[selected].double().sum()
+                        sums[k, 4] += selected.sum()
                 if synchronize:
                     norm, skipped = self.optimizer_update(reference, optimizer, scaler)
                     step += int(not skipped)
@@ -195,42 +224,67 @@ class Worker:
                                     micro_batches_per_epoch=len(loader), peak_memory_bytes=torch.cuda.max_memory_allocated())
             scheduler.step()
             dist.all_reduce(sums)
-            metrics = {'epoch': epoch, 'optimizer_step': step, 'mse_by_scale': (sums[:, 0]/sums[:, 2]).tolist(),
-                       'zero_predictor_mse_by_scale': (sums[:, 1]/sums[:, 2]).tolist(),
-                       'samples_by_scale': sums[:, 2].long().tolist(), 'padded_training_samples': len(sampler)*self.world-len(dataset)}
+            if health_policy:
+                metrics = summarize_reference_epoch(epoch, sums.tolist(), history, final=epoch == config['epochs']-1)
+            else:
+                metrics = {'epoch': epoch, 'mse_by_scale': (sums[:, 0]/sums[:, 4]).tolist(),
+                           'zero_predictor_mse_by_scale': (sums[:, 1]/sums[:, 4]).tolist(),
+                           'samples_by_scale': sums[:, 4].long().tolist()}
+            metrics.update(optimizer_step=step, padded_training_samples=len(sampler)*self.world-len(dataset))
             history.append(metrics)
             last = self.training_checkpoint(reference, optimizer, scheduler, scaler, epoch, step, True,
                                             history=history, initial_parameter_hash=initial_hash)
             if self.rank == 0:
                 atomic_torch_save(last_path, last)
                 append_json(self.run / 'reference_metrics.jsonl', metrics)
+                if health_policy:
+                    atomic_json(self.run / 'reference_health.json', metrics)
             dist.barrier()
             self.status('REFERENCE_TRAINING', epoch=epoch, epoch_complete=True, optimizer_step=step, metrics=metrics)
+            if health_policy:
+                require_healthy_reference(metrics)
         final_hash = tensor_hash(reference)
         final_mse = np.mean(history[-1]['mse_by_scale'])
         zero_mse = np.mean(history[-1]['zero_predictor_mse_by_scale'])
         if initial_hash == final_hash or step < 1 or not np.isfinite(final_mse) or final_mse >= zero_mse:
             raise RuntimeError('Reference did not demonstrate finite learned noise prediction within fixed budget')
+        if health_policy:
+            require_healthy_reference(history[-1])
+            if not history[-1]['reference_health']['final_endpoint_checked']:
+                raise RuntimeError('Reference final per-scale health check is missing')
+        final_probe = None
+        if health_policy:
+            from scripts.tect_diff.reference_probe import final_reference_probe
+            final_probe = final_reference_probe(self, reference)
+            if self.rank == 0:
+                atomic_json(self.run / 'reference_final_health.json', final_probe)
+            dist.barrier()
+            require_healthy_reference(final_probe['metrics'])
+            require_final_reference_probe(final_probe, config, final_hash, self.bundle['manifest_hashes']['reference'])
         artifact_path = Path(self.config['project_root']) / 'artifacts/reference' / self.run.name / 'reference_final.pth'
         if self.rank == 0:
             atomic_torch_save(artifact_path, {'model': reference.state_dict(), 'reference_trained': True,
-                'config': self.config, 'config_hash': self.config_hash, 'epoch': 19,
+                'config': self.config, 'config_hash': self.config_hash, 'epoch': config['epochs']-1,
+                'architecture_version': reference.architecture_version,
+                'final_health_probe': final_probe,
                 'fit_manifest_sha256': self.bundle['manifest_hashes']['reference'],
                 'initial_parameter_hash': initial_hash, 'final_parameter_hash': final_hash,
                 'reference_source_mode': self.bundle['reference_source_mode'], 'history': history})
             self.receipt('reference', artifact_path=str(artifact_path), sha256=sha256(artifact_path),
-                         optimizer_step=step, epoch=19, initial_parameter_hash=initial_hash,
+                         optimizer_step=step, epoch=config['epochs']-1, initial_parameter_hash=initial_hash,
                          final_parameter_hash=final_hash, mean_epsilon_mse=float(final_mse),
                          zero_predictor_mse=float(zero_mse), sample_count=len(dataset),
-                         reference_source_mode=self.bundle['reference_source_mode'])
+                         reference_source_mode=self.bundle['reference_source_mode'],
+                         architecture_version=reference.architecture_version,
+                         health_metrics=history[-1] if health_policy else None,
+                         final_health_probe=final_probe)
         dist.barrier()
 
     def calibration(self):
         artifact, receipt = self.read_artifact('reference')
         if artifact.get('reference_trained') is not True:
             raise ValueError('A trained reference is mandatory')
-        reference = ReferenceDenoiser().to(self.device)
-        reference.load_state_dict(artifact['model'], strict=True)
+        reference = self.reference_model(artifact)
         reference.freeze()
         del artifact
         fitter = CalibrationFitter(self.config)
@@ -342,8 +396,7 @@ class Worker:
         if calibration['metadata']['reference_sha256'] != reference_receipt['sha256']:
             raise ValueError('Calibration is not bound to this trained reference')
         seed_all(self.config['seed'])
-        reference = ReferenceDenoiser().to(self.device)
-        reference.load_state_dict(reference_artifact['model'], strict=True)
+        reference = self.reference_model(reference_artifact)
         reference.freeze()
         network = TECTNetwork(self.config['pretrained_path'], self.config['model']['gradient_checkpointing']).to(self.device)
         model = TECTDiffusion(network, reference, calibration, self.config).to(self.device)

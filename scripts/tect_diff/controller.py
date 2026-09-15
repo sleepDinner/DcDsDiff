@@ -253,8 +253,16 @@ def status(run_dir):
     return result
 
 
+def check_operational_hold(run):
+    hold = run / 'operational_hold.json'
+    state = read_json(hold) if hold.exists() else {}
+    if state.get('active'):
+        raise RuntimeError('Run is held after user-requested stop: ' + state.get('reason', 'see operational_hold.json'))
+
+
 def resume(run_dir):
     run, root, config, provenance = read_run(run_dir)
+    check_operational_hold(run)
     with acquire_file(root / "runtime/locks" / f"tect-registration-{run.name}.lock"):
         current = status(run)
         if current["controller_alive"] or current["worker_alive"]:
@@ -299,6 +307,30 @@ def validate_receipt(run, stage, provenance):
             raise RuntimeError("Reference receipt does not demonstrate actual weight updates")
         if receipt.get("epoch") != config["reference"]["epochs"] - 1:
             raise RuntimeError("Reference did not reach its fixed training endpoint")
+        if config['reference'].get('health_policy'):
+            from scripts.tect_diff.reference_health import (
+                POLICY_ID, FINAL_RATIO_THRESHOLD, require_healthy_reference, require_final_reference_probe,
+            )
+            import math
+            metrics = receipt.get('health_metrics') or {}
+            health = metrics.get('reference_health') or {}
+            ratios = metrics.get('mse_ratio_by_scale', [])
+            if (config['reference']['health_policy'] != POLICY_ID or health.get('policy_id') != POLICY_ID
+                    or not health.get('final_endpoint_checked') or not health.get('all_scales_pass_final_margin')
+                    or metrics.get('epoch') != config['reference']['epochs']-1
+                    or len(ratios) != 4 or not all(math.isfinite(x) and 0 <= x < FINAL_RATIO_THRESHOLD for x in ratios)
+                    or receipt.get('architecture_version') != config['reference']['architecture_version']):
+                raise RuntimeError('Reference receipt is missing valid per-scale final learning evidence')
+            require_healthy_reference(metrics)
+            bundle = read_json(run / 'data_bundle.json')
+            probe = receipt.get('final_health_probe')
+            require_final_reference_probe(probe, config['reference'], receipt['final_parameter_hash'],
+                                          bundle['manifest_hashes']['reference'])
+            from scripts.tect_diff.data import canonical_hash
+            records = read_json(bundle['manifest_paths']['reference'])
+            if (canonical_hash(records) != bundle['manifest_hashes']['reference']
+                    or probe['selected_reference_ids'] != [row['id'] for row in records[:16]]):
+                raise RuntimeError('Final reference probe IDs differ from the frozen training manifest')
     if stage == "main":
         for endpoint in ("best", "final"):
             item = receipt[endpoint]
@@ -334,6 +366,7 @@ def clean_empty_startup_files(run, state):
 
 def supervise(run_dir):
     run, root, config, provenance = read_run(run_dir)
+    check_operational_hold(run)
     # A dedicated controller lock prevents duplicate supervisors even while
     # resource locks are unavailable and while final publication is retrying.
     controller_lock = acquire_file(root / "runtime/locks" / f"tect-controller-{run.name}.lock")

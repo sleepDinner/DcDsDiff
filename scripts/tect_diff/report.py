@@ -207,6 +207,9 @@ def generate(run_dir, target_root=None):
     provenance = read_json(run / "provenance.json")
     bundle = optional_json(run / "data_bundle.json")
     reference = optional_json(run / "reference_receipt.json")
+    reference_health = optional_json(run / 'reference_health.json')
+    final_reference_health = optional_json(run / 'reference_final_health.json')
+    operational_hold = optional_json(run / 'operational_hold.json')
     calibration = optional_json(run / "calibration_receipt.json")
     main = optional_json(run / "main_receipt.json")
     diagnostics = summarize_diagnostics(run)
@@ -225,6 +228,8 @@ def generate(run_dir, target_root=None):
         "manifest_hashes": bundle.get("manifest_hashes", {}),
         "data_counts": {key: bundle.get(key) for key in ("train_count", "reference_count", "calibration_count", "test_counts", "excluded_train_count")},
         "reference": reference, "calibration": calibration, "best": best, "final": final,
+        "reference_health": reference_health, "reference_final_health": final_reference_health,
+        "operational_hold": operational_hold,
         "costs": {**state.get("stage_costs", {}), **main.get("costs", {})}, "progress": progress,
         "pretrained_load_report": main.get("pretrained_load_report", {}),
         "stage_budgets": {"reference_epochs": config["reference"]["epochs"],
@@ -260,7 +265,9 @@ def generate(run_dir, target_root=None):
              "## Actual progress", "", "```json", json.dumps(progress, indent=2, ensure_ascii=False), "```", "",
              _checkpoint_table("Test-selected best", best), _checkpoint_table("Fixed final endpoint", final),
              "## Phase receipts and costs", "", "```json",
-             json.dumps({"reference": reference, "calibration": calibration, "costs": report["costs"]},
+             json.dumps({"reference": reference, "reference_health": reference_health,
+                         "reference_final_health": final_reference_health,
+                         "operational_hold": operational_hold, "calibration": calibration, "costs": report["costs"]},
                         indent=2, ensure_ascii=False), "```", "", "## Mechanisms and limitations", "",
              "参考参数与训练内统计冻结；Image loss 必须非零启用。梯度/异常存在仅说明工程路径可运行，不代表方法有效。",
              "q 全零、gamma 退化、Image 退化或控制损害定位以 diagnostics_summary.json 记录的实际诊断为准；缺失项仍待完成。",
@@ -273,7 +280,9 @@ def generate(run_dir, target_root=None):
              "无同协议完整 baseline，只报告 TECT-Diff 自身结果，不声称超过 DcDsDiff。", "",
              "## Reproduce / recover", "", "```bash",
              f"{config['environment']}/bin/python -s {run}/source/scripts/tect_diff/controller.py status --run-dir {run}",
-             f"{config['environment']}/bin/python -s {run}/source/scripts/tect_diff/controller.py resume --run-dir {run}",
+             ("# Resume is blocked by the recorded user-requested operational hold."
+              if operational_hold.get('active') else
+              f"{config['environment']}/bin/python -s {run}/source/scripts/tect_diff/controller.py resume --run-dir {run}"),
              "```", "", f"Source snapshot: `{run / 'source'}`; logs/status/checkpoints: `{run}`.",
              "模型权重、训练原图和诊断可视化不上传 GitHub。", ""]
     if report["failure_reason"]:

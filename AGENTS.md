@@ -2,6 +2,8 @@
 
 ## TECT-Diff authorization, 2026-09-15
 
+- Later user request on 2026-09-15 stops the degenerated Stage A reference in `TECT-DIFF-FULL-R512-S42-20260915-A`. Keep that run stopped and preserve its epoch15 checkpoint/frozen snapshot. The versioned reference repair is described in `configs/tect_diff/REFNORM_V2.md`; this repair task performs bounded engineering validation only and does not restart formal training or select an earlier reference checkpoint.
+
 - TECT-Diff is a distinct user-authorized protocol, governed by `configs/tect_diff/full_r512_s42.json` and `configs/tect_diff/PROTOCOL.md`. Its dual-GPU DDP, global batch 8, 512-first input, FinalTrainData training and All8 macro per-image Pixel-F1 selection replace the historical single-GPU/batch6/final99-only rules **only for TECT**. Never resume the stopped CASIA parent/continuation or rerun completed original evaluations.
 - Authorized scope: one seed42 FULL main run, 20 fixed-epoch reference training if needed, training-only calibration, 100 main epochs and automatic reports. No validation split, extra seed, baseline or ablation run. Whole valid training manifest remains in main training despite reference/calibration roles.
 - All `/data0/hl/FinalTrainData` and eight registered benchmark roots are read-only. Confirm pair mappings, authenticity and zero-mask semantics; isolate invalid pairs/exact leakage by manifests, never modify source data. No missing-mask authenticity inference or test-derived reference/statistics/hyperparameters.
