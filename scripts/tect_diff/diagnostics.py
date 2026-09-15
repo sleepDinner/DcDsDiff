@@ -27,6 +27,7 @@ from model.tect_diff.diffusion import coefficients, ddim_step, stable_noise
 from model.tect_diff.evidence import measure, tensor_tree_hash
 from model.tect_diff.network import TECTNetwork
 from denoising_diffusion_pytorch.simple_diffusion import logsnr_schedule_cosine, logsnr_schedule_shifted
+from model.tect_diff.amp_context import self_condition_no_grad
 from scripts.tect_diff.common import atomic_json, rng_state, restore_rng, timestamp, seed_all
 from scripts.tect_diff.data import ManifestDataset
 
@@ -191,7 +192,7 @@ class _SyntheticEngineeringProbe(nn.Module):
         image_time = torch.full((len(image),), 5., device=image.device)
         was_training = self.network.training
         self.network.eval()
-        with torch.no_grad():
+        with self_condition_no_grad():
             pilot = self.network(image, noisy_mask, logsnr, features[-1], estimates[-1], image_time, trace=trace)
             pilot_ctrl, _ = self.control(pilot['logits_base'], evidence, 9, 4)
             previous = (F.interpolate(pilot_ctrl.sigmoid(), (32, 32), mode='bilinear', align_corners=False) >= .5).float()
@@ -550,6 +551,10 @@ def main_probe(worker, model):
         scaler = torch.cuda.amp.GradScaler(enabled=worker.dtype == torch.float16)
         scaler.scale(loss).backward()
         gradients = _gradient_receipt(model, scaler.get_scale())
+        from scripts.tect_diff.gradient_safety import MAIN_UNUSED
+        missing = {name for name, p in model.named_parameters() if p.requires_grad and p.grad is None}
+        if missing != MAIN_UNUSED:
+            raise RuntimeError('Actual main probe has missing trainable gradients: ' + str(sorted(missing)))
         if reference_hash != _hash(model.reference) or calibration_hash != model.evidence.assert_frozen():
             raise RuntimeError('Actual reference or calibration changed during backward')
         if float(model.last_diagnostics['image_loss']) <= 0 or float(model.last_diagnostics['joint_ref_mse']) <= 0:
@@ -567,6 +572,7 @@ def main_probe(worker, model):
             'image_loss': float(model.last_diagnostics['image_loss']),
             'joint_ref_mse': float(model.last_diagnostics['joint_ref_mse']),
             'finite_loss': float(loss.detach()), 'gradients': gradients, 'evidence': evidence_summary,
+            'full_gradient_coverage': True, 'registered_unused_parameters': sorted(missing),
             'q_all_zero_on_training_probe': q_zero, 'ell_all_zero_on_training_probe': ell_zero,
             'gamma': gamma_value, 'sample_profile': sample_profile,
             'fixed_training_probe_pixel_f1': {'P_base': base_f1, 'P_ctrl': controlled_f1,

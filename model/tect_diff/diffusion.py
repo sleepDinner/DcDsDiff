@@ -17,6 +17,7 @@ from denoising_diffusion_pytorch.simple_diffusion import (
 )
 from model.loss import structure_loss
 from .evidence import FixedTrajectoryEvidence
+from .amp_context import self_condition_no_grad
 
 
 def coefficients(logsnr):
@@ -121,7 +122,7 @@ class TECTDiffusion(nn.Module):
             # No stochastic buffers, dropout or BatchNorm updates in this extra pass.
             was_training = self.network.training
             self.network.eval()
-            with torch.no_grad():
+            with self_condition_no_grad():
                 first = self.task(image, trace, noisy_mask, logsnr, features[-1], estimates[-1], m)
                 first_ctrl, _ = self.control(first['logits_base'], measured, j, m)
                 previous = (F.interpolate(first_ctrl.sigmoid(), (32, 32), mode='bilinear', align_corners=False) >= .5).float().detach()

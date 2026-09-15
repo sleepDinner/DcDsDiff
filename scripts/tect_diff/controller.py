@@ -174,7 +174,9 @@ def _spawn(run, root, config):
             "log": str(run / "controller.log"), "state": str(run / "controller_status.json")}
 
 
-def launch(config_file, run_id, reference_parent=None):
+def launch(config_file, run_id, reference_parent=None, artifact_parent=None):
+    if reference_parent and artifact_parent:
+        raise ValueError('Choose one registered continuation boundary')
     if not RUN_PATTERN.fullmatch(run_id):
         raise ValueError("Invalid run ID")
     config = read_json(config_file)
@@ -223,10 +225,11 @@ def launch(config_file, run_id, reference_parent=None):
                       "repository": settings["publish_url"], "config_hash": json_hash(config),
                       "source_hashes": hashes, "created_at": timestamp(), "environment": config["environment"],
                       "gpus": config["gpus"], "config_source": str(Path(config_file).resolve())}
-        if reference_parent:
-            provenance['reference_parent'] = str(Path(reference_parent).resolve(strict=True))
+        if reference_parent or artifact_parent:
+            key = 'reference_parent' if reference_parent else 'artifact_parent'
+            provenance[key] = str(Path(reference_parent or artifact_parent).resolve(strict=True))
             atomic_json(run / 'operational_hold.json', {
-                'active': True, 'reason': 'Reference state import has not completed'})
+                'active': True, 'reason': 'Registered dependency import has not completed'})
         atomic_json(run / "provenance.json", provenance)
         env = runtime_environment(root, run_id)
         package_list = subprocess.check_output([str(Path(config["environment"]) / "bin/python"), "-s", "-m", "pip", "list", "--format=json"],
@@ -237,6 +240,9 @@ def launch(config_file, run_id, reference_parent=None):
         if reference_parent:
             from scripts.tect_diff.reference_continuation import import_reference_state
             import_reference_state(run, reference_parent)
+        if artifact_parent:
+            from scripts.tect_diff.artifact_continuation import import_completed_artifacts
+            import_completed_artifacts(run, artifact_parent)
         return _spawn(run, root, config)
 
 
@@ -523,11 +529,12 @@ def main():
     parser.add_argument("--run-id")
     parser.add_argument("--run-dir")
     parser.add_argument("--reference-parent", help="Stopped same-config reference run; state-preserving source-version continuation")
+    parser.add_argument("--artifact-parent", help="Registered held MAIN repair parent; reuse completed reference/calibration and initialize MAIN fresh")
     args = parser.parse_args()
     if args.command == "launch":
         if not args.config or not args.run_id:
             parser.error("launch requires --config and --run-id")
-        result = launch(args.config, args.run_id, args.reference_parent)
+        result = launch(args.config, args.run_id, args.reference_parent, args.artifact_parent)
     else:
         run_dir = args.run_dir or (str(SOURCE / "runs" / args.run_id) if args.run_id else None)
         if run_dir is None:

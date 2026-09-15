@@ -112,6 +112,10 @@ class Worker:
 
     def training_checkpoint(self, model, optimizer, scheduler, scaler, epoch, step,
                             evaluation_complete, **extra):
+        if extra.get('selection_protocol') == 'test_selected':
+            from scripts.tect_diff.gradient_safety import require_parameter_sync
+            extra['trainable_parameter_sha256'] = require_parameter_sync(
+                model, self.run / 'main_parameter_agreement.json')
         local_rng = rng_state()
         states = [None] * self.world
         dist.all_gather_object(states, local_rng)
@@ -141,7 +145,7 @@ class Worker:
         scaler.load_state_dict(checkpoint['scaler'])
         restore_rng(checkpoint['rng_by_rank'][self.rank])
 
-    def optimizer_update(self, model, optimizer, scaler):
+    def optimizer_update(self, model, optimizer, scaler, check_main_sync=False):
         scaler.unscale_(optimizer)
         parameters = [p for p in model.parameters() if p.requires_grad and p.grad is not None]
         # Keep flags on device until the single all-rank decision. Python all()
@@ -154,6 +158,10 @@ class Worker:
             raise FloatingPointError('Non-finite gradient; no optimizer update made')
         maximum = self.config['training']['gradient_clip_norm']
         norm = torch.nn.utils.clip_grad_norm_(parameters, float('inf') if maximum is None else maximum)
+        if check_main_sync:
+            from scripts.tect_diff.gradient_safety import require_gradient_sync
+            self.last_gradient_sync = require_gradient_sync(
+                model, norm, self.run / f'gradient_sync_failure_rank{self.rank}.json')
         old_scale = scaler.get_scale()
         scaler.step(optimizer)
         scaler.update()
@@ -449,10 +457,11 @@ class Worker:
                         # Frozen reference and calibration are never in optimizer.
                         if any(p.grad is not None for p in reference.parameters()):
                             raise RuntimeError('Reference received a gradient')
-                        norm, skipped = self.optimizer_update(model, optimizer, scaler)
+                        norm, skipped = self.optimizer_update(model, optimizer, scaler, check_main_sync=True)
                         step += int(not skipped)
                         if step == 1 or step % config['diagnostic_step_interval'] == 0:
                             diagnostics = {key: float(value) if torch.is_tensor(value) else value for key, value in model.last_diagnostics.items()}
+                            diagnostics['gradient_sync'] = self.last_gradient_sync
                             self.status('MAIN_TRAINING', epoch=epoch, optimizer_step=step, loss=float(loss), gradient_norm=norm,
                                 amp_skipped=skipped, micro_batch=index+1, micro_batches_per_epoch=len(loader),
                                 peak_memory_bytes=torch.cuda.max_memory_allocated(), **diagnostics)
