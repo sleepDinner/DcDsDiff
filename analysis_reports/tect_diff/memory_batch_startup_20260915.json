@@ -1,0 +1,1874 @@
+{
+  "batch_restart": {
+    "artifact_bytes_and_metadata_unchanged": true,
+    "at": "2026-09-15T14:10:24Z",
+    "calibration_refitted": false,
+    "calibration_sha256": "bb349a143385b25798fe0a9c7c43904ba08c26f38ed7a6aee991add7ed16f59c",
+    "child_receipt_sha256": {
+      "calibration_receipt.json": "d12117a50feff7896bfc4e8f5189a9d791ee3ef6da5e66a47170b294892673ce",
+      "data_bundle.json": "157cdc70e1a317203a08f02a35b075c2ec7de277de70b71febc21997b6045186",
+      "reference_final_health.json": "c1600fc6eda466b211629d60c2596cb107755719384bdcd90b3184099a1cbf9a",
+      "reference_health.json": "36f3010c2377b87715be27e14670cffd2139ae18d0ccfc704c3c12f96207ddda",
+      "reference_metrics.jsonl": "d69517a38211e9edb29cc410bb3ffbde01aa60bc7c1846f401e9cb5eaed0ff15",
+      "reference_receipt.json": "031202aaee1b164bff5a0dbe9191ccc93f01a83b6e43b7e81af1befd93416b0a"
+    },
+    "config_delta": {
+      "evaluation.metric_queue_limit": {
+        "new": 8,
+        "old": null
+      },
+      "evaluation.metric_workers": {
+        "new": 4,
+        "old": null
+      },
+      "evaluation.micro_batch": {
+        "new": 8,
+        "old": 1
+      },
+      "protocol_id": {
+        "new": "TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6",
+        "old": "TECT-DIFF-FULL-R512-S42-REFNORM-V2"
+      },
+      "training.accumulation_steps": {
+        "new": 1,
+        "old": 2
+      },
+      "training.global_batch": {
+        "new": 12,
+        "old": 8
+      },
+      "training.micro_batch": {
+        "new": 6,
+        "old": 2
+      }
+    },
+    "config_hash": "63e53b3e50df4d4798d9310cb4ca2065efee1fbaea4fd2ba485fb88a37116275",
+    "evaluation_numerical_policy": {
+      "budget_basis": "predeclared empirical guard, not analytical end-to-end bound",
+      "difference_scope": "Cross-batch binary and metric differences are disclosed, not required to be zero; CPU metrics on identical arrays remain exact",
+      "fp32_control_budget": 1e-05,
+      "policy_id": "BF16_BATCH_EXECUTION_V1",
+      "probability_budget": 0.0078125
+    },
+    "evaluation_scheduling": {
+      "metric_queue_limit": 8,
+      "metric_workers": 4,
+      "micro_batch": 8
+    },
+    "inherited_artifact_continuation": {
+      "at": "2026-09-15T11:51:01Z",
+      "calibration_refitted": false,
+      "calibration_sha256": "bb349a143385b25798fe0a9c7c43904ba08c26f38ed7a6aee991add7ed16f59c",
+      "changed_python_files": [
+        "model/tect_diff/amp_context.py",
+        "model/tect_diff/diffusion.py",
+        "scripts/tect_diff/artifact_continuation.py",
+        "scripts/tect_diff/controller.py",
+        "scripts/tect_diff/diagnostics.py",
+        "scripts/tect_diff/gradient_safety.py",
+        "scripts/tect_diff/report.py",
+        "scripts/tect_diff/test_artifact_continuation.py",
+        "scripts/tect_diff/test_main_gradient_safety.py",
+        "scripts/tect_diff/worker.py"
+      ],
+      "config_hash": "0b0358aa4908b852bb53113467184483fbb11d4be517eb58548ba80757052f88",
+      "copied_receipt_sha256": {
+        "calibration_receipt.json": "89562ed608254b9d99412b5b914b9a5266d2442cca6f9949d26d4f351829a99b",
+        "data_bundle.json": "157cdc70e1a317203a08f02a35b075c2ec7de277de70b71febc21997b6045186",
+        "reference_final_health.json": "c1600fc6eda466b211629d60c2596cb107755719384bdcd90b3184099a1cbf9a",
+        "reference_health.json": "36f3010c2377b87715be27e14670cffd2139ae18d0ccfc704c3c12f96207ddda",
+        "reference_metrics.jsonl": "d69517a38211e9edb29cc410bb3ffbde01aa60bc7c1846f401e9cb5eaed0ff15",
+        "reference_receipt.json": "fdf3793d063d5a529a470307f4bb10ccca1d89797c04be9a0de21e503b303ff1"
+      },
+      "main_seed": 42,
+      "main_start_epoch": 0,
+      "main_start_optimizer_step": 0,
+      "manifest_hashes": {
+        "calibration": "a22183506365f042e141c16b09a8c9e369c3f7886864c2a1d5326a4ada5e38c5",
+        "reference": "0a501e3f0570b245ac594941fcbf2328d1bed195835825de8b7a758f62a13f79",
+        "test_Casiav1": "a51508ac9da6618b685c807415674a78cd99b0681af7d4dae59b9947d187bc73",
+        "test_Columbia": "dfcd1d818b0ec1250023b94e1b92c7292fb3ed107a47cbcf19d2050742594307",
+        "test_DSO-1": "5265d478ca803e135518f2f9f5b0ecfadaaedf5a54dda022db310e92ee985fd6",
+        "test_IMD2020": "5a74e0978c0ac97160eff982abc03ade617844dec53355671ace86b8a05eb766",
+        "test_Korus": "22af2a4ce976c31a2881a87090878ecfbf9e08dc25a6baba3c9bbd1bfe38c222",
+        "test_NIST16": "33c9b85a5facdc76722fc64a36f557dff457ad72f45530250e970e1c9e649a2f",
+        "test_coverage": "e37249f77cd4de583a77a4d2887ffcb5fc0623fe31174535ab3b4c42dafa1783",
+        "test_wild": "25a688eb600bc1dd9720c18c8eaff6fb6877549b3a041a691f3d17b14021fcb3",
+        "train": "ba5c7de4a3988f1abe6fa34dd3d2424abd2712fde4754a2adab6aa9637ea74cc"
+      },
+      "mode": "reuse_completed_reference_calibration_restart_invalid_main",
+      "parent_main_checkpoint_reused": false,
+      "parent_partial_main_valid": false,
+      "parent_run": "TECT-DIFF-FULL-R512-S42-REFNORM-V2-PERF-20260915-C",
+      "parent_source_commit": "f9c1b90d2fc19c914dd3998f49c2c6665d580ca2",
+      "reference_epochs_retrained": 0,
+      "reference_sha256": "800f50c392a275fde3ec249c6f52275c6db79813e6f8b7e8b534f9ddb52a523f",
+      "selection_protocol": "test_selected",
+      "source_commit": "84fcf47e5721317d99fe186feec08d365fc3f72c",
+      "status": "COMPLETED"
+    },
+    "inherited_artifact_continuation_sha256": "a894f0943b03a2dd101174f6431e2c6976e3ccb6eacdebd9f00ab459b929e4d8",
+    "main_batch": {
+      "accumulation_steps": 1,
+      "global_batch": 12,
+      "micro_batch_per_rank": 6
+    },
+    "main_initialization": "fresh registered ImageNet weights",
+    "main_seed": 42,
+    "main_start_epoch": 0,
+    "main_start_optimizer_step": 0,
+    "manifest_hashes": {
+      "calibration": "a22183506365f042e141c16b09a8c9e369c3f7886864c2a1d5326a4ada5e38c5",
+      "reference": "0a501e3f0570b245ac594941fcbf2328d1bed195835825de8b7a758f62a13f79",
+      "test_Casiav1": "a51508ac9da6618b685c807415674a78cd99b0681af7d4dae59b9947d187bc73",
+      "test_Columbia": "dfcd1d818b0ec1250023b94e1b92c7292fb3ed107a47cbcf19d2050742594307",
+      "test_DSO-1": "5265d478ca803e135518f2f9f5b0ecfadaaedf5a54dda022db310e92ee985fd6",
+      "test_IMD2020": "5a74e0978c0ac97160eff982abc03ade617844dec53355671ace86b8a05eb766",
+      "test_Korus": "22af2a4ce976c31a2881a87090878ecfbf9e08dc25a6baba3c9bbd1bfe38c222",
+      "test_NIST16": "33c9b85a5facdc76722fc64a36f557dff457ad72f45530250e970e1c9e649a2f",
+      "test_coverage": "e37249f77cd4de583a77a4d2887ffcb5fc0623fe31174535ab3b4c42dafa1783",
+      "test_wild": "25a688eb600bc1dd9720c18c8eaff6fb6877549b3a041a691f3d17b14021fcb3",
+      "train": "ba5c7de4a3988f1abe6fa34dd3d2424abd2712fde4754a2adab6aa9637ea74cc"
+    },
+    "mode": "authorized_microbatch_protocol_restart_fresh_main_reuse_fitting",
+    "original_receipts": {
+      "calibration": {
+        "artifact_hash": "bcb2f80690dff8632a5af39c3c3263f29460aede883f93335fbf45c36b470f43",
+        "artifact_path": "/data1/hl/DcDsDiff-and-GIT10K/artifacts/calibration/TECT-DIFF-FULL-R512-S42-REFNORM-V2-PERF-20260915-C/calibration.pth",
+        "completed_at": "2026-09-15T10:45:25Z",
+        "config_hash": "0b0358aa4908b852bb53113467184483fbb11d4be517eb58548ba80757052f88",
+        "elapsed_seconds": 96.11043768748641,
+        "fit_receipt": {
+          "content_fit": {
+            "coefficient_l2": 0.8784816861152649,
+            "fitting_pixels": 131072,
+            "iterations": 4,
+            "negative_pixels": 87245,
+            "positive_pixels": 43827,
+            "regularized_objective": 0.6183885335922241
+          },
+          "images": 2048,
+          "normal_pixels": 262016,
+          "normal_statistics": "only known GT=0 training query pixels",
+          "sample_ids_sha256": "d08a7359e8725a2d45b7642c35975fa86ea35472d88e9f3070b4e4a2670af71f",
+          "sampling": "up to 128 uniform pixels per available class per image; equal pixel weight; identical joint/content sample",
+          "semantics": "estimated content-subtracted evidence; no conditional-density guarantee",
+          "tampered_pixels": 130561
+        },
+        "prefix_metadata": {
+          "1": {
+            "A_quantiles": [
+              -7.880748748779297,
+              0.018113723024725914,
+              0.12383788824081421,
+              0.3908524513244629,
+              61.65579605102539
+            ],
+            "W_normalization": "inverse shrunk variance divided by dimension",
+            "W_sha256": "31e596978019c5eea3f77fd720a18058a76f1cd835bf6874f16836a6050caf04",
+            "anomaly_scale": 0.13599398732185364,
+            "control_enabled": false,
+            "d0": 0.1414022594690323,
+            "dimension": 9,
+            "ell_mean": -0.000751599611248821,
+            "ell_std": 0.04960409551858902,
+            "joint_fit": {
+              "coefficient_l2": 0.9058691263198853,
+              "fitting_pixels": 131072,
+              "iterations": 4,
+              "negative_pixels": 87245,
+              "positive_pixels": 43827,
+              "regularized_objective": 0.6180851459503174
+            },
+            "negative_A_fraction": 0.204996719956398,
+            "normal_trajectory_rows": 524032,
+            "q_mean": 0.21458935737609863,
+            "q_zero_fraction": 0.0,
+            "v0": 0.2336273193359375
+          },
+          "2": {
+            "A_quantiles": [
+              -8.633238792419434,
+              0.025318020954728127,
+              0.10904906690120697,
+              0.35280659794807434,
+              52.047515869140625
+            ],
+            "W_normalization": "inverse shrunk variance divided by dimension",
+            "W_sha256": "2b7499bec14dca40816894214005791a66a3b6c4e9a2310b607519b34bfd9c72",
+            "anomaly_scale": 0.1128426045179367,
+            "control_enabled": true,
+            "d0": 0.1414022594690323,
+            "dimension": 27,
+            "ell_mean": -0.0009161768830381334,
+            "ell_std": 0.05373438075184822,
+            "joint_fit": {
+              "coefficient_l2": 0.9088301062583923,
+              "fitting_pixels": 131072,
+              "iterations": 4,
+              "negative_pixels": 87245,
+              "positive_pixels": 43827,
+              "regularized_objective": 0.6180295348167419
+            },
+            "negative_A_fraction": 0.16642339527606964,
+            "normal_trajectory_rows": 524032,
+            "q_mean": 0.2145639955997467,
+            "q_zero_fraction": 0.0,
+            "v0": 0.19703319668769836
+          },
+          "3": {
+            "A_quantiles": [
+              -6.8743896484375,
+              0.029178602620959282,
+              0.1082027405500412,
+              0.34457486867904663,
+              40.679908752441406
+            ],
+            "W_normalization": "inverse shrunk variance divided by dimension",
+            "W_sha256": "b56377d1e5e030a8c695867bff70b968ad3583dd50f77e27ef1581f26de4357d",
+            "anomaly_scale": 0.11086861789226532,
+            "control_enabled": true,
+            "d0": 0.1414022594690323,
+            "dimension": 45,
+            "ell_mean": -0.0010517120826989412,
+            "ell_std": 0.05607052892446518,
+            "joint_fit": {
+              "coefficient_l2": 0.9096332788467407,
+              "fitting_pixels": 131072,
+              "iterations": 4,
+              "negative_pixels": 87245,
+              "positive_pixels": 43827,
+              "regularized_objective": 0.6179935336112976
+            },
+            "negative_A_fraction": 0.14441242814064026,
+            "normal_trajectory_rows": 524032,
+            "q_mean": 0.21562372148036957,
+            "q_zero_fraction": 0.0,
+            "v0": 0.18079955875873566
+          },
+          "4": {
+            "A_quantiles": [
+              -6.197851181030273,
+              0.03362632915377617,
+              0.11223015189170837,
+              0.33935195207595825,
+              37.91045379638672
+            ],
+            "W_normalization": "inverse shrunk variance divided by dimension",
+            "W_sha256": "fef4391de6ebf63e4cf5cb783625445e93630af6cd65e7c7e7da74807e985232",
+            "anomaly_scale": 0.1134263351559639,
+            "control_enabled": true,
+            "d0": 0.1414022594690323,
+            "dimension": 63,
+            "ell_mean": -0.0010528421262279153,
+            "ell_std": 0.055919308215379715,
+            "joint_fit": {
+              "coefficient_l2": 0.9076429605484009,
+              "fitting_pixels": 131072,
+              "iterations": 4,
+              "negative_pixels": 87245,
+              "positive_pixels": 43827,
+              "regularized_objective": 0.6179834604263306
+            },
+            "negative_A_fraction": 0.12565432488918304,
+            "normal_trajectory_rows": 524032,
+            "q_mean": 0.21798691153526306,
+            "q_zero_fraction": 0.0,
+            "v0": 0.17477399110794067
+          }
+        },
+        "protocol_id": "TECT-DIFF-FULL-R512-S42-REFNORM-V2",
+        "sha256": "bb349a143385b25798fe0a9c7c43904ba08c26f38ed7a6aee991add7ed16f59c",
+        "status": "COMPLETED"
+      },
+      "reference": {
+        "architecture_version": "tect-reference-pixel-unet-v2-stable-paths",
+        "artifact_path": "/data1/hl/DcDsDiff-and-GIT10K/artifacts/reference/TECT-DIFF-FULL-R512-S42-REFNORM-V2-PERF-20260915-C/reference_final.pth",
+        "completed_at": "2026-09-15T10:43:15Z",
+        "config_hash": "0b0358aa4908b852bb53113467184483fbb11d4be517eb58548ba80757052f88",
+        "elapsed_seconds": 2486.857013281435,
+        "epoch": 19,
+        "final_health_probe": {
+          "architecture_version": "tect-reference-pixel-unet-v2-stable-paths",
+          "checkpoint_selection": "fixed_final_only_no_reselection",
+          "ddp_padding": false,
+          "image_count": 16,
+          "image_noise_observations_per_scale": 32,
+          "lambdas": [
+            2,
+            3,
+            4,
+            5
+          ],
+          "metrics": {
+            "epoch": 19,
+            "mse_by_scale": [
+              0.03451702056918293,
+              0.04682891140691936,
+              0.06367181369569153,
+              0.08684402983635664
+            ],
+            "mse_ratio_by_scale": [
+              0.03450432840680501,
+              0.04681169207171148,
+              0.06364840110141204,
+              0.08681209664774242
+            ],
+            "prediction_energy_by_scale": [
+              0.9665694944560528,
+              0.9556144587695599,
+              0.9413436762988567,
+              0.9262109212577343
+            ],
+            "prediction_energy_ratio_by_scale": [
+              0.966214079742648,
+              0.9552630723033645,
+              0.9409975373043548,
+              0.9258703466885808
+            ],
+            "prediction_noise_correlation_by_scale": [
+              0.9825964555943345,
+              0.9763142073464643,
+              0.9676555887442707,
+              0.9556313676432615
+            ],
+            "prediction_noise_cross_by_scale": [
+              0.9662101529538631,
+              0.9545766934752464,
+              0.9390198551118374,
+              0.919867355376482
+            ],
+            "reference_health": {
+              "all_scales_pass_final_margin": true,
+              "checkpoint_selection": "fixed_final_only_no_reselection",
+              "collapse_detected_epoch": null,
+              "collapse_patience_epochs": 2,
+              "collapse_ratio_threshold": 0.98,
+              "consecutive_collapsed_epochs": 0,
+              "correlation_definition": "uncentered_cross_over_sqrt_prediction_energy_times_noise_energy",
+              "failed": false,
+              "failure_reason": null,
+              "final_endpoint_checked": true,
+              "final_ratio_threshold": 0.98,
+              "first_learned_epoch": 19,
+              "learning_ratio_threshold": 0.98,
+              "policy_id": "REFERENCE-NOISE-HEALTH-v1",
+              "state": "LEARNED",
+              "statistics_source": "fixed_final_weights_training_reference_probe"
+            },
+            "samples_by_scale": [
+              16,
+              16,
+              16,
+              16
+            ],
+            "zero_predictor_mse_by_scale": [
+              1.0003678426146507,
+              1.0003678426146507,
+              1.0003678426146507,
+              1.0003678426146507
+            ]
+          },
+          "micro_batch": 2,
+          "model_parameter_hash": "7fcf803535527efb7b42979e6ffa9f9454e7b308e28dafa3dac6a8744730d828",
+          "noise_purposes": [
+            "reference-final-probe-replica-0",
+            "reference-final-probe-replica-1"
+          ],
+          "parameters_unchanged": true,
+          "probe_id": "REFERENCE-FIXED-FINAL-TRAINING-PROBE-v1",
+          "reference_manifest_sha256": "0a501e3f0570b245ac594941fcbf2328d1bed195835825de8b7a758f62a13f79",
+          "replicas": 2,
+          "resolution": 512,
+          "rng_and_modes_restored": true,
+          "scope": "training_reference_images_only_no_validation_split_or_test_data",
+          "seed": 42,
+          "selected_reference_ids": [
+            "FinalTrainData:Au_ani_00002",
+            "FinalTrainData:Au_ani_00003",
+            "FinalTrainData:Au_ani_00004",
+            "FinalTrainData:Au_ani_00006",
+            "FinalTrainData:Au_ani_00011",
+            "FinalTrainData:Au_ani_00013",
+            "FinalTrainData:Au_ani_00017",
+            "FinalTrainData:Au_ani_00018",
+            "FinalTrainData:Au_ani_00019",
+            "FinalTrainData:Au_ani_00020",
+            "FinalTrainData:Au_ani_00022",
+            "FinalTrainData:Au_ani_00024",
+            "FinalTrainData:Au_ani_00025",
+            "FinalTrainData:Au_ani_00027",
+            "FinalTrainData:Au_ani_00028",
+            "FinalTrainData:Au_ani_00029"
+          ],
+          "selection": "first_16_in_frozen_reference_manifest_order",
+          "shared_noise_across_scales": true,
+          "training_augmentation": false
+        },
+        "final_parameter_hash": "7fcf803535527efb7b42979e6ffa9f9454e7b308e28dafa3dac6a8744730d828",
+        "health_metrics": {
+          "epoch": 19,
+          "mse_by_scale": [
+            0.04705284501944984,
+            0.06933950953775925,
+            0.10231307664632658,
+            0.15306649952740803
+          ],
+          "mse_ratio_by_scale": [
+            0.04705354736842748,
+            0.06933632493333626,
+            0.10231176212651907,
+            0.15307022817873817
+          ],
+          "optimizer_step": 14960,
+          "padded_training_samples": 0,
+          "prediction_energy_by_scale": [
+            0.949628342955617,
+            0.9273398385841845,
+            0.894701914498735,
+            0.8402182572822992
+          ],
+          "prediction_energy_ratio_by_scale": [
+            0.9496425178794826,
+            0.9272972479951933,
+            0.8946904193563058,
+            0.8402387247322788
+          ],
+          "prediction_noise_correlation_by_scale": [
+            0.9761912373069056,
+            0.9647106996623951,
+            0.9474654366732265,
+            0.9202951126132125
+          ],
+          "prediction_noise_cross_by_scale": [
+            0.9512802883957748,
+            0.9290231312449183,
+            0.896200845330027,
+            0.8435637002424108
+          ],
+          "reference_health": {
+            "all_scales_pass_final_margin": true,
+            "checkpoint_selection": "fixed_final_only_no_reselection",
+            "collapse_detected_epoch": null,
+            "collapse_patience_epochs": 2,
+            "collapse_ratio_threshold": 0.98,
+            "consecutive_collapsed_epochs": 0,
+            "correlation_definition": "uncentered_cross_over_sqrt_prediction_energy_times_noise_energy",
+            "failed": false,
+            "failure_reason": null,
+            "final_endpoint_checked": true,
+            "final_ratio_threshold": 0.98,
+            "first_learned_epoch": 0,
+            "learning_ratio_threshold": 0.98,
+            "policy_id": "REFERENCE-NOISE-HEALTH-v1",
+            "state": "LEARNED",
+            "statistics_source": "training_images_only_all_rank_per_image_mean_sums"
+          },
+          "samples_by_scale": [
+            2991,
+            2991,
+            2991,
+            2991
+          ],
+          "zero_predictor_mse_by_scale": [
+            0.9999850734106795,
+            1.0000459298127793,
+            1.000012848178745,
+            0.9999756409108779
+          ]
+        },
+        "initial_parameter_hash": "6f127a7e0904fd481bf2db1dbf5449e55eb49c352513eab035be5670f6236bec",
+        "mean_epsilon_mse": 0.09294298268273593,
+        "optimizer_step": 14960,
+        "protocol_id": "TECT-DIFF-FULL-R512-S42-REFNORM-V2",
+        "reference_source_mode": "authentic",
+        "sample_count": 11964,
+        "sha256": "800f50c392a275fde3ec249c6f52275c6db79813e6f8b7e8b534f9ddb52a523f",
+        "status": "COMPLETED",
+        "zero_predictor_mse": 1.0000048730782705
+      }
+    },
+    "parent_config_hash": "0b0358aa4908b852bb53113467184483fbb11d4be517eb58548ba80757052f88",
+    "parent_main_state_reused": false,
+    "parent_protocol_id": "TECT-DIFF-FULL-R512-S42-REFNORM-V2",
+    "parent_receipt_sha256": {
+      "calibration_receipt.json": "89562ed608254b9d99412b5b914b9a5266d2442cca6f9949d26d4f351829a99b",
+      "data_bundle.json": "157cdc70e1a317203a08f02a35b075c2ec7de277de70b71febc21997b6045186",
+      "reference_final_health.json": "c1600fc6eda466b211629d60c2596cb107755719384bdcd90b3184099a1cbf9a",
+      "reference_health.json": "36f3010c2377b87715be27e14670cffd2139ae18d0ccfc704c3c12f96207ddda",
+      "reference_metrics.jsonl": "d69517a38211e9edb29cc410bb3ffbde01aa60bc7c1846f401e9cb5eaed0ff15",
+      "reference_receipt.json": "fdf3793d063d5a529a470307f4bb10ccca1d89797c04be9a0de21e503b303ff1"
+    },
+    "parent_run": "TECT-DIFF-FULL-R512-S42-REFNORM-V2-AMPFIX-20260915-D",
+    "parent_source_commit": "84fcf47e5721317d99fe186feec08d365fc3f72c",
+    "protocol_id": "TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6",
+    "rebound_receipt_fields": {
+      "calibration_receipt.json": [
+        "config_hash",
+        "protocol_id"
+      ],
+      "reference_receipt.json": [
+        "config_hash",
+        "protocol_id"
+      ]
+    },
+    "reference_epochs_retrained": 0,
+    "reference_sha256": "800f50c392a275fde3ec249c6f52275c6db79813e6f8b7e8b534f9ddb52a523f",
+    "selection_protocol": "test_selected",
+    "source_commit": "ad8fb6e5f3f6f295b1e94b87e28175a5fabc779c",
+    "status": "COMPLETED",
+    "training_validation_scope": {
+      "all_rank_gradients_synchronized": true,
+      "final_parameter_and_optimizer_hashes_agree": true,
+      "full_gradient_coverage_all_updates": true,
+      "learning_rate_scaling": "none",
+      "measured_updates": 32,
+      "warmup_updates": 4
+    },
+    "validation": {
+      "accepted_geometry_variant": "geometry_full_queries",
+      "accumulation_steps": 1,
+      "all_rank_gradients_synchronized": true,
+      "at": "2026-09-15T14:07:11.294618+00:00",
+      "calibration_sha256": "bb349a143385b25798fe0a9c7c43904ba08c26f38ed7a6aee991add7ed16f59c",
+      "candidate_evaluation_pipeline_sha256": "602826a22fcecd49d5d7e2defdd753d6d454edcbd7dcc1f40cf4c362992329c4",
+      "candidate_model_sha256": "11cdc9079d41693951f504a2831eb675ef891f381b8cf0a6b176f9de140f0781",
+      "candidate_worker_sha256": "f05cc607c0c57eeeaf2933c56da54f81afc34b10284fb073b44db0caed143dee",
+      "config_hash": "63e53b3e50df4d4798d9310cb4ca2065efee1fbaea4fd2ba485fb88a37116275",
+      "cross_run_bitwise_training_equivalence": false,
+      "evaluation_memory_headroom": {
+        "context_scratch_allowance_bytes": 2147483648,
+        "estimated_total_bytes": 9249661280,
+        "limitation": "Conservative arithmetic allowance, not a measured formal evaluation peak.",
+        "optimizer_and_bucket_allowance_multiplier": 2,
+        "optimizer_state_bytes_per_rank": 530484656,
+        "passed": true,
+        "physical_gpu_bytes": 25757220864,
+        "selected_evaluation_peak_bytes": 6041208320
+      },
+      "evaluation_validation": {
+        "binary_disagreement_count": 2520,
+        "finite": true,
+        "fp32_batch_control_max_abs": 4.172325134277344e-07,
+        "fp32_batch_control_passed": true,
+        "full_id_coverage": true,
+        "identical_array_cpu_metrics_exact": true,
+        "max_boundary_f1_abs_difference": 0.003700950795189284,
+        "max_iou_abs_difference": 3.45228609227588e-05,
+        "max_mae_abs_difference": 4.6361632272673425e-05,
+        "max_pixel_f1_abs_difference": 3.343034862968164e-05,
+        "max_probability_abs_error": 0.007109403610229492,
+        "metric_queue_limit": 8,
+        "metric_workers": 4,
+        "micro_batch": 8,
+        "model_rng_unchanged": true,
+        "numerical_policy": "BF16_BATCH_EXECUTION_V1",
+        "passed": true,
+        "unique_valid_pixels": 33508878
+      },
+      "evidence_forward_validation": {
+        "all_global_ids_exact": true,
+        "candidate_evidence_sha256": "11cdc9079d41693951f504a2831eb675ef891f381b8cf0a6b176f9de140f0781",
+        "forward_original_repeat_bitwise": true,
+        "global_count": 16,
+        "limits": "Forward-only evidence isolation; no full training/backward equivalence or performance conclusion.",
+        "reference_calibration_rng_unchanged": true,
+        "scientific_result": false,
+        "status": "COMPLETED",
+        "variants": {
+          "geometry_full_queries": {
+            "all_forward_outputs_bitwise_equal": true
+          },
+          "geometry_only": {
+            "all_forward_outputs_bitwise_equal": true
+          }
+        }
+      },
+      "evidence_forward_validation_path": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/evidence-forward-proof/aggregate.json",
+      "evidence_forward_validation_sha256": "28849319d020f8fb5b112b20d2ca2a8588e6f7e55850d90a80352743943ccfda",
+      "full_gradient_coverage": true,
+      "global_batch": 12,
+      "measured_speedup": 1.589831301767125,
+      "measured_speedup_vs_micro4": 1.1067724531912888,
+      "measurement_receipts": {
+        "bf16-throughput/aggregate.json": {
+          "server_path": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/bf16-throughput/aggregate.json",
+          "sha256": "f3a48b51c19e375d5bf2aaa04bb8db6f1f80c6e3db2f183b1503ec197fef779b"
+        },
+        "cpu_validation_final.json": {
+          "server_path": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/cpu_validation_final.json",
+          "sha256": "0a37533b0b3b92c4cacb79cbd9bae096ffaeece0f4b5600a9dfbae4461cf3c49"
+        },
+        "equivalence/aggregate.json": {
+          "server_path": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/equivalence/aggregate.json",
+          "sha256": "5819f9d16a9d833c06c54304c71fa8f75140cf08b9daccbbf46d0f4c1695bd05"
+        },
+        "evaluation/aggregate.json": {
+          "server_path": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/evaluation/aggregate.json",
+          "sha256": "ec15f4fbc4cc305d1f6c1dfa33a031e60bb1095777e426c10ecabb14c3fb4886"
+        },
+        "fp32-control/aggregate.json": {
+          "server_path": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/fp32-control/aggregate.json",
+          "sha256": "b3500f4a5387a9f67b8b9399f0a5514dd42369f00ce7be693554dcba09cca707"
+        },
+        "micro4/aggregate.json": {
+          "server_path": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/micro4/aggregate.json",
+          "sha256": "7b61ad79d41eeddf33a9ff2a2769fd652de27e6158c2dadf4a89184cd515f219"
+        },
+        "micro6/aggregate.json": {
+          "server_path": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/micro6/aggregate.json",
+          "sha256": "f6b9be8ed0ab953df53078d512358b14e86272e946550a91900bf92baaeeda82"
+        }
+      },
+      "micro6_no_oom": true,
+      "micro_batch": 6,
+      "parent_config_hash": "0b0358aa4908b852bb53113467184483fbb11d4be517eb58548ba80757052f88",
+      "parent_run": "TECT-DIFF-FULL-R512-S42-REFNORM-V2-AMPFIX-20260915-D",
+      "parent_source_commit": "84fcf47e5721317d99fe186feec08d365fc3f72c",
+      "passed": true,
+      "probe_finite": true,
+      "reference_sha256": "800f50c392a275fde3ec249c6f52275c6db79813e6f8b7e8b534f9ddb52a523f",
+      "scientific_result": false,
+      "training_benchmark_path": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/micro6/aggregate.json",
+      "training_benchmark_sha256": "f6b9be8ed0ab953df53078d512358b14e86272e946550a91900bf92baaeeda82"
+    },
+    "validation_source_path": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/batch_validation.json",
+    "validation_source_sha256": "27d7c201f25bb44d06686d7d0732c962b060cbd186c5f69b914d6ca8396843d3"
+  },
+  "batch_validation_verified": true,
+  "collector_sha256": "628530f109247f747d6b87000885cb5b6680372086ac57b52486efeda38a3357",
+  "common_gradient_steps": [
+    [
+      0,
+      1
+    ],
+    [
+      0,
+      50
+    ],
+    [
+      0,
+      100
+    ]
+  ],
+  "config_hash": "63e53b3e50df4d4798d9310cb4ca2065efee1fbaea4fd2ba485fb88a37116275",
+  "configuration": {
+    "data": {
+      "benchmark_spec": "config/benchmark_all8.json",
+      "calibration_max_images": 2048,
+      "exclude_exact_test_rgb_duplicates": true,
+      "horizontal_flip_probability": 0.5,
+      "ignore_pixel_values": [],
+      "image_resize": "bilinear_direct_from_original",
+      "loader_workers": 4,
+      "mask_resize": "nearest",
+      "prefetch_factor": 2,
+      "reference_min_images": 128,
+      "train_root": "/data0/hl/FinalTrainData",
+      "workers": 8
+    },
+    "evaluation": {
+      "boundary_diagonal_ratio": 0.005,
+      "distributed_padding": false,
+      "every_epoch": true,
+      "metric_queue_limit": 8,
+      "metric_workers": 4,
+      "micro_batch": 8,
+      "per_image_minmax": false,
+      "positive_class": "tampered",
+      "seed": 0,
+      "selection_metric": "all8_macro_pixel_f1",
+      "selection_protocol": "test_selected",
+      "threshold": 0.5,
+      "tie": "earlier_epoch",
+      "tta": false
+    },
+    "gpus": [
+      0,
+      1
+    ],
+    "group_id": "TECT-DIFF-FULL-REFNORM-V2",
+    "protocol_id": "TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6",
+    "resolution": 512,
+    "seed": 42,
+    "training": {
+      "accumulation_steps": 1,
+      "betas": [
+        0.9,
+        0.999
+      ],
+      "diagnostic_step_interval": 50,
+      "drop_last": false,
+      "epochs": 100,
+      "eps": 1e-08,
+      "find_unused_parameters": true,
+      "global_batch": 12,
+      "gradient_clip_norm": null,
+      "lambda_image": 1.0,
+      "learning_rate": 0.0001,
+      "micro_batch": 6,
+      "minimum_learning_rate": 1e-06,
+      "precision": "bf16_if_supported_else_fp16_scaler",
+      "static_graph": false,
+      "weight_decay": 0.01
+    },
+    "world_size": 2
+  },
+  "controller_status": {
+    "commit": "ad8fb6e5f3f6f295b1e94b87e28175a5fabc779c",
+    "config_hash": "63e53b3e50df4d4798d9310cb4ca2065efee1fbaea4fd2ba485fb88a37116275",
+    "controller_alive": true,
+    "controller_identity": {
+      "cmdline": "/data0/hl/conda_envs/dcdsdiff/bin/python -s /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E/source/scripts/tect_diff/controller.py supervise --run-dir /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E ",
+      "pid": 701932,
+      "start_ticks": "2708114314"
+    },
+    "controller_pgid": 701932,
+    "controller_pid": 701932,
+    "elapsed_seconds": 181.24347373098135,
+    "failure_reason": null,
+    "last_returncode": 0,
+    "progress": {
+      "A_mean": 0.5790457129478455,
+      "A_negative_fraction": 0.17574946582317352,
+      "amp_skipped": false,
+      "control_logit_change": 0.0002800740476232022,
+      "elapsed_seconds": 134.31103317439556,
+      "ell_mean": -0.0007205724250525236,
+      "epoch": 0,
+      "gamma": 0.0447995588183403,
+      "gradient_norm": 0.7696643471717834,
+      "gradient_sync": {
+        "at": "2026-09-15T14:13:55Z",
+        "coverage_pass_by_rank": [
+          true,
+          true
+        ],
+        "gradient_norm_by_rank": [
+          0.7696643471717834,
+          0.7696643471717834
+        ],
+        "gradient_tensors_by_rank": [
+          856,
+          856
+        ],
+        "passed": true
+      },
+      "image_loss": 0.09883306175470352,
+      "joint_ref_mse": 0.0016771152149885893,
+      "loss": 1.320755958557129,
+      "mask_loss": 1.2219228744506836,
+      "micro_batch": 100,
+      "micro_batches_per_epoch": 4051,
+      "optimizer_step": 100,
+      "peak_memory_bytes": 17994686976,
+      "pid": 702761,
+      "prefix": 2,
+      "q_mean": 0.17832574248313904,
+      "q_zero_fraction": 0.0233001708984375,
+      "rank": 0,
+      "sampling_step": 4,
+      "stage": "MAIN_TRAINING",
+      "updated_at": "2026-09-15T14:13:55Z"
+    },
+    "reference_source_mode": "authentic",
+    "run_dir": "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E",
+    "run_id": "TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E",
+    "stage": "MAIN",
+    "stage_costs": {
+      "preflight_seconds": 60.00239287316799
+    },
+    "status": "RUNNING",
+    "updated_at": "2026-09-15T14:13:26Z",
+    "worker_alive": true,
+    "worker_command": [
+      "/data0/hl/conda_envs/dcdsdiff/bin/python",
+      "-s",
+      "-m",
+      "torch.distributed.run",
+      "--standalone",
+      "--nnodes=1",
+      "--nproc-per-node=2",
+      "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E/source/scripts/tect_diff/worker.py",
+      "--run-dir",
+      "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E",
+      "--stage",
+      "main"
+    ],
+    "worker_identity": {
+      "cmdline": "/data0/hl/conda_envs/dcdsdiff/bin/python -s -m torch.distributed.run --standalone --nnodes=1 --nproc-per-node=2 /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E/source/scripts/tect_diff/worker.py --run-dir /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E --stage main ",
+      "pid": 702694,
+      "start_ticks": "2708120462"
+    },
+    "worker_pgid": 702694,
+    "worker_pid": 702694
+  },
+  "evidence_forward_proof_verified": true,
+  "fitting_artifact_checks": {
+    "calibration": {
+      "artifact_path": "/data1/hl/DcDsDiff-and-GIT10K/artifacts/calibration/TECT-DIFF-FULL-R512-S42-REFNORM-V2-PERF-20260915-C/calibration.pth",
+      "bytes_verified": true,
+      "sha256": "bb349a143385b25798fe0a9c7c43904ba08c26f38ed7a6aee991add7ed16f59c"
+    },
+    "reference": {
+      "artifact_path": "/data1/hl/DcDsDiff-and-GIT10K/artifacts/reference/TECT-DIFF-FULL-R512-S42-REFNORM-V2-PERF-20260915-C/reference_final.pth",
+      "bytes_verified": true,
+      "sha256": "800f50c392a275fde3ec249c6f52275c6db79813e6f8b7e8b534f9ddb52a523f"
+    }
+  },
+  "gpu_processes": [
+    {
+      "gpu": 0,
+      "memory_mib": "19774",
+      "name": "/data0/hl/conda_envs/dcdsdiff/bin/python",
+      "pid": 702761
+    },
+    {
+      "gpu": 1,
+      "memory_mib": "19872",
+      "name": "/data0/hl/conda_envs/dcdsdiff/bin/python",
+      "pid": 702762
+    }
+  ],
+  "issues": [],
+  "live_controller_and_launcher": {
+    "controller": {
+      "cmdline": "/data0/hl/conda_envs/dcdsdiff/bin/python -s /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E/source/scripts/tect_diff/controller.py supervise --run-dir /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E ",
+      "pgid": 701932,
+      "pid": 701932,
+      "start_ticks": "2708114314"
+    },
+    "worker": {
+      "cmdline": "/data0/hl/conda_envs/dcdsdiff/bin/python -s -m torch.distributed.run --standalone --nnodes=1 --nproc-per-node=2 /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E/source/scripts/tect_diff/worker.py --run-dir /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E --stage main ",
+      "pgid": 702694,
+      "pid": 702694,
+      "start_ticks": "2708120462"
+    }
+  },
+  "locks": {
+    "gpu-0.lock": "HELD",
+    "gpu-1.lock": "HELD",
+    "run-TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E.lock": "HELD",
+    "tect-controller-TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E.lock": "HELD"
+  },
+  "main_probe_receipt": {
+    "completed_at": "2026-09-15T14:11:48Z",
+    "config_hash": "63e53b3e50df4d4798d9310cb4ca2065efee1fbaea4fd2ba485fb88a37116275",
+    "elapsed_seconds": 8.017141349613667,
+    "formal_optimizer_steps": 0,
+    "initial_state_and_rng_restored": true,
+    "no_diagnostic_weights_saved": true,
+    "protocol_id": "TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6",
+    "ranks": [
+      {
+        "anomaly_mask_invariance": true,
+        "backward_micro_batch": 6,
+        "backward_training_ids": [
+          "FinalTrainData:Au_ani_00001",
+          "FinalTrainData:Au_ani_00002",
+          "FinalTrainData:Au_ani_00003",
+          "FinalTrainData:Au_ani_00004",
+          "FinalTrainData:Au_ani_00005",
+          "FinalTrainData:Au_ani_00006"
+        ],
+        "calibration_artifact_hash": "bcb2f80690dff8632a5af39c3c3263f29460aede883f93335fbf45c36b470f43",
+        "calibration_state_hash": "724c995fd96ed6971b5985a03589e17cc5e3de9b332ec34b714882c86c12b5d8",
+        "completed_at": "2026-09-15T14:11:47Z",
+        "control_numerics": {
+          "extreme_evidence_finite": true,
+          "final_zero_noise_identity": true,
+          "gamma_zero_identity": true,
+          "prefix_one_disabled": true
+        },
+        "diagnostic_override": "Full prefix and one predicted self-conditioning pass; restored before formal training",
+        "diagnostic_seed": 30045,
+        "elapsed_seconds": 5.307073652744293,
+        "ell_all_zero_on_training_probe": false,
+        "evidence": {
+          "A": {
+            "max": 6.79133415222168,
+            "mean": 0.07441355288028717,
+            "min": -2.9450554847717285
+          },
+          "ell": {
+            "max": 0.24836519360542297,
+            "mean": -0.01934228464961052,
+            "min": -0.32226434350013733
+          },
+          "q": {
+            "max": 0.8260631561279297,
+            "mean": 0.41746199131011963,
+            "min": 0.0
+          }
+        },
+        "external_gt_invariance": true,
+        "external_gt_inversion_prediction_max_abs": 0.0,
+        "finite_loss": 1.8243317604064941,
+        "fixed_training_probe_pixel_f1": {
+          "P_base": 0.0,
+          "P_ctrl": 0.0,
+          "control_minus_base": 0.0,
+          "coordinates": "fixed resized training grid; diagnostic only"
+        },
+        "formal_optimizer_steps": 0,
+        "full_gradient_coverage": true,
+        "gamma": 0.10000000149011612,
+        "gradients": {
+          "controller": {
+            "gradient_tensors": 1,
+            "nonzero_tensors": 1,
+            "norm": 0.00035364325333122324
+          },
+          "hf_pvt": {
+            "gradient_tensors": 348,
+            "nonzero_tensors": 348,
+            "norm": 0.1021128504652558
+          },
+          "image_task": {
+            "gradient_tensors": 38,
+            "nonzero_tensors": 38,
+            "norm": 3.2884129619072864
+          },
+          "image_to_mask": {
+            "gradient_tensors": 12,
+            "nonzero_tensors": 12,
+            "norm": 0.01548913232765962
+          },
+          "mask": {
+            "gradient_tensors": 38,
+            "nonzero_tensors": 38,
+            "norm": 1.7284654423324417
+          },
+          "mask_to_image": {
+            "gradient_tensors": 12,
+            "nonzero_tensors": 12,
+            "norm": 0.7014748960132469
+          },
+          "rgb_pvt": {
+            "gradient_tensors": 348,
+            "nonzero_tensors": 348,
+            "norm": 0.09158861602355556
+          }
+        },
+        "history_epsilon_joint_mean_abs_change": 0.1458035558462143,
+        "image_loss": 0.19273638725280762,
+        "initial_state_and_rng_restored": true,
+        "joint_ref_mse": 0.12385878711938858,
+        "peak_allocated_bytes": 17215086080,
+        "peak_reserved_bytes": 18350080000,
+        "q_all_zero_on_training_probe": false,
+        "rank": 0,
+        "reference_index_invariance": true,
+        "reference_mask_isolation": true,
+        "reference_state_hash": "fdbed02735fb8ac2398c0407dee63d7668b51a99d073d81a12f4412ff1ac0878",
+        "registered_unused_parameters": [
+          "network.mmff1.MMFF_att.de_spatial_attention.conv1.weight",
+          "network.mmff1.MMFF_att.rgb_spatial_attention.conv1.weight",
+          "network.mmff2.MMFF_att.de_spatial_attention.conv1.weight",
+          "network.mmff2.MMFF_att.rgb_spatial_attention.conv1.weight",
+          "network.mmff3.MMFF_att.de_spatial_attention.conv1.weight",
+          "network.mmff3.MMFF_att.rgb_spatial_attention.conv1.weight",
+          "network.mmff4.MMFF_att.de_spatial_attention.conv1.weight",
+          "network.mmff4.MMFF_att.rgb_spatial_attention.conv1.weight"
+        ],
+        "resolution": 512,
+        "sample_profile": {
+          "cold_reference_and_measurement_seconds": 0.8895149864256382,
+          "cross_call_cache": false,
+          "image_count": 1,
+          "mask_ten_steps_with_reference_reuse_seconds": 0.5194689482450485,
+          "reference_feature_requests": 20,
+          "reference_feature_reuse_hits": 12,
+          "reference_forwards": 8,
+          "total_seconds": 1.4089839346706867
+        },
+        "sample_shape": [
+          1,
+          1,
+          512,
+          512
+        ],
+        "sampling_peak_allocated_bytes": 1423634944,
+        "sampling_steps": 10,
+        "status": "PASS",
+        "synthetic_engineering_only": false,
+        "training_ids": [
+          "FinalTrainData:Au_ani_00001"
+        ],
+        "visualization_server_only": "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E/diagnostics/training-0.png"
+      },
+      {
+        "anomaly_mask_invariance": true,
+        "backward_micro_batch": 6,
+        "backward_training_ids": [
+          "FinalTrainData:Au_ani_00001",
+          "FinalTrainData:Au_ani_00002",
+          "FinalTrainData:Au_ani_00003",
+          "FinalTrainData:Au_ani_00004",
+          "FinalTrainData:Au_ani_00005",
+          "FinalTrainData:Au_ani_00006"
+        ],
+        "calibration_artifact_hash": "bcb2f80690dff8632a5af39c3c3263f29460aede883f93335fbf45c36b470f43",
+        "calibration_state_hash": "724c995fd96ed6971b5985a03589e17cc5e3de9b332ec34b714882c86c12b5d8",
+        "completed_at": "2026-09-15T14:11:47Z",
+        "control_numerics": {
+          "extreme_evidence_finite": true,
+          "final_zero_noise_identity": true,
+          "gamma_zero_identity": true,
+          "prefix_one_disabled": true
+        },
+        "diagnostic_override": "Full prefix and one predicted self-conditioning pass; restored before formal training",
+        "diagnostic_seed": 30145,
+        "elapsed_seconds": 5.320156671106815,
+        "ell_all_zero_on_training_probe": false,
+        "evidence": {
+          "A": {
+            "max": 5.7427449226379395,
+            "mean": 0.15279364585876465,
+            "min": -2.267827033996582
+          },
+          "ell": {
+            "max": 0.2913540303707123,
+            "mean": -0.0077019548043608665,
+            "min": -0.3699227571487427
+          },
+          "q": {
+            "max": 0.7706204056739807,
+            "mean": 0.22767791152000427,
+            "min": 0.0
+          }
+        },
+        "external_gt_invariance": true,
+        "external_gt_inversion_prediction_max_abs": 0.0,
+        "finite_loss": 1.819344401359558,
+        "fixed_training_probe_pixel_f1": {
+          "P_base": 0.0,
+          "P_ctrl": 0.0,
+          "control_minus_base": 0.0,
+          "coordinates": "fixed resized training grid; diagnostic only"
+        },
+        "formal_optimizer_steps": 0,
+        "full_gradient_coverage": true,
+        "gamma": 0.10000000149011612,
+        "gradients": {
+          "controller": {
+            "gradient_tensors": 1,
+            "nonzero_tensors": 1,
+            "norm": 0.0003153009990655545
+          },
+          "hf_pvt": {
+            "gradient_tensors": 348,
+            "nonzero_tensors": 348,
+            "norm": 0.04334036314495913
+          },
+          "image_task": {
+            "gradient_tensors": 38,
+            "nonzero_tensors": 38,
+            "norm": 3.286870859278968
+          },
+          "image_to_mask": {
+            "gradient_tensors": 12,
+            "nonzero_tensors": 12,
+            "norm": 0.004101336880226255
+          },
+          "mask": {
+            "gradient_tensors": 38,
+            "nonzero_tensors": 38,
+            "norm": 1.097928691940403
+          },
+          "mask_to_image": {
+            "gradient_tensors": 12,
+            "nonzero_tensors": 12,
+            "norm": 0.6989242639727093
+          },
+          "rgb_pvt": {
+            "gradient_tensors": 348,
+            "nonzero_tensors": 348,
+            "norm": 0.04209358532541649
+          }
+        },
+        "history_epsilon_joint_mean_abs_change": 0.13316695392131805,
+        "image_loss": 0.19279764592647552,
+        "initial_state_and_rng_restored": true,
+        "joint_ref_mse": 0.12402813881635666,
+        "peak_allocated_bytes": 17215086080,
+        "peak_reserved_bytes": 18350080000,
+        "q_all_zero_on_training_probe": false,
+        "rank": 1,
+        "reference_index_invariance": true,
+        "reference_mask_isolation": true,
+        "reference_state_hash": "fdbed02735fb8ac2398c0407dee63d7668b51a99d073d81a12f4412ff1ac0878",
+        "registered_unused_parameters": [
+          "network.mmff1.MMFF_att.de_spatial_attention.conv1.weight",
+          "network.mmff1.MMFF_att.rgb_spatial_attention.conv1.weight",
+          "network.mmff2.MMFF_att.de_spatial_attention.conv1.weight",
+          "network.mmff2.MMFF_att.rgb_spatial_attention.conv1.weight",
+          "network.mmff3.MMFF_att.de_spatial_attention.conv1.weight",
+          "network.mmff3.MMFF_att.rgb_spatial_attention.conv1.weight",
+          "network.mmff4.MMFF_att.de_spatial_attention.conv1.weight",
+          "network.mmff4.MMFF_att.rgb_spatial_attention.conv1.weight"
+        ],
+        "resolution": 512,
+        "sample_profile": {
+          "cold_reference_and_measurement_seconds": 0.9106642790138721,
+          "cross_call_cache": false,
+          "image_count": 1,
+          "mask_ten_steps_with_reference_reuse_seconds": 0.5248575173318386,
+          "reference_feature_requests": 20,
+          "reference_feature_reuse_hits": 12,
+          "reference_forwards": 8,
+          "total_seconds": 1.4355217963457108
+        },
+        "sample_shape": [
+          1,
+          1,
+          512,
+          512
+        ],
+        "sampling_peak_allocated_bytes": 1423634944,
+        "sampling_steps": 10,
+        "status": "PASS",
+        "synthetic_engineering_only": false,
+        "training_ids": [
+          "FinalTrainData:Au_ani_00002"
+        ],
+        "visualization_server_only": "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E/diagnostics/training-1.png"
+      }
+    ],
+    "status": "COMPLETED"
+  },
+  "minimum_step": 100,
+  "owned_worker_group": [
+    {
+      "cmdline": "/data0/hl/conda_envs/dcdsdiff/bin/python -s -m torch.distributed.run --standalone --nnodes=1 --nproc-per-node=2 /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E/source/scripts/tect_diff/worker.py --run-dir /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E --stage main ",
+      "pid": 702694,
+      "start_ticks": "2708120462"
+    },
+    {
+      "cmdline": "/data0/hl/conda_envs/dcdsdiff/bin/python -u /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E/source/scripts/tect_diff/worker.py --run-dir /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E --stage main ",
+      "pid": 702761,
+      "start_ticks": "2708120848"
+    },
+    {
+      "cmdline": "/data0/hl/conda_envs/dcdsdiff/bin/python -u /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E/source/scripts/tect_diff/worker.py --run-dir /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E --stage main ",
+      "pid": 702762,
+      "start_ticks": "2708120848"
+    },
+    {
+      "cmdline": "/data0/hl/conda_envs/dcdsdiff/bin/python -u /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E/source/scripts/tect_diff/worker.py --run-dir /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E --stage main ",
+      "pid": 703014,
+      "start_ticks": "2708122710"
+    },
+    {
+      "cmdline": "/data0/hl/conda_envs/dcdsdiff/bin/python -u /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E/source/scripts/tect_diff/worker.py --run-dir /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E --stage main ",
+      "pid": 703015,
+      "start_ticks": "2708122710"
+    },
+    {
+      "cmdline": "/data0/hl/conda_envs/dcdsdiff/bin/python -u /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E/source/scripts/tect_diff/worker.py --run-dir /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E --stage main ",
+      "pid": 703140,
+      "start_ticks": "2708122714"
+    },
+    {
+      "cmdline": "/data0/hl/conda_envs/dcdsdiff/bin/python -u /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E/source/scripts/tect_diff/worker.py --run-dir /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E --stage main ",
+      "pid": 703141,
+      "start_ticks": "2708122715"
+    },
+    {
+      "cmdline": "/data0/hl/conda_envs/dcdsdiff/bin/python -u /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E/source/scripts/tect_diff/worker.py --run-dir /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E --stage main ",
+      "pid": 703266,
+      "start_ticks": "2708122719"
+    },
+    {
+      "cmdline": "/data0/hl/conda_envs/dcdsdiff/bin/python -u /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E/source/scripts/tect_diff/worker.py --run-dir /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E --stage main ",
+      "pid": 703267,
+      "start_ticks": "2708122719"
+    },
+    {
+      "cmdline": "/data0/hl/conda_envs/dcdsdiff/bin/python -u /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E/source/scripts/tect_diff/worker.py --run-dir /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E --stage main ",
+      "pid": 703392,
+      "start_ticks": "2708122722"
+    },
+    {
+      "cmdline": "/data0/hl/conda_envs/dcdsdiff/bin/python -u /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E/source/scripts/tect_diff/worker.py --run-dir /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E --stage main ",
+      "pid": 703518,
+      "start_ticks": "2708122724"
+    }
+  ],
+  "parameter_agreement": {
+    "reason": "Written at checkpoint boundary, not required at step100",
+    "status": "NOT_YET_AVAILABLE"
+  },
+  "parent_statuses": [
+    {
+      "controller_alive": false,
+      "hold_active": true,
+      "run_id": "TECT-DIFF-FULL-R512-S42-20260915-A",
+      "stage": "REFERENCE",
+      "status": "INTERRUPTED",
+      "worker_alive": false
+    },
+    {
+      "controller_alive": false,
+      "hold_active": true,
+      "run_id": "TECT-DIFF-FULL-R512-S42-REFNORM-V2-20260915-B",
+      "stage": "REFERENCE",
+      "status": "INTERRUPTED",
+      "worker_alive": false
+    },
+    {
+      "controller_alive": false,
+      "hold_active": true,
+      "run_id": "TECT-DIFF-FULL-R512-S42-REFNORM-V2-PERF-20260915-C",
+      "stage": "MAIN",
+      "status": "INTERRUPTED",
+      "worker_alive": false
+    },
+    {
+      "controller_alive": false,
+      "hold_active": true,
+      "run_id": "TECT-DIFF-FULL-R512-S42-REFNORM-V2-AMPFIX-20260915-D",
+      "stage": "MAIN",
+      "status": "INTERRUPTED",
+      "worker_alive": false
+    }
+  ],
+  "pending": [],
+  "preflight_status": "COMPLETED",
+  "progress": [
+    {
+      "A_mean": 0.5790457129478455,
+      "A_negative_fraction": 0.17574946582317352,
+      "amp_skipped": false,
+      "control_logit_change": 0.0002800740476232022,
+      "elapsed_seconds": 134.31103317439556,
+      "ell_mean": -0.0007205724250525236,
+      "epoch": 0,
+      "gamma": 0.0447995588183403,
+      "gradient_norm": 0.7696643471717834,
+      "gradient_sync": {
+        "at": "2026-09-15T14:13:55Z",
+        "coverage_pass_by_rank": [
+          true,
+          true
+        ],
+        "gradient_norm_by_rank": [
+          0.7696643471717834,
+          0.7696643471717834
+        ],
+        "gradient_tensors_by_rank": [
+          856,
+          856
+        ],
+        "passed": true
+      },
+      "image_loss": 0.09883306175470352,
+      "joint_ref_mse": 0.0016771152149885893,
+      "loss": 1.320755958557129,
+      "mask_loss": 1.2219228744506836,
+      "micro_batch": 100,
+      "micro_batches_per_epoch": 4051,
+      "optimizer_step": 100,
+      "peak_memory_bytes": 17994686976,
+      "pid": 702761,
+      "prefix": 2,
+      "q_mean": 0.17832574248313904,
+      "q_zero_fraction": 0.0233001708984375,
+      "rank": 0,
+      "sampling_step": 4,
+      "stage": "MAIN_TRAINING",
+      "updated_at": "2026-09-15T14:13:55Z"
+    },
+    {
+      "A_mean": 0.33493494987487793,
+      "A_negative_fraction": 0.10101954638957977,
+      "amp_skipped": false,
+      "control_logit_change": 0.0006640460342168808,
+      "elapsed_seconds": 134.288432944566,
+      "ell_mean": 0.004871462471783161,
+      "epoch": 0,
+      "gamma": 0.0895991176366806,
+      "gradient_norm": 0.7696643471717834,
+      "gradient_sync": {
+        "at": "2026-09-15T14:13:55Z",
+        "coverage_pass_by_rank": [
+          true,
+          true
+        ],
+        "gradient_norm_by_rank": [
+          0.7696643471717834,
+          0.7696643471717834
+        ],
+        "gradient_tensors_by_rank": [
+          856,
+          856
+        ],
+        "passed": true
+      },
+      "image_loss": 0.14637912809848785,
+      "joint_ref_mse": 0.00239229085855186,
+      "loss": 1.171135425567627,
+      "mask_loss": 1.0247563123703003,
+      "micro_batch": 100,
+      "micro_batches_per_epoch": 4051,
+      "optimizer_step": 100,
+      "peak_memory_bytes": 17997210112,
+      "pid": 702762,
+      "prefix": 4,
+      "q_mean": 0.23659449815750122,
+      "q_zero_fraction": 0.0233001708984375,
+      "rank": 1,
+      "sampling_step": 8,
+      "stage": "MAIN_TRAINING",
+      "updated_at": "2026-09-15T14:13:55Z"
+    }
+  ],
+  "rank_start_ticks_basis": "Live capture; progress files do not contain historical rank start_ticks",
+  "recent_rank_metrics": {
+    "0": [
+      {
+        "A_mean": 0.24855145812034607,
+        "A_negative_fraction": 0.1650714874267578,
+        "amp_skipped": false,
+        "control_logit_change": 0.0005428004078567028,
+        "ell_mean": -0.00852382555603981,
+        "epoch": 0,
+        "gamma": 0.055555559694767,
+        "gradient_norm": 3.3980534076690674,
+        "gradient_sync": {
+          "at": "2026-09-15T14:11:52Z",
+          "coverage_pass_by_rank": [
+            true,
+            true
+          ],
+          "gradient_norm_by_rank": [
+            3.3980534076690674,
+            3.3980534076690674
+          ],
+          "gradient_tensors_by_rank": [
+            856,
+            856
+          ],
+          "passed": true
+        },
+        "image_loss": 0.21575239300727844,
+        "joint_ref_mse": 0.14418530464172363,
+        "loss": 1.779725193977356,
+        "mask_loss": 1.5639728307724,
+        "optimizer_step": 1,
+        "peak_memory_bytes": 17215086080,
+        "prefix": 3,
+        "q_mean": 0.3043288588523865,
+        "q_zero_fraction": 0.0233001708984375,
+        "sampling_step": 5
+      },
+      {
+        "A_mean": 0.30124202370643616,
+        "A_negative_fraction": 0.1538136899471283,
+        "amp_skipped": false,
+        "control_logit_change": 0.0005115187959745526,
+        "ell_mean": -0.0018350243335589767,
+        "epoch": 0,
+        "gamma": 0.07809502631425858,
+        "gradient_norm": 0.7978464365005493,
+        "gradient_sync": {
+          "at": "2026-09-15T14:12:55Z",
+          "coverage_pass_by_rank": [
+            true,
+            true
+          ],
+          "gradient_norm_by_rank": [
+            0.7978464365005493,
+            0.7978464365005493
+          ],
+          "gradient_tensors_by_rank": [
+            856,
+            856
+          ],
+          "passed": true
+        },
+        "image_loss": 0.09371773153543472,
+        "joint_ref_mse": 0.0032590168993920088,
+        "loss": 1.3144384622573853,
+        "mask_loss": 1.2207207679748535,
+        "optimizer_step": 50,
+        "peak_memory_bytes": 17994686976,
+        "prefix": 3,
+        "q_mean": 0.22097361087799072,
+        "q_zero_fraction": 0.0233001708984375,
+        "sampling_step": 7
+      },
+      {
+        "A_mean": 0.5790457129478455,
+        "A_negative_fraction": 0.17574946582317352,
+        "amp_skipped": false,
+        "control_logit_change": 0.0002800740476232022,
+        "ell_mean": -0.0007205724250525236,
+        "epoch": 0,
+        "gamma": 0.0447995588183403,
+        "gradient_norm": 0.7696643471717834,
+        "gradient_sync": {
+          "at": "2026-09-15T14:13:55Z",
+          "coverage_pass_by_rank": [
+            true,
+            true
+          ],
+          "gradient_norm_by_rank": [
+            0.7696643471717834,
+            0.7696643471717834
+          ],
+          "gradient_tensors_by_rank": [
+            856,
+            856
+          ],
+          "passed": true
+        },
+        "image_loss": 0.09883306175470352,
+        "joint_ref_mse": 0.0016771152149885893,
+        "loss": 1.320755958557129,
+        "mask_loss": 1.2219228744506836,
+        "optimizer_step": 100,
+        "peak_memory_bytes": 17994686976,
+        "prefix": 2,
+        "q_mean": 0.17832574248313904,
+        "q_zero_fraction": 0.0233001708984375,
+        "sampling_step": 4
+      }
+    ],
+    "1": [
+      {
+        "A_mean": 0.5910004377365112,
+        "A_negative_fraction": 0.11970329284667969,
+        "amp_skipped": false,
+        "control_logit_change": 0.00045407400466501713,
+        "ell_mean": 0.012576977722346783,
+        "epoch": 0,
+        "gamma": 0.10000000149011612,
+        "gradient_norm": 3.3980534076690674,
+        "gradient_sync": {
+          "at": "2026-09-15T14:11:52Z",
+          "coverage_pass_by_rank": [
+            true,
+            true
+          ],
+          "gradient_norm_by_rank": [
+            3.3980534076690674,
+            3.3980534076690674
+          ],
+          "gradient_tensors_by_rank": [
+            856,
+            856
+          ],
+          "passed": true
+        },
+        "image_loss": 0.36226171255111694,
+        "joint_ref_mse": 0.12243173271417618,
+        "loss": 1.866938591003418,
+        "mask_loss": 1.5046768188476562,
+        "optimizer_step": 1,
+        "peak_memory_bytes": 17429630464,
+        "prefix": 4,
+        "q_mean": 0.11978945136070251,
+        "q_zero_fraction": 0.0233001708984375,
+        "sampling_step": 9
+      },
+      {
+        "A_mean": 0.4154137074947357,
+        "A_negative_fraction": 0.16130511462688446,
+        "amp_skipped": false,
+        "control_logit_change": 0.0003135041333734989,
+        "ell_mean": 0.0036708253901451826,
+        "epoch": 0,
+        "gamma": 0.04462572932243347,
+        "gradient_norm": 0.7978464365005493,
+        "gradient_sync": {
+          "at": "2026-09-15T14:12:55Z",
+          "coverage_pass_by_rank": [
+            true,
+            true
+          ],
+          "gradient_norm_by_rank": [
+            0.7978464365005493,
+            0.7978464365005493
+          ],
+          "gradient_tensors_by_rank": [
+            856,
+            856
+          ],
+          "passed": true
+        },
+        "image_loss": 0.0750272274017334,
+        "joint_ref_mse": 0.002569087315350771,
+        "loss": 1.4465538263320923,
+        "mask_loss": 1.3715265989303589,
+        "optimizer_step": 50,
+        "peak_memory_bytes": 17997210112,
+        "prefix": 2,
+        "q_mean": 0.19970405101776123,
+        "q_zero_fraction": 0.0233001708984375,
+        "sampling_step": 4
+      },
+      {
+        "A_mean": 0.33493494987487793,
+        "A_negative_fraction": 0.10101954638957977,
+        "amp_skipped": false,
+        "control_logit_change": 0.0006640460342168808,
+        "ell_mean": 0.004871462471783161,
+        "epoch": 0,
+        "gamma": 0.0895991176366806,
+        "gradient_norm": 0.7696643471717834,
+        "gradient_sync": {
+          "at": "2026-09-15T14:13:55Z",
+          "coverage_pass_by_rank": [
+            true,
+            true
+          ],
+          "gradient_norm_by_rank": [
+            0.7696643471717834,
+            0.7696643471717834
+          ],
+          "gradient_tensors_by_rank": [
+            856,
+            856
+          ],
+          "passed": true
+        },
+        "image_loss": 0.14637912809848785,
+        "joint_ref_mse": 0.00239229085855186,
+        "loss": 1.171135425567627,
+        "mask_loss": 1.0247563123703003,
+        "optimizer_step": 100,
+        "peak_memory_bytes": 17997210112,
+        "prefix": 4,
+        "q_mean": 0.23659449815750122,
+        "q_zero_fraction": 0.0233001708984375,
+        "sampling_step": 8
+      }
+    ]
+  },
+  "recorded_at": "2026-09-15T14:14:03Z",
+  "resource": {
+    "MemAvailable_kib": 119471844,
+    "MemTotal_kib": 131601464,
+    "cpu_busy_percent": 6.670952615058805,
+    "cpu_iowait_percent": 0.0037817191695344705,
+    "cpu_logical_count": 64,
+    "duration_seconds": 4.13392648100853,
+    "samples": [
+      {
+        "at": "2026-09-15T14:14:03Z",
+        "gpus": [
+          {
+            "gpu": 0.0,
+            "memory_mib": 19794.0,
+            "memory_total_mib": 24564.0,
+            "memory_utilization_percent": 21.0,
+            "power_watts": 183.72,
+            "utilization_percent": 54.0
+          },
+          {
+            "gpu": 1.0,
+            "memory_mib": 19892.0,
+            "memory_total_mib": 24564.0,
+            "memory_utilization_percent": 40.0,
+            "power_watts": 186.21,
+            "utilization_percent": 65.0
+          }
+        ]
+      },
+      {
+        "at": "2026-09-15T14:14:04Z",
+        "gpus": [
+          {
+            "gpu": 0.0,
+            "memory_mib": 19794.0,
+            "memory_total_mib": 24564.0,
+            "memory_utilization_percent": 8.0,
+            "power_watts": 170.68,
+            "utilization_percent": 71.0
+          },
+          {
+            "gpu": 1.0,
+            "memory_mib": 19892.0,
+            "memory_total_mib": 24564.0,
+            "memory_utilization_percent": 30.0,
+            "power_watts": 196.78,
+            "utilization_percent": 56.0
+          }
+        ]
+      },
+      {
+        "at": "2026-09-15T14:14:05Z",
+        "gpus": [
+          {
+            "gpu": 0.0,
+            "memory_mib": 19794.0,
+            "memory_total_mib": 24564.0,
+            "memory_utilization_percent": 24.0,
+            "power_watts": 171.33,
+            "utilization_percent": 100.0
+          },
+          {
+            "gpu": 1.0,
+            "memory_mib": 19892.0,
+            "memory_total_mib": 24564.0,
+            "memory_utilization_percent": 44.0,
+            "power_watts": 194.57,
+            "utilization_percent": 97.0
+          }
+        ]
+      },
+      {
+        "at": "2026-09-15T14:14:06Z",
+        "gpus": [
+          {
+            "gpu": 0.0,
+            "memory_mib": 19794.0,
+            "memory_total_mib": 24564.0,
+            "memory_utilization_percent": 36.0,
+            "power_watts": 176.54,
+            "utilization_percent": 98.0
+          },
+          {
+            "gpu": 1.0,
+            "memory_mib": 19892.0,
+            "memory_total_mib": 24564.0,
+            "memory_utilization_percent": 27.0,
+            "power_watts": 181.8,
+            "utilization_percent": 98.0
+          }
+        ]
+      },
+      {
+        "at": "2026-09-15T14:14:07Z",
+        "gpus": [
+          {
+            "gpu": 0.0,
+            "memory_mib": 19794.0,
+            "memory_total_mib": 24564.0,
+            "memory_utilization_percent": 35.0,
+            "power_watts": 174.41,
+            "utilization_percent": 51.0
+          },
+          {
+            "gpu": 1.0,
+            "memory_mib": 19892.0,
+            "memory_total_mib": 24564.0,
+            "memory_utilization_percent": 40.0,
+            "power_watts": 175.16,
+            "utilization_percent": 97.0
+          }
+        ]
+      }
+    ]
+  },
+  "run_id": "TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E",
+  "schema_version": 1,
+  "scientific_result": false,
+  "scope": "Read-only bounded early engineering health; no convergence or formal evaluation conclusion",
+  "selection_protocol": "test_selected",
+  "source_commit": "ad8fb6e5f3f6f295b1e94b87e28175a5fabc779c",
+  "source_files_verified": 171,
+  "source_hashes": {
+    ".gitattributes": "ae0261d4fe4efe59e9c0338516437b6f70f141b1de0fc7b4ea4e224925c9f9c4",
+    ".gitignore": "22e678ce463d14db40ca14963d8d2a5250843f44814a96a190a58f0723e963f8",
+    "AGENTS.md": "d0ac1f25d4ebea64779a9256214c8c3520dc54ab87e037811c2b355c6f44123c",
+    "DcDsDiff \u8bba\u6587.pdf": "bec71779e774eeb80f879e6ba03092849b1e991b323e81edac7b5818ad5e1c65",
+    "README.md": "c88f13d84b6da96767148cf0bc6218e648622c2412ed10fcb6ae5b429ba3fc6d",
+    "analysis_reports/experiment_ledger.csv": "2d26b656af6f7d3fd96fb67cde16e1dd133decaa698b33c8ba645fade1174676",
+    "analysis_reports/experiment_ledger.md": "7f7cf08ec61ed72b98fb67534ef32f082ee619471f015ca4132ad7990aadb3a2",
+    "analysis_reports/failure_registry.jsonl": "bef039dd00bbbc7eee92462e82087c72b888d594a323f2300cebb8b7d0523ec9",
+    "analysis_reports/groups/TECT-DIFF-FULL-REFNORM-V2/report.md": "d0a5b01424482b6d10828b6a032534bda2c5240f66a26db1515628df287a01e4",
+    "analysis_reports/groups/TECT-DIFF-FULL-V1/report.md": "866e8ed35e6a773fbf171041dca744e348366fa5c54331dd49b0be8ef6a552f7",
+    "analysis_reports/reference_repair_20260915.md": "69a856de93599070a844e26b3c3c541d2a305cfc0d7f67f9e2f39e394330ab14",
+    "analysis_reports/reference_repair_receipt.json": "dea7d8e83cb3f068d77f2359dbabe966c863bfa0fe2aa3d3f2d15997bcef0b2e",
+    "analysis_reports/runs/TECT-DIFF-FULL-R512-S42-20260915-A/report.json": "8f3ebfa716840f726b17bc6cf77392dca081dd31234b84019ddf547e813bba9e",
+    "analysis_reports/runs/TECT-DIFF-FULL-R512-S42-20260915-A/report.md": "620b20399208cd913b74c42f1dc2104e69387c5fdd0e425026c148f9123530dd",
+    "analysis_reports/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-20260915-B/report.json": "348c09f3157d8a0d3c68a6fc317f3aa645918596450def5c795ae36566f1e33f",
+    "analysis_reports/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-20260915-B/report.md": "b9c2c397d124433fa549958fd878bf6da8adcac5bceabaff15efabd3a0869766",
+    "analysis_reports/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-AMPFIX-20260915-D/report.json": "7678b9c8889b4545a647fa372ea85e40effe64860c4c4c0835b384946dda3f54",
+    "analysis_reports/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-AMPFIX-20260915-D/report.md": "0b1072ffe2b412fd5e6b6ab1122b7d7913e12a779c4e7557c9844fa27d2a92fa",
+    "analysis_reports/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-PERF-20260915-C/report.json": "8af80dd160afc21023a9ae1caef5c65eb5ced25aa766aa2a81f670c2a3c4e7a7",
+    "analysis_reports/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-PERF-20260915-C/report.md": "dd84fd39d7dddc7df78be0d2fc09117db3e656d3b8f2e79731ad5e2764d57bb7",
+    "analysis_reports/tect_diff/amp_ddp_repair_20260915.json": "f824bd7abf195d71f2f067507c8d96908b4db89528d12d26cd07c23c8d821339",
+    "analysis_reports/tect_diff/ampfix_startup.json": "b110074e20cf212c9b1023bf0f98a23ec5e110e0f9922d01b22f3b9a2e3ed2ff",
+    "analysis_reports/tect_diff/memory_batch_performance_20260915.json": "667dc36318d9c4900d9f50e5cf66a1284032577ed3991f1cf9a35dc50e9717aa",
+    "analysis_reports/tect_diff/memory_batch_performance_20260915.md": "aa20fb967d73a15a36347b924d1420660f8b0edecf4ff0bcbc99283887e9946f",
+    "analysis_reports/tect_diff/preflight_512.json": "c7a7dda3306d751321aad878029ad2e01afdcbb2e6f69061e8fd94713f72bfa5",
+    "analysis_reports/tect_diff/publication_recovery.json": "bad11f422adeb645c4b735e3b26820d83787e65de4e1df95dd236fc0d32d4886",
+    "analysis_reports/tect_diff/refnorm_v2_performance.json": "cf54579c7428137a796dc4ae6fc0422c29451177b6040d99b442dba29dcd581d",
+    "analysis_reports/tect_diff/refnorm_v2_startup.json": "eabb64ebbf9880d26debdd1767dd9ddf86eb8a82e0c7995f579de2aa51ac15ad",
+    "analysis_reports/tect_diff/startup_verification.json": "3bda44c56708c8104f0fdbf912e9066a6070ce74e8510a22cb508f1e94abbd79",
+    "analysis_reports/tect_evidence_math_receipt.json": "37025134a87c09ba094f0f63e5f59af3f5ceadfad2938055ef440e7fe41f4669",
+    "config/benchmark_all8.json": "edb414ec31da0e73f5f9a83380b16360cbbb52d5eca1f5617e3486e1807c3dbc",
+    "config/experiments/casia2_all8.yaml": "28f1904d3ebdf385a82a9903d2cf75523846c26e4bb3ba2fc0a0a03fe9be2ba7",
+    "config/experiments/casia2_sel3_all8.yaml": "7d46dca3b46ea75ee7b45b8b6bbe2810d023bef5d09daf9666472b4ea4e685f2",
+    "config/reproduction.yaml": "8a9e8d00e56c168a78453ef78f772da5ee63c322cecef2ac37cb4a122c36b3e8",
+    "configs/tect_diff/AMP_DDP_REPAIR.md": "fbf2b06587c4fa31b6260a0e6bba6944c52317eb03326608e80e946e2f56a587",
+    "configs/tect_diff/MEMORY_BATCH_RESTART.md": "edb052c70daab1d2c5471e9439b4f5edfefb0cb0e7b8263c10ebaf631b902a74",
+    "configs/tect_diff/PERFORMANCE_CONTINUATION.md": "f6b5d630ee41191a014dd74cf8a3a16d6eb46ebfef72738f8aa7b439755f87f8",
+    "configs/tect_diff/PROTOCOL.md": "4128d0c1e78c9c66f419b256d898928c714e2a382acc208069b8d9d1caa5c6f8",
+    "configs/tect_diff/REFNORM_V2.md": "4b1c1d28b8aff5c0c52f059672ff1d0d0ca7a8977e62585d3678baf85641f697",
+    "configs/tect_diff/RESTART_V2.md": "7414bb60badce8ef2a412b9d1b7e7e60fe1d82a29a3224c05c9bd9389afd8032",
+    "configs/tect_diff/full_r512_s42.json": "60a9b4a65b60d185387442333cbfb2c9dae13fa8da4a331448a5d7a4f20e2e8a",
+    "configs/tect_diff/full_r512_s42_refnorm_v2.json": "1afeeaa018b5aeddb6518a0a2ff3217f19895d5321339f76c11a2373387ec36d",
+    "configs/tect_diff/full_r512_s42_refnorm_v2_memb6.json": "2028e14bda582ec1c7f288fc210418e23657df4d7e417d6549f6e7974e5cb030",
+    "dataset/benchmark_subset.py": "7259506e7652319b649679ee49245d14826623b40329e1cc223253999dde47b4",
+    "dataset/data_val.py": "16136814c4c8ededa33c99934949b18466152d01381a807886672f5427764d8f",
+    "denoisingdiffusionpytorch/denoising_diffusion_pytorch/__init__.py": "c34db6100b75ea096d2b299806f188a1f4c0e264011852993d44f7b71684d2ce",
+    "denoisingdiffusionpytorch/denoising_diffusion_pytorch/classifier_free_guidance.py": "399ae8b97c92496031b61b1866dc7124d43a7f0a919fc7692c932ead30313185",
+    "denoisingdiffusionpytorch/denoising_diffusion_pytorch/continuous_time_gaussian_diffusion.py": "af312b1e10ee391d9779658a8830dae200319cde99184b95e4b297acabf2148c",
+    "denoisingdiffusionpytorch/denoising_diffusion_pytorch/denoising_diffusion_pytorch.py": "28a6d9db3dc8169586f257b07e320f576d23790ee4a177ada073b6bb42da62f9",
+    "denoisingdiffusionpytorch/denoising_diffusion_pytorch/denoising_diffusion_pytorch_1d.py": "73de735b15a8db6e8328e2ea0bc73cff5883281d49804ad47f1b93d7b8b347a0",
+    "denoisingdiffusionpytorch/denoising_diffusion_pytorch/elucidated_diffusion.py": "e14838632dc4eef2cc1d01d642d8632719fa264fa5bf067c863987b2cf7e01e6",
+    "denoisingdiffusionpytorch/denoising_diffusion_pytorch/guided_diffusion.py": "e7fe306c79000b6b2ee6d44fe3f89f5bbb7a01d96e09513d004a1d9ebbb400fc",
+    "denoisingdiffusionpytorch/denoising_diffusion_pytorch/learned_gaussian_diffusion.py": "86ab85750853864f6ee443db72bb3bce53c39e19641e66b52a2278016c2eb633",
+    "denoisingdiffusionpytorch/denoising_diffusion_pytorch/simple_diffusion.py": "b5f79f4989fe01517c7ab3c0f6d3eb68aac948e97e24d89a95fcb3617561dbc6",
+    "denoisingdiffusionpytorch/denoising_diffusion_pytorch/v_param_continuous_time_gaussian_diffusion.py": "086182162cfe7066d79c07441ab0faaf0331f23d06e28714c472851142dc8327",
+    "denoisingdiffusionpytorch/denoising_diffusion_pytorch/version.py": "e889b19d1f0400504cb62c84707b048e8109ac4bb351c3855335894deba9be93",
+    "denoisingdiffusionpytorch/denoising_diffusion_pytorch/weighted_objective_gaussian_diffusion.py": "2a82d57bc3ac5ff60e041db85947de0268b64e0359b230a60a57821b5d330c7f",
+    "denoisingdiffusionpytorch/setup.py": "2a3b27dacc8f25f872fc2fb73b2e58786c4792e098c47af57e8236250e2c50ec",
+    "docs/all8_overlap_audit.json": "205f5b16412a6f1e6d5e3199b3b30fbaf16d253ae8db9ae67c6dd81a5e9c06f0",
+    "docs/casia2_all8_dataset_receipt.json": "fab40dd7de395d7ed7d1c9caca5a4a18992ee0964700bf7292a34ca97e13b011",
+    "docs/casia2_all8_protocol.md": "9d5bfb472832c2ee4830a830003d096b6882fed5ab52484cafcd6728c991446e",
+    "docs/casia2_all8_review.md": "061482e9e0f80c9a4f138793d9db841edbc3bbe8cc7a991161a472f8e3516afc",
+    "docs/casia2_all8_startup_receipt.json": "bdf66559012e7e2a55b0100a3b221c6b72e36cee40bf7774faff118846dcdfe8",
+    "docs/casia2_early_stop.md": "6522d1f8d2847ff6d1b5078e6258d095566457b8ff4a2a4a3b1597baba53f59e",
+    "docs/casia2_sel3_continuation.md": "6a242c5903a831f3e8be04ca6c4317f427dbb350aae2a05d66004edc680c6acb",
+    "docs/cleanup.md": "b1d2876019f591ed7f87517df621f26db1d00ab6ce831f5747be7aadcab76720",
+    "docs/cleanup_receipt.json": "a7793d1f5ee7bb4f1cf152f6df057be2721c5cb912c7998bf3a55829089b152a",
+    "docs/code_audit.md": "e8e75fd7c985f8cf6a06e4e03af49190365aee4ac7fb7f89626a931804ea204f",
+    "docs/dataset_receipt.json": "fc122ebacbc75bc1733437b0659b8a83d75f7427677acf43c39ee3c0fd138d28",
+    "docs/environment_receipt.json": "0692023cc770d688fe76998abb00cd10093a4cf81712f10b13bbcf627bc6393c",
+    "docs/history/pre-rebuild-audit.md": "a2575d56c7aa0b7315e50a4978daec8d64516a6636705109c0d226e8414e5ca7",
+    "docs/paper_protocol_audit.md": "3058c4c62e3f4a49c8b77a63da4e53ca0ba610de4c51a8b5936464ebf3e9469f",
+    "docs/rejected_split_receipt.json": "508236a54f2976de1a693b76cb94cfe15fee9c5497220855d55de78f565c42a5",
+    "docs/reproduction_protocol.md": "9d752b30472223861caf8bf7189bd2c0a94ea241152bbc2895d61e82fdec4ed3",
+    "docs/results/DCDSDIFF-CASIA2-SEL3-ALL8-20260914-B/all8-best/per_image.csv": "ae69fa50e66b92e21161830f75b917a15f11e5a28592629b6b962361dd6e19ba",
+    "docs/results/DCDSDIFF-CASIA2-SEL3-ALL8-20260914-B/all8-best/provenance.json": "cd007b8a762460a142a1e453d3c384e12bb6a632da2e866a0ee50ad5968d2f58",
+    "docs/results/DCDSDIFF-CASIA2-SEL3-ALL8-20260914-B/all8-best/report.md": "2149f600236a52f2fc80bda2ed9c56b70648ef0017192ffa978a3ac1c235a133",
+    "docs/results/DCDSDIFF-CASIA2-SEL3-ALL8-20260914-B/all8-best/results.json": "f5852e0b27ebbf4d53d836f7fab643bc0fdfcd4788c9a11d823e9e564a73f01b",
+    "docs/results/DCDSDIFF-CASIA2-SEL3-ALL8-20260914-B/all8-best/status.json": "0f69a5e43d125f4a387a6c93523f788a01ec5ab0923e10c92e7248bbc5076408",
+    "docs/results/DCDSDIFF-CASIA2-SEL3-ALL8-20260914-B/controller_status.json": "ad2ae4d8ff52009f6f164339bbe0a3e722638586dffa03729746836e3f4fe214",
+    "docs/results/DCDSDIFF-CASIA2-SEL3-ALL8-20260914-B/early_stop.json": "30bbfec67e39a8ac4f39cb15f92d395d441cfb3b4ce22a82914a012df3f7a67a",
+    "docs/results/DCDSDIFF-CASIA2-SEL3-ALL8-20260914-B/metrics.jsonl": "3aaa086cf33ee4862c8cea4777021e2951fa900243c7524c67deab496798b553",
+    "docs/results/DCDSDIFF-CASIA2-SEL3-ALL8-20260914-B/provenance.json": "74a9293a266ac55de577f636559a65477b7a13fb6aef9c0467ba874330f891dd",
+    "docs/results/DCDSDIFF-CASIA2-SEL3-ALL8-20260914-B/training_status.json": "01cf3f592f7856c52c7c32ce3d105c83656f6d88a7e6e19788cc92f2720ad03f",
+    "docs/results/DCDSDIFF-GIT10K-RECON-20260914-A/all8-best/per_image.csv": "b66820234f65b2e940fc7e7dee8e453e5e60b57deee3bc3a972046e726cfdf35",
+    "docs/results/DCDSDIFF-GIT10K-RECON-20260914-A/all8-best/provenance.json": "0d17922849a6689b682c97a42834582588fa0e519dff519a64e6c33a91061a86",
+    "docs/results/DCDSDIFF-GIT10K-RECON-20260914-A/all8-best/report.md": "c27d5cd680999507f9db4269af4875ba008fe9acb62ea73c8552275823e1ef2b",
+    "docs/results/DCDSDIFF-GIT10K-RECON-20260914-A/all8-best/results.json": "f8e38056750412fbf608383bab6c8a6f3d87c1efbd5f59ff7b904c2fada1139b",
+    "docs/results/DCDSDIFF-GIT10K-RECON-20260914-A/all8-best/status.json": "ebf8acaed092108d1b70a543d1a5767e79a54ecdad0324a1c66448510bba5a11",
+    "docs/results/DCDSDIFF-GIT10K-RECON-20260914-A/controller_status.json": "1338fd6b206af750c48fbef5c898adcb947c63aa43f793fe428a7fa8e448ac13",
+    "docs/results/DCDSDIFF-GIT10K-RECON-20260914-A/final99/per_image.csv": "b87afc7c5b1684feee04cd3da79fa0141564300413246b89db55d8a19e3bbe9a",
+    "docs/results/DCDSDIFF-GIT10K-RECON-20260914-A/final99/report.md": "3c7b6bc526212fdc86091d74c4c0ab92327c11d6256ca5c8dcb784e5375e050f",
+    "docs/results/DCDSDIFF-GIT10K-RECON-20260914-A/final99/results.json": "295e588fc3373a1305f9bfd2f1dd55ab2ffb415760baac4d99e55775760817fd",
+    "docs/results/DCDSDIFF-GIT10K-RECON-20260914-A/metrics.jsonl": "188103c12354ef3d88ffd9f4bf0a8c53c2033106a02df58daeca8fdccdd896ed",
+    "docs/results/DCDSDIFF-GIT10K-RECON-20260914-A/provenance.json": "a735027bc5d548527334e277dda846ef2cc665110e607322c5004ac3dbebe9f1",
+    "docs/results/DCDSDIFF-GIT10K-RECON-20260914-A/training_status.json": "df0426d778634c192cf6f3490c26cb5682a53ca13360e1463b74d0586fad2f5c",
+    "docs/results/README.md": "fb5b401c6208d17323f70ead13535fdaf5cb7c906311ceacde61ee5cade2be4d",
+    "docs/results/completion_receipt.json": "d9acf0ac02d5dc2fdb188c7053d462c605329b854f30da0ba81da37f8d22d2a3",
+    "docs/review_summary.md": "685a307beea41ceb099af97c1ceb01ba10ed3eaad4636617633b41299a1dfe57",
+    "docs/sel3_cleanup_receipt.json": "483ccb056d7b4b9c3ab098f3aba41c309cf0aa7b211e58e69695817c40204719",
+    "docs/sel3_startup_receipt.json": "26f25c0221f519a607a879bb047baff890df71010d0b16beb7af503482ed0bbe",
+    "docs/server_resource_audit.md": "9b3f7e7e94bd961b20255ba13a30c332886ec67e2360aec7b7092a06a37fa119",
+    "docs/startup_receipt.json": "42da8528b5ae4796355a69ea1a17b8ac1239ad7361350749a59e200cf370abb6",
+    "docs/transfer_cleanup_receipt.json": "2abfed8b00cc30cd3a2df458fd611f3ae022c0a7035d1f6dd9d4893cfea79a83",
+    "docs/validation_controller.json": "7931b1cb7c42727780cc2eb3c755f72927d0b4e199ae71d22c6ac1b8d310f0e2",
+    "docs/validation_early_stop.json": "05695e47c0d12b3e67032f8dc8927112a927f65e1015d0faffd1aa03223bfe38",
+    "docs/validation_gpu.json": "b274d452d4fe7fc7218e71db3d2e65347da0b1d390c5852fd5feb0a8408c015f",
+    "docs/validation_sel3.json": "0b39ef8fb9cd78c6c152560ca466f1e82895952a5e34e7b8eb01c959c2fda4fd",
+    "docs/validation_training.json": "af1da317b5aa11e23baef63164325a85fd351104e3ae53661252a214e821bc30",
+    "docs/validation_transfer_cpu.json": "7f9e15884913b7562144a4305885be2b39d08193c904249ddc207157a664081e",
+    "docs/validation_transfer_gpu.json": "f5382168830849dc5bf23d57c40bcd81c5f36a0dcb321c1c68fa316a8f7000f5",
+    "docs/validation_transfer_provenance.json": "eea8249cd178dd8d547177dd401e2ee01d0e88e60207f0038071284bf4c612f6",
+    "environment/create.sh": "f729c4df3d3c10afb764af3bdcc927ddee363f00b51dedf3fef00cd2b4691a4a",
+    "environment/requirements.lock.txt": "b846c703ddebceffa2efece65c08501b3656a1f2af78ef51e747c1ed42ce0300",
+    "environment/requirements.txt": "e2c4e5b58dca86f09f66aa5efafb0716f9dc9f8e63c46c213a3a72edb6637eb5",
+    "experiment_ledger.md": "df9ec1c313b89b5f3cf360d7d50b44d595a666a241ddf61b853be724cf1e682f",
+    "findings.md": "7a02fd639848bad737689f9d5dc51727b39d024d33bfb50c06ba07fed1913c68",
+    "manifests/casia2-all8-v1.csv": "b5d7c329a957bb62e39d22bbef79f4b3d3bb071487fc97212ca2e99455c1bd8b",
+    "manifests/git10k-recon-v1.csv": "d865abb3144ae843ba44a9d9d8e3bef547acdccaaad5936a64bd82e99b72d189",
+    "model/SimpleDiffSef.py": "aa6c2f4acf41954d8bf1c00b6a8e0d58858324f15e1e854627ef6e4d6f5a519b",
+    "model/loss.py": "ea8011f3d8bedf03988a2645a2afb60dac1ce3fef3e9818938eeb573f33d0ffd",
+    "model/net.py": "d361b7864fe8259368c60911a02a15da6022c8fbd21eea95c7c19ee4b1e209aa",
+    "model/tect_diff/amp_context.py": "b4c504db03c32d7c55921d52f8b79accbf939254dae769819e3029a3cc99e894",
+    "model/tect_diff/diffusion.py": "7f4a29b9468ddc6e3454b29ffaf9290d79f314717bd08b4912792bd29d5a794b",
+    "model/tect_diff/evidence.py": "11cdc9079d41693951f504a2831eb675ef891f381b8cf0a6b176f9de140f0781",
+    "model/tect_diff/network.py": "76c55a0b26d115b9ff910ca094d074ded8bf8e723236491f57364dd5ff5d8feb",
+    "model/tect_diff/reference.py": "dee956ec8057fe324f2a9f3392e15beb91d7e18bf795ee7f6e65b81c06eb496f",
+    "model/train_val_forward.py": "f0fe749395adeac8570c21c8887a45385d4104d5f305a37f3189a644c01a9e7a",
+    "progress.md": "3a3bae82cc9b6f9adb9b32638e2655092de98b2f8bffebf3fea0e0d5f84c4acb",
+    "scripts/tect_diff/__init__.py": "709e22a999462f1e86c94030c76fcfe3692ee6d9b557be6fd326548d24699e3b",
+    "scripts/tect_diff/artifact_continuation.py": "1d042d9a98e59a5f5131ed4877321263f47bed64fca882d8beb3e267d6a2fa5e",
+    "scripts/tect_diff/batch_restart.py": "20b057b5252f7a261adae2a25223f654018cf8da4abff35e6d089944a5b696e3",
+    "scripts/tect_diff/common.py": "de781d00565a597343aa8bff9beb580e26ce6526c2fbbd646c3846f680dce3d0",
+    "scripts/tect_diff/controller.py": "e58df5cf9eb693b9b7a2d5a57a77757cbff93cec72cd421814050b03979c6fe8",
+    "scripts/tect_diff/data.py": "376efbab1ee82294fdcb8d5dd7a91b050fa7a2c2105bf376cbf415b1d2223a84",
+    "scripts/tect_diff/diagnostics.py": "34304547d06c9ba6df3b57268865e265a783e1c931f15655f6e99fa960ebeb41",
+    "scripts/tect_diff/evaluation_pipeline.py": "602826a22fcecd49d5d7e2defdd753d6d454edcbd7dcc1f40cf4c362992329c4",
+    "scripts/tect_diff/gradient_safety.py": "13e3462fd60439130a187eb9bcb3db875970c64ae73b6b1e645468f4213374e1",
+    "scripts/tect_diff/metrics.py": "49980dffc2b03ddec8c627760bf5ffc744f967a93626b6189c2e9521560dcf74",
+    "scripts/tect_diff/reference_continuation.py": "a2dda2d0eca80ccc145bc4a87c32530dc67baf1197f76ddd7c5020f0e5c0c5a2",
+    "scripts/tect_diff/reference_health.py": "5054df3f168febe9a21d5298acdb2fe1f10f0614454643be679e12255875cb4e",
+    "scripts/tect_diff/reference_probe.py": "5b90b8d471e0bb5317c962ae6bebb150059e0a92bc537fe0e7e883be6cd7ff3c",
+    "scripts/tect_diff/report.py": "097e293c864bb11e36b5dc807104a4c1e86bc786619302c89099b36c28f0a94a",
+    "scripts/tect_diff/test_artifact_continuation.py": "5574f8cbebd549410692450cec3c27ead3dca4c00e02ecabc38176f52db22cf9",
+    "scripts/tect_diff/test_batch_restart.py": "b5ba2a3cf52e6fcf16416419ebe893a00b19c551246b358c814d9f979d00775d",
+    "scripts/tect_diff/test_evaluation_pipeline.py": "6e2ddab24d840d96a8a21812bb5a2d31813fabecd4229d49552ecc230d56ec05",
+    "scripts/tect_diff/test_evidence_geometry_cache.py": "b4cda223a538f5e55dfc6df7bcdd2e330a43a7d5ae0ed709899bf70b6780c9c7",
+    "scripts/tect_diff/test_main_gradient_safety.py": "8ace700dadd65359ef8fb0576421508c9555213edcb88801122ea63fe6c563a7",
+    "scripts/tect_diff/test_reference_health.py": "f2534fdd2e6181fcb46428cf958c7b00fd4531793197752b7b46c13a0fadfb16",
+    "scripts/tect_diff/test_reference_model.py": "b2e16456a18bb7bc80785276d57a2a8c93c6720bf88bff7ad18c2f823c05ace2",
+    "scripts/tect_diff/worker.py": "f05cc607c0c57eeeaf2933c56da54f81afc34b10284fb073b44db0caed143dee",
+    "task_plan.md": "a2e5a08d49c516b1299204b63d62fc99c98644b879171c33947206024905197e",
+    "tools/benchmark_protocol.py": "5f43b6b6aa3be60d3cee8d3c821a3ffdfea36effd350fd7f177c54062fb34159",
+    "tools/continue_casia_selection.py": "a49d2cddcc555424595e73a29bdfca14cb2a12526905b6d86ab37c1627ee362b",
+    "tools/early_stop.py": "8e9971aa580886368b8fa7956854bbc289fd28c983a3ac9c6efc4e178dde51f0",
+    "tools/evaluate_benchmarks.py": "a9b76e397e7faa7515bb6b91919912382de033e35353964b3f43e2f83a80269c",
+    "tools/evaluate_reproduction.py": "f345ba88cc041234eda8251527a53c9200c1004badb41b3e0a086094d0a5f142",
+    "tools/generate_git10k_aux.py": "a3d7dcf40fc618467f68af0bdb05e2c6cc657671d546d4227c62c3b91bc7cc5f",
+    "tools/manage_experiment.py": "05721a384c55b962b5338b95acf80537d07615c33fbcf7be87121fa427ac7b44",
+    "tools/prepare_benchmark_data.py": "422eefeaec70f470daac629f7d178663acd0d01bf9478d58e7f02dd0c7f6f3da",
+    "tools/prepare_reproduction_data.py": "dc18897ae267d9faad0bfce807a9777644738fc32b41fec4c4cac3c6b77fbee0",
+    "tools/queue_benchmark.py": "fd8d086d3f55e1e8b14a855e2e4ae9b7c5def8cb77b55bd965bed541b36fc39e",
+    "tools/resource_locks.py": "92bda313742a8967ced4e8c6fb10747bed987bce4c935331b5d632418442c574",
+    "train.py": "0b3f6fbb472cdc7c9ef4bb800f3e54a7c44c85774e6a234bd9cc5b6249240403",
+    "utils/collate_utils.py": "9600c5b8ca8f0d31872b6bcc9420c0d5bd2d7752dc8b22191c36c2a44cf53c7e",
+    "utils/import_utils.py": "89c474d0b4868f066088328048cd95e960527f7b02689f0592e41d97ea4877bf",
+    "utils/init_env.py": "bbb78125342711b1e0f46479e9f570d4c793236976c4474d50a798e5a55a95b3",
+    "utils/init_utils.py": "39404e2ccfba8287e50a94fd781ac372c83da4317c20e02ea76f29298283a064",
+    "utils/logger_utils.py": "14c582612496d977af0b0ba12ca003a028b6ebad7f250fc8507f4d2896ff74c3",
+    "utils/train_utils.py": "e6448259d92e8466330bcf172d8046292b833272e61859b338c584784a44468f",
+    "utils/trainer.py": "f5c3db61ef451c8cd70c86b768b157bb031350377458d7f9ad8e27adf8c2afb9"
+  },
+  "status": "PASS",
+  "throughput_windows": [
+    {
+      "elapsed_seconds": 59.582285951822996,
+      "epoch": 0,
+      "global_batch": 12,
+      "images": 600,
+      "images_per_second": 10.070107086612078,
+      "pid": 702761,
+      "seconds_per_update": 1.19164571903646,
+      "step_from": 50,
+      "step_to": 100
+    }
+  ],
+  "torch_imported": false,
+  "worker_identities": [
+    {
+      "cmdline": "/data0/hl/conda_envs/dcdsdiff/bin/python -u /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E/source/scripts/tect_diff/worker.py --run-dir /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E --stage main ",
+      "pgid": 702694,
+      "pid": 702761,
+      "start_ticks": "2708120848"
+    },
+    {
+      "cmdline": "/data0/hl/conda_envs/dcdsdiff/bin/python -u /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E/source/scripts/tect_diff/worker.py --run-dir /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E --stage main ",
+      "pgid": 702694,
+      "pid": 702762,
+      "start_ticks": "2708120848"
+    }
+  ]
+}

@@ -102,3 +102,5 @@ Historical runs are summarized separately in [pre-rebuild audit](docs/history/pr
 - 本条为发布前登记，正式执行提交、配置hash、启动及初始健康状态待实际收据补充。30分钟tect-v2监督跟随E完整main0–2及其All8正常后暂停，训练继续到99；selection_protocol=test_selected。
 
 - [TECT-Diff TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E](analysis_reports/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E/report.md); test_selected All8 F1; fixed final reported separately.
+
+- E于22:10:25 Asia/Shanghai正式派发，执行提交`ad8fb6e5f3f6f295b1e94b87e28175a5fabc779c`、配置hash`63e53b3e50df4d4798d9310cb4ca2065efee1fbaea4fd2ba485fb88a37116275`。22:14两rank epoch0/step100启动核验PASS，171冻结文件及拟合hash正确、856梯度同步、无AMP跳步；正式step50–100为10.070 images/s，nvidia-smi总显存19.33/19.43GiB。四资源/控制器锁持有，A/B/C/D均hold/stopped。36项原生CPU测试、实际启动门控及双卡训练检查通过，见[启动收据](analysis_reports/tect_diff/memory_batch_startup_20260915.json)。当前无完整epoch/All8或收敛结论；tect-v2已绑定E且ACTIVE每30分钟，到完整健康main0–2和All8后暂停监督。

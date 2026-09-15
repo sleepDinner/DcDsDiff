@@ -1,7 +1,88 @@
 {
+  "actual_gate_cpu": {
+    "at": "2026-09-15T14:09:03Z",
+    "candidate_source_hashes": {
+      "model/tect_diff/evidence.py": "11cdc9079d41693951f504a2831eb675ef891f381b8cf0a6b176f9de140f0781",
+      "scripts/tect_diff/batch_restart.py": "20b057b5252f7a261adae2a25223f654018cf8da4abff35e6d089944a5b696e3",
+      "scripts/tect_diff/controller.py": "e58df5cf9eb693b9b7a2d5a57a77757cbff93cec72cd421814050b03979c6fe8",
+      "scripts/tect_diff/evaluation_pipeline.py": "602826a22fcecd49d5d7e2defdd753d6d454edcbd7dcc1f40cf4c362992329c4",
+      "scripts/tect_diff/report.py": "097e293c864bb11e36b5dc807104a4c1e86bc786619302c89099b36c28f0a94a",
+      "scripts/tect_diff/test_batch_restart.py": "b5ba2a3cf52e6fcf16416419ebe893a00b19c551246b358c814d9f979d00775d",
+      "scripts/tect_diff/test_evaluation_pipeline.py": "6e2ddab24d840d96a8a21812bb5a2d31813fabecd4229d49552ecc230d56ec05",
+      "scripts/tect_diff/test_evidence_geometry_cache.py": "b4cda223a538f5e55dfc6df7bcdd2e330a43a7d5ae0ed709899bf70b6780c9c7",
+      "scripts/tect_diff/worker.py": "f05cc607c0c57eeeaf2933c56da54f81afc34b10284fb073b44db0caed143dee"
+    },
+    "config_delta": {
+      "evaluation.metric_queue_limit": {
+        "new": 8,
+        "old": null
+      },
+      "evaluation.metric_workers": {
+        "new": 4,
+        "old": null
+      },
+      "evaluation.micro_batch": {
+        "new": 8,
+        "old": 1
+      },
+      "protocol_id": {
+        "new": "TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6",
+        "old": "TECT-DIFF-FULL-R512-S42-REFNORM-V2"
+      },
+      "training.accumulation_steps": {
+        "new": 1,
+        "old": 2
+      },
+      "training.global_batch": {
+        "new": 12,
+        "old": 8
+      },
+      "training.micro_batch": {
+        "new": 6,
+        "old": 2
+      }
+    },
+    "config_file": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/final_config.json",
+    "config_file_sha256": "2028e14bda582ec1c7f288fc210418e23657df4d7e417d6549f6e7974e5cb030",
+    "config_hash": "63e53b3e50df4d4798d9310cb4ca2065efee1fbaea4fd2ba485fb88a37116275",
+    "cpu_validation_sha256": "0a37533b0b3b92c4cacb79cbd9bae096ffaeece0f4b5600a9dfbae4461cf3c49",
+    "cuda_visible_devices": "",
+    "evidence_forward_validation_sha256": "28849319d020f8fb5b112b20d2ca2a8588e6f7e55850d90a80352743943ccfda",
+    "measured_speedup": 1.589831301767125,
+    "measured_speedup_vs_micro4": 1.1067724531912888,
+    "measurement_receipts_sha256": {
+      "bf16-throughput/aggregate.json": "f3a48b51c19e375d5bf2aaa04bb8db6f1f80c6e3db2f183b1503ec197fef779b",
+      "cpu_validation_final.json": "0a37533b0b3b92c4cacb79cbd9bae096ffaeece0f4b5600a9dfbae4461cf3c49",
+      "equivalence/aggregate.json": "5819f9d16a9d833c06c54304c71fa8f75140cf08b9daccbbf46d0f4c1695bd05",
+      "evaluation/aggregate.json": "ec15f4fbc4cc305d1f6c1dfa33a031e60bb1095777e426c10ecabb14c3fb4886",
+      "fp32-control/aggregate.json": "b3500f4a5387a9f67b8b9399f0a5514dd42369f00ce7be693554dcba09cca707",
+      "micro4/aggregate.json": "7b61ad79d41eeddf33a9ff2a2769fd652de27e6158c2dadf4a89184cd515f219",
+      "micro6/aggregate.json": "f6b9be8ed0ab953df53078d512358b14e86272e946550a91900bf92baaeeda82"
+    },
+    "parent_config_hash": "0b0358aa4908b852bb53113467184483fbb11d4be517eb58548ba80757052f88",
+    "parent_run": "TECT-DIFF-FULL-R512-S42-REFNORM-V2-AMPFIX-20260915-D",
+    "parent_source_commit": "84fcf47e5721317d99fe186feec08d365fc3f72c",
+    "scientific_result": false,
+    "source": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/cpu-validation-source",
+    "status": "PASS",
+    "torch_imported": false,
+    "training_benchmark_sha256": "f6b9be8ed0ab953df53078d512358b14e86272e946550a91900bf92baaeeda82",
+    "validation_mode": "Native CPU configuration/benchmark validators; no registration, model load or GPU execution",
+    "validation_path": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/batch_validation.json",
+    "validation_sha256": "27d7c201f25bb44d06686d7d0732c962b060cbd186c5f69b914d6ca8396843d3"
+  },
   "at": "2026-09-15T14:07:11.294618+00:00",
+  "automation": {
+    "early_endpoint": "Complete healthy MAIN epochs0-2 and corresponding complete All8, then pause monitor only",
+    "id": "tect-v2",
+    "interval_minutes": 30,
+    "status": "ACTIVE",
+    "updated_at": 1789481482802
+  },
+  "complete_main_epochs_at_startup": 0,
   "config_hash": "63e53b3e50df4d4798d9310cb4ca2065efee1fbaea4fd2ba485fb88a37116275",
   "constraints": "One authorized fresh main restart; healthy fitting reused; A/B/C/D held. No All8 images used in tuning.",
+  "convergence_conclusion": "Not established; initial finite learning and engineering checks passed",
   "evaluation": {
     "batchnorm_running_stats_unchanged": true,
     "bn_dropout_eval_verified": true,
@@ -464,6 +545,29 @@
     "physical_gpu_bytes": 25757220864,
     "selected_evaluation_peak_bytes": 6041208320
   },
+  "execution_source_commit": "ad8fb6e5f3f6f295b1e94b87e28175a5fabc779c",
+  "formal_launch": {
+    "at": "2026-09-15T14:10:25Z",
+    "command": [
+      "/data0/hl/conda_envs/dcdsdiff/bin/python",
+      "-B",
+      "-s",
+      "/data1/hl/DcDsDiff-and-GIT10K/scripts/tect_diff/controller.py",
+      "launch",
+      "--config",
+      "/data1/hl/DcDsDiff-and-GIT10K/configs/tect_diff/full_r512_s42_refnorm_v2_memb6.json",
+      "--run-id",
+      "TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E",
+      "--batch-parent",
+      "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-AMPFIX-20260915-D",
+      "--batch-validation",
+      "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/batch_validation.json"
+    ],
+    "returncode": 0,
+    "source_commit": "ad8fb6e5f3f6f295b1e94b87e28175a5fabc779c",
+    "stderr": "/data0/hl/conda_envs/dcdsdiff/lib/python3.10/site-packages/torch/_utils.py:831: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()\n  return self.fget.__get__(instance, owner)()\n",
+    "stdout": "{\n  \"controller_pid\": 701932,\n  \"log\": \"/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E/controller.log\",\n  \"run_id\": \"TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E\",\n  \"state\": \"/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E/controller_status.json\",\n  \"status\": \"DISPATCHED\"\n}\n"
+  },
   "forward_evidence_validation": {
     "all_global_ids_exact": true,
     "candidate_evidence_sha256": "11cdc9079d41693951f504a2831eb675ef891f381b8cf0a6b176f9de140f0781",
@@ -634,6 +738,7 @@
       }
     }
   },
+  "full_training_completed": false,
   "initial_strict_evaluation": {
     "baseline_micro1_workers0_end_to_end_images_per_second": 2.87730110097546,
     "batch_variants": {
@@ -1044,7 +1149,121 @@
   },
   "run_id": "TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E",
   "selection_protocol": "test_selected",
-  "status": "BENCHMARKS_PASSED_PENDING_FORMAL_LAUNCH",
+  "startup": {
+    "common_gradient_steps": [
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        50
+      ],
+      [
+        0,
+        100
+      ]
+    ],
+    "gpu_processes": [
+      {
+        "gpu": 0,
+        "memory_mib": "19774",
+        "name": "/data0/hl/conda_envs/dcdsdiff/bin/python",
+        "pid": 702761
+      },
+      {
+        "gpu": 1,
+        "memory_mib": "19872",
+        "name": "/data0/hl/conda_envs/dcdsdiff/bin/python",
+        "pid": 702762
+      }
+    ],
+    "locks": {
+      "gpu-0.lock": "HELD",
+      "gpu-1.lock": "HELD",
+      "run-TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E.lock": "HELD",
+      "tect-controller-TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E.lock": "HELD"
+    },
+    "parent_statuses": [
+      {
+        "controller_alive": false,
+        "hold_active": true,
+        "run_id": "TECT-DIFF-FULL-R512-S42-20260915-A",
+        "stage": "REFERENCE",
+        "status": "INTERRUPTED",
+        "worker_alive": false
+      },
+      {
+        "controller_alive": false,
+        "hold_active": true,
+        "run_id": "TECT-DIFF-FULL-R512-S42-REFNORM-V2-20260915-B",
+        "stage": "REFERENCE",
+        "status": "INTERRUPTED",
+        "worker_alive": false
+      },
+      {
+        "controller_alive": false,
+        "hold_active": true,
+        "run_id": "TECT-DIFF-FULL-R512-S42-REFNORM-V2-PERF-20260915-C",
+        "stage": "MAIN",
+        "status": "INTERRUPTED",
+        "worker_alive": false
+      },
+      {
+        "controller_alive": false,
+        "hold_active": true,
+        "run_id": "TECT-DIFF-FULL-R512-S42-REFNORM-V2-AMPFIX-20260915-D",
+        "stage": "MAIN",
+        "status": "INTERRUPTED",
+        "worker_alive": false
+      }
+    ],
+    "receipt": "analysis_reports/tect_diff/memory_batch_startup_20260915.json",
+    "recorded_at": "2026-09-15T14:14:03Z",
+    "sha256": "837c26b6f5fa84f0fd454fc46c98743991bf0e893063c226a01915f3fca62cea",
+    "source_files_verified": 171,
+    "status": "PASS",
+    "throughput_windows": [
+      {
+        "elapsed_seconds": 59.582285951822996,
+        "epoch": 0,
+        "global_batch": 12,
+        "images": 600,
+        "images_per_second": 10.070107086612078,
+        "pid": 702761,
+        "seconds_per_update": 1.19164571903646,
+        "step_from": 50,
+        "step_to": 100
+      }
+    ]
+  },
+  "status": "RUNNING_MAIN_EARLY_STARTUP_PASSED",
+  "temporary_benchmark_cleanup": {
+    "formal_controller_and_launcher_unchanged": true,
+    "formal_run": "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E",
+    "formal_source_commit": "ad8fb6e5f3f6f295b1e94b87e28175a5fabc779c",
+    "protected_content_unchanged": true,
+    "raw_receipt": "/data1/hl/DcDsDiff-and-GIT10K/runtime/tect-resource-recheck-20260915/cleanup-receipt-20260915T142101Z-710242.json",
+    "raw_receipt_sha256": "1e052eaa8a41dd44330fefb4b9d16f89a8a7c989eac60769ebf03904295ad515",
+    "removed": [
+      "source",
+      "cpu-validation-source",
+      "benchmark.py",
+      "benchmark_micro6.py",
+      "benchmark_evaluation.py",
+      "benchmark_evaluation_precision.py",
+      "compare_evidence_forward.py",
+      "launch_benchmark.py",
+      "run_cpu_validation_memb6.py",
+      "cpu_validation_overlay.zip",
+      "cpu_validation_final_overlay.zip",
+      "cpu_validation_bf16_policy_overlay.zip",
+      "cpu_validation_memb6_overlay.zip"
+    ],
+    "retained_evidence_file_count": 139,
+    "status": "COMPLETED",
+    "task_id": "TECT-MEMOPT-20260915"
+  },
   "training": {
     "arms": {
       "geometry_full_queries": {
