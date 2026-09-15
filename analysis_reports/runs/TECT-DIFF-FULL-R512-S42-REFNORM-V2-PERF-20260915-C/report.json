@@ -1,0 +1,634 @@
+{
+  "baseline_comparison": "No complete baseline under this protocol; no superiority claim.",
+  "best": {},
+  "calibration": {},
+  "checkpoints_local": "Not downloaded; server-authoritative weights only.",
+  "commit": "f9c1b90d2fc19c914dd3998f49c2c6665d580ca2",
+  "config_hash": "0b0358aa4908b852bb53113467184483fbb11d4be517eb58548ba80757052f88",
+  "costs": {
+    "preflight_seconds": 60.00258359313011
+  },
+  "data_counts": {
+    "calibration_count": 2048,
+    "excluded_train_count": 17,
+    "reference_count": 11964,
+    "test_counts": {
+      "Casiav1": 920,
+      "Columbia": 180,
+      "DSO-1": 100,
+      "IMD2020": 2010,
+      "Korus": 220,
+      "NIST16": 564,
+      "coverage": 100,
+      "wild": 201
+    },
+    "train_count": 48612
+  },
+  "diagnostics": {
+    "cache_scope": "Per-image within one ten-step call; no claimed cross-call or cross-epoch cache.",
+    "control_effect_boundary": "A nonzero logit change/finite gradient is not proof of benefit. Compare registered training-probe base/control diagnostics where available; no checkpoint/output reselection.",
+    "flags": {
+      "all_observed_gamma_below_1e_minus4": null,
+      "all_observed_image_loss_below_1e_minus12": null,
+      "all_observed_joint_ref_mse_below_1e_minus12": null,
+      "all_observed_q_zero": null
+    },
+    "main_probe": {},
+    "peak_allocated_bytes_by_rank": {
+      "0": 990669824,
+      "1": 990669824
+    },
+    "preflight": {
+      "completed_at": "2026-09-15T10:00:55Z",
+      "config_hash": "0b0358aa4908b852bb53113467184483fbb11d4be517eb58548ba80757052f88",
+      "elapsed_seconds": 7.421872854232788,
+      "no_diagnostic_weights_saved": true,
+      "protocol_id": "TECT-DIFF-FULL-R512-S42-REFNORM-V2",
+      "ranks": [
+        {
+          "accumulation_steps": 2,
+          "checkpoint_roundtrip": {
+            "cpu_optimizer_restore": true,
+            "model_sha256": "fd6080de6ddd5574b9351e5d69b1543c909ee15ace702b50e1b80b5bf799336c",
+            "next_epoch": 1,
+            "optimizer_sha256": "5bf1ca41aea669e676b3b9b89711811b78e43f9f97ad10f9222a03b4adfdfb1e",
+            "optimizer_step": 1,
+            "rng_restored": true,
+            "scaler_restored": true,
+            "scheduler_restored": true,
+            "serialized_bytes": 318079272,
+            "status": "PASS",
+            "storage": "BytesIO only; no diagnostic weights saved"
+          },
+          "completed_at": "2026-09-15T10:00:55Z",
+          "control_numerics": {
+            "extreme_evidence_finite": true,
+            "final_zero_noise_identity": true,
+            "gamma_zero_identity": true,
+            "prefix_one_disabled": true
+          },
+          "diagnostic_effective_global_batch": 8,
+          "diagnostic_optimizer_steps": 1,
+          "elapsed_seconds": 7.407575860619545,
+          "finite_loss": 3.017073392868042,
+          "formal_optimizer_steps": 0,
+          "gradients": {
+            "controller": {
+              "gradient_tensors": 1,
+              "nonzero_tensors": 1,
+              "norm": 0.005258123450949179
+            },
+            "hf_pvt": {
+              "gradient_tensors": 106,
+              "nonzero_tensors": 106,
+              "norm": 0.009182556544439686
+            },
+            "image_task": {
+              "gradient_tensors": 12,
+              "nonzero_tensors": 12,
+              "norm": 0.09071631387845717
+            },
+            "image_to_mask": {
+              "gradient_tensors": 4,
+              "nonzero_tensors": 4,
+              "norm": 0.0006417400195145594
+            },
+            "mask": {
+              "gradient_tensors": 16,
+              "nonzero_tensors": 16,
+              "norm": 0.19979744947207406
+            },
+            "mask_to_image": {
+              "gradient_tensors": 4,
+              "nonzero_tensors": 4,
+              "norm": 0.032791149364659856
+            },
+            "rgb_pvt": {
+              "gradient_tensors": 106,
+              "nonzero_tensors": 106,
+              "norm": 0.008213185700990524
+            }
+          },
+          "limitation": "Trained calibration and its actual pixel evidence are checked once in main_probe after stages A/B",
+          "micro_batch": 2,
+          "network_shapes": {
+            "F_joint": [
+              2,
+              2,
+              256,
+              128,
+              128
+            ],
+            "gamma": 0.10000000149011612,
+            "image_epsilon": [
+              2,
+              2,
+              3,
+              512,
+              512
+            ],
+            "image_loss": 1.2396843433380127,
+            "joint_ref_mse": 0.14829877018928528,
+            "mask_logits": [
+              2,
+              1,
+              512,
+              512
+            ],
+            "mask_loss": 1.7773890495300293,
+            "raw_response_shape": [
+              2,
+              4,
+              2,
+              9,
+              512,
+              512
+            ],
+            "reference_features": [
+              2,
+              2,
+              256,
+              128,
+              128
+            ]
+          },
+          "noise": {
+            "different_mask_seed": true,
+            "different_replica_seeds": true,
+            "image_mask_correlation": -0.0018992768600583076,
+            "noise_seed_rule": "SHA256(seed | stable sample id | independent purpose)",
+            "replica_correlation": 0.0003735868085641414
+          },
+          "partial_window_padding_shape": [
+            1,
+            256,
+            9,
+            11
+          ],
+          "peak_allocated_bytes": 5417140736,
+          "peak_reserved_bytes": 6041894912,
+          "pretrained_load_report": {
+            "branches": {
+              "backbone": {
+                "feature_coverage": 1.0,
+                "fresh_diffusion_keys": [
+                  "patch_embed1.mask_proj.bias",
+                  "patch_embed1.mask_proj.weight",
+                  "time_embed.0.0.bias",
+                  "time_embed.0.0.weight",
+                  "time_embed.0.2.bias",
+                  "time_embed.0.2.weight",
+                  "time_embed.1.0.bias",
+                  "time_embed.1.0.weight",
+                  "time_embed.1.2.bias",
+                  "time_embed.1.2.weight",
+                  "time_embed.2.0.bias",
+                  "time_embed.2.0.weight",
+                  "time_embed.2.2.bias",
+                  "time_embed.2.2.weight",
+                  "time_embed.3.0.bias",
+                  "time_embed.3.0.weight",
+                  "time_embed.3.2.bias",
+                  "time_embed.3.2.weight"
+                ],
+                "loaded_feature_keys": 332,
+                "loaded_feature_numel": 24849856,
+                "required_feature_keys": 332
+              },
+              "backbone_t": {
+                "feature_coverage": 1.0,
+                "fresh_diffusion_keys": [
+                  "patch_embed1.mask_proj.bias",
+                  "patch_embed1.mask_proj.weight",
+                  "time_embed.0.0.bias",
+                  "time_embed.0.0.weight",
+                  "time_embed.0.2.bias",
+                  "time_embed.0.2.weight",
+                  "time_embed.1.0.bias",
+                  "time_embed.1.0.weight",
+                  "time_embed.1.2.bias",
+                  "time_embed.1.2.weight",
+                  "time_embed.2.0.bias",
+                  "time_embed.2.0.weight",
+                  "time_embed.2.2.bias",
+                  "time_embed.2.2.weight",
+                  "time_embed.3.0.bias",
+                  "time_embed.3.0.weight",
+                  "time_embed.3.2.bias",
+                  "time_embed.3.2.weight"
+                ],
+                "loaded_feature_keys": 332,
+                "loaded_feature_numel": 24849856,
+                "required_feature_keys": 332
+              }
+            },
+            "path": "/data1/hl/DcDsDiff-and-GIT10K/pretrained_weights/pvt_v2_b2.pth",
+            "sha256": "80711cd1b37ffba12bec6c7a2a7c54efe2315ed635e6d2055fd51c3e909ede4d"
+          },
+          "rank": 0,
+          "reference_mask_isolation": true,
+          "reference_parameters_and_buffers_unchanged": true,
+          "resolution": 512,
+          "sample_shape": [
+            1,
+            1,
+            512,
+            512
+          ],
+          "sampling_steps": 10,
+          "scope": "Disposable untrained reference and fixed synthetic controller evidence; no Stage A/B artifact or scientific score",
+          "status": "PASS",
+          "synthetic_engineering_only": true,
+          "training_ids": [
+            "FinalTrainData:Au_ani_00001",
+            "FinalTrainData:Au_ani_00002"
+          ],
+          "training_peak_allocated_bytes": 5417140736
+        },
+        {
+          "accumulation_steps": 2,
+          "checkpoint_roundtrip": {
+            "cpu_optimizer_restore": true,
+            "model_sha256": "987fd795d85c22aa8ba7f058043ff72077e5574de03e554ced4f60b779301570",
+            "next_epoch": 1,
+            "optimizer_sha256": "5bf1ca41aea669e676b3b9b89711811b78e43f9f97ad10f9222a03b4adfdfb1e",
+            "optimizer_step": 1,
+            "rng_restored": true,
+            "scaler_restored": true,
+            "scheduler_restored": true,
+            "serialized_bytes": 318079272,
+            "status": "PASS",
+            "storage": "BytesIO only; no diagnostic weights saved"
+          },
+          "completed_at": "2026-09-15T10:00:55Z",
+          "control_numerics": {
+            "extreme_evidence_finite": true,
+            "final_zero_noise_identity": true,
+            "gamma_zero_identity": true,
+            "prefix_one_disabled": true
+          },
+          "diagnostic_effective_global_batch": 8,
+          "diagnostic_optimizer_steps": 1,
+          "elapsed_seconds": 7.397521488368511,
+          "finite_loss": 3.0300817489624023,
+          "formal_optimizer_steps": 0,
+          "gradients": {
+            "controller": {
+              "gradient_tensors": 1,
+              "nonzero_tensors": 1,
+              "norm": 0.005258123450949179
+            },
+            "hf_pvt": {
+              "gradient_tensors": 106,
+              "nonzero_tensors": 106,
+              "norm": 0.009182556544439686
+            },
+            "image_task": {
+              "gradient_tensors": 12,
+              "nonzero_tensors": 12,
+              "norm": 0.09071631387845717
+            },
+            "image_to_mask": {
+              "gradient_tensors": 4,
+              "nonzero_tensors": 4,
+              "norm": 0.0006417400195145594
+            },
+            "mask": {
+              "gradient_tensors": 16,
+              "nonzero_tensors": 16,
+              "norm": 0.19979744947207406
+            },
+            "mask_to_image": {
+              "gradient_tensors": 4,
+              "nonzero_tensors": 4,
+              "norm": 0.032791149364659856
+            },
+            "rgb_pvt": {
+              "gradient_tensors": 106,
+              "nonzero_tensors": 106,
+              "norm": 0.008213185700990524
+            }
+          },
+          "limitation": "Trained calibration and its actual pixel evidence are checked once in main_probe after stages A/B",
+          "micro_batch": 2,
+          "network_shapes": {
+            "F_joint": [
+              2,
+              2,
+              256,
+              128,
+              128
+            ],
+            "gamma": 0.10000000149011612,
+            "image_epsilon": [
+              2,
+              2,
+              3,
+              512,
+              512
+            ],
+            "image_loss": 1.2517774105072021,
+            "joint_ref_mse": 0.15463680028915405,
+            "mask_logits": [
+              2,
+              1,
+              512,
+              512
+            ],
+            "mask_loss": 1.7783043384552002,
+            "raw_response_shape": [
+              2,
+              4,
+              2,
+              9,
+              512,
+              512
+            ],
+            "reference_features": [
+              2,
+              2,
+              256,
+              128,
+              128
+            ]
+          },
+          "noise": {
+            "different_mask_seed": true,
+            "different_replica_seeds": true,
+            "image_mask_correlation": 0.004385821055620909,
+            "noise_seed_rule": "SHA256(seed | stable sample id | independent purpose)",
+            "replica_correlation": -0.0008099933038465679
+          },
+          "partial_window_padding_shape": [
+            1,
+            256,
+            9,
+            11
+          ],
+          "peak_allocated_bytes": 5417140736,
+          "peak_reserved_bytes": 6041894912,
+          "pretrained_load_report": {
+            "branches": {
+              "backbone": {
+                "feature_coverage": 1.0,
+                "fresh_diffusion_keys": [
+                  "patch_embed1.mask_proj.bias",
+                  "patch_embed1.mask_proj.weight",
+                  "time_embed.0.0.bias",
+                  "time_embed.0.0.weight",
+                  "time_embed.0.2.bias",
+                  "time_embed.0.2.weight",
+                  "time_embed.1.0.bias",
+                  "time_embed.1.0.weight",
+                  "time_embed.1.2.bias",
+                  "time_embed.1.2.weight",
+                  "time_embed.2.0.bias",
+                  "time_embed.2.0.weight",
+                  "time_embed.2.2.bias",
+                  "time_embed.2.2.weight",
+                  "time_embed.3.0.bias",
+                  "time_embed.3.0.weight",
+                  "time_embed.3.2.bias",
+                  "time_embed.3.2.weight"
+                ],
+                "loaded_feature_keys": 332,
+                "loaded_feature_numel": 24849856,
+                "required_feature_keys": 332
+              },
+              "backbone_t": {
+                "feature_coverage": 1.0,
+                "fresh_diffusion_keys": [
+                  "patch_embed1.mask_proj.bias",
+                  "patch_embed1.mask_proj.weight",
+                  "time_embed.0.0.bias",
+                  "time_embed.0.0.weight",
+                  "time_embed.0.2.bias",
+                  "time_embed.0.2.weight",
+                  "time_embed.1.0.bias",
+                  "time_embed.1.0.weight",
+                  "time_embed.1.2.bias",
+                  "time_embed.1.2.weight",
+                  "time_embed.2.0.bias",
+                  "time_embed.2.0.weight",
+                  "time_embed.2.2.bias",
+                  "time_embed.2.2.weight",
+                  "time_embed.3.0.bias",
+                  "time_embed.3.0.weight",
+                  "time_embed.3.2.bias",
+                  "time_embed.3.2.weight"
+                ],
+                "loaded_feature_keys": 332,
+                "loaded_feature_numel": 24849856,
+                "required_feature_keys": 332
+              }
+            },
+            "path": "/data1/hl/DcDsDiff-and-GIT10K/pretrained_weights/pvt_v2_b2.pth",
+            "sha256": "80711cd1b37ffba12bec6c7a2a7c54efe2315ed635e6d2055fd51c3e909ede4d"
+          },
+          "rank": 1,
+          "reference_mask_isolation": true,
+          "reference_parameters_and_buffers_unchanged": true,
+          "resolution": 512,
+          "sample_shape": [
+            1,
+            1,
+            512,
+            512
+          ],
+          "sampling_steps": 10,
+          "scope": "Disposable untrained reference and fixed synthetic controller evidence; no Stage A/B artifact or scientific score",
+          "status": "PASS",
+          "synthetic_engineering_only": true,
+          "training_ids": [
+            "FinalTrainData:Au_ani_00003",
+            "FinalTrainData:Au_ani_00004"
+          ],
+          "training_peak_allocated_bytes": 5417140736
+        }
+      ],
+      "same_resolution_real_artifact_probe_required": true,
+      "status": "COMPLETED",
+      "synthetic_engineering_only": true
+    },
+    "sample_profiles": [],
+    "scope": "Low-frequency sampled training records; not an estimate over all unlogged batches.",
+    "streams": {}
+  },
+  "environment": "/data0/hl/conda_envs/dcdsdiff",
+  "failure_reason": null,
+  "final": {},
+  "gpus": [
+    0,
+    1
+  ],
+  "group_id": "TECT-DIFF-FULL-REFNORM-V2",
+  "manifest_hashes": {
+    "calibration": "a22183506365f042e141c16b09a8c9e369c3f7886864c2a1d5326a4ada5e38c5",
+    "reference": "0a501e3f0570b245ac594941fcbf2328d1bed195835825de8b7a758f62a13f79",
+    "test_Casiav1": "a51508ac9da6618b685c807415674a78cd99b0681af7d4dae59b9947d187bc73",
+    "test_Columbia": "dfcd1d818b0ec1250023b94e1b92c7292fb3ed107a47cbcf19d2050742594307",
+    "test_DSO-1": "5265d478ca803e135518f2f9f5b0ecfadaaedf5a54dda022db310e92ee985fd6",
+    "test_IMD2020": "5a74e0978c0ac97160eff982abc03ade617844dec53355671ace86b8a05eb766",
+    "test_Korus": "22af2a4ce976c31a2881a87090878ecfbf9e08dc25a6baba3c9bbd1bfe38c222",
+    "test_NIST16": "33c9b85a5facdc76722fc64a36f557dff457ad72f45530250e970e1c9e649a2f",
+    "test_coverage": "e37249f77cd4de583a77a4d2887ffcb5fc0623fe31174535ab3b4c42dafa1783",
+    "test_wild": "25a688eb600bc1dd9720c18c8eaff6fb6877549b3a041a691f3d17b14021fcb3",
+    "train": "ba5c7de4a3988f1abe6fa34dd3d2424abd2712fde4754a2adab6aa9637ea74cc"
+  },
+  "operational_hold": {
+    "active": false,
+    "at": "2026-09-15T10:00:33Z",
+    "reason": "Reference state import verified; see reference_continuation.json"
+  },
+  "pretrained_load_report": {},
+  "progress": {
+    "amp_skipped": false,
+    "elapsed_seconds": 309.9320814497769,
+    "epoch": 4,
+    "gradient_norm": 0.870252251625061,
+    "loss": 0.10220833122730255,
+    "micro_batch": 632,
+    "micro_batches_per_epoch": 2991,
+    "optimizer_step": 3150,
+    "peak_memory_bytes": 990669824,
+    "pid": 522403,
+    "rank": 0,
+    "stage": "REFERENCE_TRAINING",
+    "updated_at": "2026-09-15T10:06:58Z"
+  },
+  "protocol_id": "TECT-DIFF-FULL-R512-S42-REFNORM-V2",
+  "reference": {},
+  "reference_continuation": {
+    "all_other_state_exactly_equal": true,
+    "at": "2026-09-15T10:00:33Z",
+    "changed_checkpoint_fields": [
+      "source_commit"
+    ],
+    "changed_python_files": [
+      "scripts/tect_diff/controller.py",
+      "scripts/tect_diff/reference_continuation.py",
+      "scripts/tect_diff/report.py",
+      "scripts/tect_diff/worker.py"
+    ],
+    "child_checkpoint_sha256": "70699e63742a27866d08ccff38ceda06e2639e1f75fe83df24b8ba1d92de64be",
+    "config_hash": "0b0358aa4908b852bb53113467184483fbb11d4be517eb58548ba80757052f88",
+    "epoch": 1,
+    "manifest_hashes": {
+      "calibration": "a22183506365f042e141c16b09a8c9e369c3f7886864c2a1d5326a4ada5e38c5",
+      "reference": "0a501e3f0570b245ac594941fcbf2328d1bed195835825de8b7a758f62a13f79",
+      "test_Casiav1": "a51508ac9da6618b685c807415674a78cd99b0681af7d4dae59b9947d187bc73",
+      "test_Columbia": "dfcd1d818b0ec1250023b94e1b92c7292fb3ed107a47cbcf19d2050742594307",
+      "test_DSO-1": "5265d478ca803e135518f2f9f5b0ecfadaaedf5a54dda022db310e92ee985fd6",
+      "test_IMD2020": "5a74e0978c0ac97160eff982abc03ade617844dec53355671ace86b8a05eb766",
+      "test_Korus": "22af2a4ce976c31a2881a87090878ecfbf9e08dc25a6baba3c9bbd1bfe38c222",
+      "test_NIST16": "33c9b85a5facdc76722fc64a36f557dff457ad72f45530250e970e1c9e649a2f",
+      "test_coverage": "e37249f77cd4de583a77a4d2887ffcb5fc0623fe31174535ab3b4c42dafa1783",
+      "test_wild": "25a688eb600bc1dd9720c18c8eaff6fb6877549b3a041a691f3d17b14021fcb3",
+      "train": "ba5c7de4a3988f1abe6fa34dd3d2424abd2712fde4754a2adab6aa9637ea74cc"
+    },
+    "mode": "state_preserving_source_version_continuation",
+    "next_epoch": 2,
+    "optimizer_step": 1496,
+    "parent_checkpoint_sha256": "df51ace1ebccc1bd9177b83e164b4d9bac9a8eeeaef0c606ede5bcf60852d220",
+    "parent_run": "TECT-DIFF-FULL-R512-S42-REFNORM-V2-20260915-B",
+    "parent_source_commit": "100d46edb1f73dd59fa0d57277e07c2925c53278",
+    "selection_protocol": "test_selected",
+    "source_commit": "f9c1b90d2fc19c914dd3998f49c2c6665d580ca2",
+    "status": "COMPLETED"
+  },
+  "reference_final_health": {},
+  "reference_health": {
+    "epoch": 3,
+    "mse_by_scale": [
+      0.08950342306451868,
+      0.11432038330037392,
+      0.15390143608247822,
+      0.21864565773996292
+    ],
+    "mse_ratio_by_scale": [
+      0.08950287163198192,
+      0.11432187579199653,
+      0.1538993436766898,
+      0.21864087570621837
+    ],
+    "optimizer_step": 2992,
+    "padded_training_samples": 0,
+    "prediction_energy_by_scale": [
+      0.8921338790278497,
+      0.865841437306782,
+      0.8295666980568042,
+      0.7506751710357813
+    ],
+    "prediction_energy_ratio_by_scale": [
+      0.8921283825716115,
+      0.8658527411622658,
+      0.8295554194735428,
+      0.7506587529004467
+    ],
+    "prediction_noise_correlation_by_scale": [
+      0.9542492767014854,
+      0.9411650296562266,
+      0.9198821432141405,
+      0.8841227420873415
+    ],
+    "prediction_noise_cross_by_scale": [
+      0.9013183092600683,
+      0.8757540012274806,
+      0.8378394307479616,
+      0.7660256942073385
+    ],
+    "reference_health": {
+      "all_scales_pass_final_margin": true,
+      "checkpoint_selection": "fixed_final_only_no_reselection",
+      "collapse_detected_epoch": null,
+      "collapse_patience_epochs": 2,
+      "collapse_ratio_threshold": 0.98,
+      "consecutive_collapsed_epochs": 0,
+      "correlation_definition": "uncentered_cross_over_sqrt_prediction_energy_times_noise_energy",
+      "failed": false,
+      "failure_reason": null,
+      "final_endpoint_checked": false,
+      "final_ratio_threshold": 0.98,
+      "first_learned_epoch": 0,
+      "learning_ratio_threshold": 0.98,
+      "policy_id": "REFERENCE-NOISE-HEALTH-v1",
+      "state": "LEARNED",
+      "statistics_source": "training_images_only_all_rank_per_image_mean_sums"
+    },
+    "samples_by_scale": [
+      2991,
+      2991,
+      2991,
+      2991
+    ],
+    "zero_predictor_mse_by_scale": [
+      1.0000061610597146,
+      0.9999869448291303,
+      1.0000135959370484,
+      1.0000218716364409
+    ]
+  },
+  "reference_source_mode": "authentic",
+  "resolution": 512,
+  "run_id": "TECT-DIFF-FULL-R512-S42-REFNORM-V2-PERF-20260915-C",
+  "seed": 42,
+  "selection_notice": "\u6309\u516b\u6d4b\u8bd5\u96c6\u9010 epoch F1 \u9009\u62e9 checkpoint\uff1b\u8fd9\u4e9b\u6d4b\u8bd5\u96c6\u53c2\u4e0e\u6a21\u578b\u9009\u62e9\uff0c\u4e0d\u662f\u72ec\u7acb\u6cdb\u5316\u8bc4\u4f30\u3002selection_protocol=test_selected\u3002\u56fa\u5b9a\u7ec8\u70b9 final.pth \u4e0e test-selected best.pth \u5206\u5f00\u62a5\u544a\u3002",
+  "selection_protocol": "test_selected",
+  "source_snapshot": "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-PERF-20260915-C/source",
+  "stage": "REFERENCE",
+  "stage_budgets": {
+    "calibration_max_images": 2048,
+    "main_epochs": 100,
+    "reference_epochs": 20
+  },
+  "status": "RUNNING",
+  "train_exclusions": {
+    "counts_may_overlap": true,
+    "exact_rgb_overlap_count": 0,
+    "excluded_train_count": 17,
+    "known_source_overlap_count": 0,
+    "records": 17,
+    "rule": "exclude train records with exact decoded RGB or known namespaced source IDs present in tests; quarantine image-mask dimension mismatches as invalid training pairs; test anomalies block; no source files changed"
+  },
+  "updated_at": "2026-09-15T10:06:59Z"
+}

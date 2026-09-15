@@ -76,3 +76,5 @@ Historical runs are summarized separately in [pre-rebuild audit](docs/history/pr
 - The 30-minute `tect-v2` early-supervision task follows C after launch. Actual transfer, startup and end-to-end throughput evidence will be appended after verification; selection_protocol=test_selected.
 
 - [TECT-Diff TECT-DIFF-FULL-R512-S42-REFNORM-V2-20260915-B](analysis_reports/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-20260915-B/report.md); test_selected All8 F1; fixed final reported separately.
+
+- [TECT-Diff TECT-DIFF-FULL-R512-S42-REFNORM-V2-PERF-20260915-C](analysis_reports/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-PERF-20260915-C/report.md); test_selected All8 F1; fixed final reported separately.
