@@ -104,3 +104,9 @@ Historical runs are summarized separately in [pre-rebuild audit](docs/history/pr
 - [TECT-Diff TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E](analysis_reports/runs/TECT-DIFF-FULL-R512-S42-REFNORM-V2-MEMB6-20260915-E/report.md); test_selected All8 F1; fixed final reported separately.
 
 - E于22:10:25 Asia/Shanghai正式派发，执行提交`ad8fb6e5f3f6f295b1e94b87e28175a5fabc779c`、配置hash`63e53b3e50df4d4798d9310cb4ca2065efee1fbaea4fd2ba485fb88a37116275`。22:14两rank epoch0/step100启动核验PASS，171冻结文件及拟合hash正确、856梯度同步、无AMP跳步；正式step50–100为10.070 images/s，nvidia-smi总显存19.33/19.43GiB。四资源/控制器锁持有，A/B/C/D均hold/stopped。36项原生CPU测试、实际启动门控及双卡训练检查通过，见[启动收据](analysis_reports/tect_diff/memory_batch_startup_20260915.json)。当前无完整epoch/All8或收敛结论；tect-v2已绑定E且ACTIVE每30分钟，到完整健康main0–2和All8后暂停监督。
+
+## 2026-09-16 E early foreground saturation and held diagnosis
+
+- 上述E启动状态是历史记录。E完整main epochs0–1的自然All8预测正像素99.8368%→99.9993%，真实7.7854%；持续严重退化触发受控停止，2026-09-15 18:22:48 UTC controller/worker均退出。保留完整epoch1/step8102 last、best0、冻结171文件；部分epoch2最后日志step10200不计入完整epoch。没有final99或健康收敛结论。
+- 16张登记训练图的只读前向对照：保存BN统计时原10步末输出99.6924%正像素，临时无更新批统计为4.9307%，GT7.2411%；j0尚无history/gamma校正已严重偏正。两rank15个BN计数均8102，完整模型/缓冲区/RNG/参考/校准/hash保持，未发现额外BN更新或源码偏离冻结协议。证据证明有界归一化敏感性，不证明GN修复有效或最终定位质量。
+- E保持`HELD_PENDING_NORMALIZATION_PROTOCOL_DECISION`，未启动新正式模型。已准备TECT-only15层GroupNorm8替代版本、训练图有界验证和fresh MAIN提案；架构修订仍需明确范围。详见[诊断及具体提案](analysis_reports/tect_diff/main_foreground_diagnostic_20260916.md)和[数值收据](analysis_reports/tect_diff/main_foreground_diagnostic_20260916.json)。selection_protocol=test_selected；没有新增All8推理或checkpoint重选。
