@@ -1,6 +1,6 @@
 # TECT-DIFF-FULL-R512-S42
 
-2026-09-15 后续状态：用户要求停止已退化的第一阶段reference并修复。原A保持停止，冻结协议和快照保留；版本化修复配置与验证边界见 [REFNORM_V2.md](REFNORM_V2.md)，尚未启动新的正式运行。
+2026-09-15 后续状态：原A已停止，冻结协议和快照保留；版本化修复配置与验证边界见 [REFNORM_V2.md](REFNORM_V2.md)。用户随后授权修复版本重新完整训练，新运行身份与前期监督见 [RESTART_V2.md](RESTART_V2.md)。
 
 Registered from the complete user-supplied `TECT_Diff_Codex_Prompt.md` on 2026-09-15. This is one new engineering/scientific protocol, not an exact reproduction of DcDsDiff or MedSegFactory. The inherited source at registration is `f257a17e969152800ff69c05a2061122aac0ec7e`; origin is the authenticated user's `git@github.com:sleepDinner/DcDsDiff.git`, development branch `feature/tect-diff`.
 

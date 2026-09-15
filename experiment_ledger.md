@@ -60,3 +60,10 @@ Historical runs are summarized separately in [pre-rebuild audit](docs/history/pr
 - `TECT-DIFF-FULL-R512-S42-REFNORM-V2` is prepared with normalized reference transition/projection paths and explicit training/fixed-final health gates. No new formal run exists and no historical checkpoint was reselected.
 - A bounded 512/BF16/two-rank regression completed1024 updates using64 training-role authentic images: fixed-probe four-scale MSE0.1192773/0.1251472/0.1421247/0.1841749. This is engineering learning evidence, not full20-epoch stability or localization performance. See [repair report](analysis_reports/reference_repair_20260915.md).
 - selection_protocol=test_selected remains the registered main-run selection rule; this task did not evaluate All8 or compare against a full matched baseline.
+
+## 2026-09-15 REFNORM-V2 complete restart authorization
+
+- User authorized a fresh complete repaired TECT run: `TECT-DIFF-FULL-R512-S42-REFNORM-V2-20260915-B`, config `configs/tect_diff/full_r512_s42_refnorm_v2.json`, [restart and early supervision](configs/tect_diff/RESTART_V2.md).
+- Execute fresh reference epochs0–19, training-only calibration, then main epochs0–99 with all registered mechanisms and selection_protocol=test_selected. Original A stays stopped; no old reference or diagnostic training checkpoint is reused.
+- A 30-minute task covers the reference stage and first three complete main epochs, stops the new run on confirmed abnormalities, performs bounded versioned repairs, and pauses itself after recording healthy early training. Server training/checkpoint/report control remains autonomous.
+- Registration before launch: run not yet dispatched; actual launch/source/process/data evidence will be appended after server verification.
