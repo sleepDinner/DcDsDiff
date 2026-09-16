@@ -1,0 +1,801 @@
+{
+  "at": "2026-09-16T01:48:11Z",
+  "config_hash": "eb1bc795902cf6145162741e67886801d2a8b97a4956cb0c50bcbbfd95845fbd",
+  "controller": {
+    "commit": "23fe792a87c1c1f63061d59523b83a81848e5d10",
+    "config_hash": "eb1bc795902cf6145162741e67886801d2a8b97a4956cb0c50bcbbfd95845fbd",
+    "controller_alive": true,
+    "controller_identity": {
+      "cmdline": "/data0/hl/conda_envs/dcdsdiff/bin/python -B -s /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-PILOT-CASIA2-GN8-EMPTYBCE-R512-S42-20260916-D/source/scripts/tect_diff/pilot_controller.py supervise --run-dir /data1/hl/DcDsDiff-and-GIT10K/runs/TECT-PILOT-CASIA2-GN8-EMPTYBCE-R512-S42-20260916-D ",
+      "pid": 1039432,
+      "start_ticks": "2712286778"
+    },
+    "controller_pgid": 1039432,
+    "controller_pid": 1039432,
+    "elapsed_seconds": 135.26535264775157,
+    "failure_reason": null,
+    "progress": {
+      "A_mean": 0.12265042960643768,
+      "A_negative_fraction": 0.15712103247642517,
+      "amp_skipped": false,
+      "control_logit_change": 0.0008181635057553649,
+      "elapsed_seconds": 98.31077878177166,
+      "ell_mean": -0.011241219937801361,
+      "epoch": 0,
+      "gamma": 0.08929524570703506,
+      "gradient_norm": 1.1795490980148315,
+      "gradient_sync": {
+        "at": "2026-09-16T01:47:55Z",
+        "coverage_pass_by_rank": [
+          true,
+          true
+        ],
+        "gradient_norm_by_rank": [
+          1.1795490980148315,
+          1.1795490980148315
+        ],
+        "gradient_tensors_by_rank": [
+          856,
+          856
+        ],
+        "passed": true
+      },
+      "image_loss": 0.08215779811143875,
+      "joint_ref_mse": 0.0032620050478726625,
+      "loss": 0.9395622611045837,
+      "mask_loss": 0.8574044704437256,
+      "micro_batch": 60,
+      "micro_batches_per_epoch": 683,
+      "optimizer_step": 60,
+      "peak_memory_bytes": 19805605888,
+      "pid": 1039477,
+      "prefix": 4,
+      "q_mean": 0.2943747937679291,
+      "q_zero_fraction": 0.0233001708984375,
+      "rank": 0,
+      "sampling_step": 8,
+      "stage": "PILOT_TRAINING",
+      "updated_at": "2026-09-16T01:47:55Z"
+    },
+    "resource_block": null,
+    "run_dir": "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-PILOT-CASIA2-GN8-EMPTYBCE-R512-S42-20260916-D",
+    "run_id": "TECT-PILOT-CASIA2-GN8-EMPTYBCE-R512-S42-20260916-D",
+    "stage": "PILOT",
+    "status": "RUNNING",
+    "updated_at": "2026-09-16T01:48:05Z",
+    "worker_alive": true,
+    "worker_command": [
+      "/data0/hl/conda_envs/dcdsdiff/bin/python",
+      "-B",
+      "-s",
+      "-m",
+      "torch.distributed.run",
+      "--standalone",
+      "--nnodes=1",
+      "--nproc-per-node=2",
+      "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-PILOT-CASIA2-GN8-EMPTYBCE-R512-S42-20260916-D/source/scripts/tect_diff/pilot_worker.py",
+      "--run-dir",
+      "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-PILOT-CASIA2-GN8-EMPTYBCE-R512-S42-20260916-D"
+    ],
+    "worker_identity": {
+      "cmdline": "",
+      "pid": 1039471,
+      "start_ticks": "2712288330"
+    },
+    "worker_pgid": 1039471,
+    "worker_pid": 1039471
+  },
+  "cpu_tests": {
+    "all_passed": true,
+    "local_controller_data_and_revision": 52,
+    "local_mask_loss": 7,
+    "server": 59
+  },
+  "engineering": {
+    "adam_hashes": [
+      "c231afb1a4abe9eb66fd77d950efd001de7fba26a6a91fa61b424e69d5d8a0fc",
+      "c231afb1a4abe9eb66fd77d950efd001de7fba26a6a91fa61b424e69d5d8a0fc"
+    ],
+    "completed_at": "2026-09-16T01:46:40Z",
+    "config_hash": "eb1bc795902cf6145162741e67886801d2a8b97a4956cb0c50bcbbfd95845fbd",
+    "elapsed_seconds": 11.91196946427226,
+    "formal_optimizer_steps": 0,
+    "fp32_batch_independence": {
+      "budget": 1e-05,
+      "formal_precision_unchanged": true,
+      "max_probability_difference": 1.2516975402832031e-06,
+      "passed": true,
+      "training_ids": [
+        "CASIA2:Au_pla_30270",
+        "CASIA2:Au_art_30439"
+      ]
+    },
+    "fresh_initialization_restored": true,
+    "no_diagnostic_weights_saved": true,
+    "peak_allocated_bytes": 19583434240,
+    "protocol_id": "TECT-PILOT-CASIA2-GN8-R512-S42-DATA2-N8192-EMPTYBCE-V1",
+    "ranks": [
+      {
+        "adam_hashes": [
+          "c231afb1a4abe9eb66fd77d950efd001de7fba26a6a91fa61b424e69d5d8a0fc",
+          "c231afb1a4abe9eb66fd77d950efd001de7fba26a6a91fa61b424e69d5d8a0fc"
+        ],
+        "elapsed_seconds": 11.91196946427226,
+        "fp32_batch_independence": {
+          "budget": 1e-05,
+          "formal_precision_unchanged": true,
+          "max_probability_difference": 1.2516975402832031e-06,
+          "passed": true,
+          "training_ids": [
+            "CASIA2:Au_pla_30270",
+            "CASIA2:Au_art_30439"
+          ]
+        },
+        "peak_allocated_bytes": 19583434240,
+        "updates": [
+          {
+            "gradient_norm": 3.7887446880340576,
+            "gradient_sync": {
+              "at": "2026-09-16T01:46:30Z",
+              "coverage_pass_by_rank": [
+                true,
+                true
+              ],
+              "gradient_norm_by_rank": [
+                3.7887446880340576,
+                3.7887446880340576
+              ],
+              "gradient_tensors_by_rank": [
+                856,
+                856
+              ],
+              "passed": true
+            },
+            "loss": 1.610361099243164,
+            "step": 1
+          },
+          {
+            "gradient_norm": 2.3210628032684326,
+            "gradient_sync": {
+              "at": "2026-09-16T01:46:31Z",
+              "coverage_pass_by_rank": [
+                true,
+                true
+              ],
+              "gradient_norm_by_rank": [
+                2.3210628032684326,
+                2.3210628032684326
+              ],
+              "gradient_tensors_by_rank": [
+                856,
+                856
+              ],
+              "passed": true
+            },
+            "loss": 1.2574137449264526,
+            "step": 2
+          },
+          {
+            "gradient_norm": 2.9006638526916504,
+            "gradient_sync": {
+              "at": "2026-09-16T01:46:33Z",
+              "coverage_pass_by_rank": [
+                true,
+                true
+              ],
+              "gradient_norm_by_rank": [
+                2.9006638526916504,
+                2.9006638526916504
+              ],
+              "gradient_tensors_by_rank": [
+                856,
+                856
+              ],
+              "passed": true
+            },
+            "loss": 1.0635008811950684,
+            "step": 3
+          },
+          {
+            "gradient_norm": 2.2095518112182617,
+            "gradient_sync": {
+              "at": "2026-09-16T01:46:34Z",
+              "coverage_pass_by_rank": [
+                true,
+                true
+              ],
+              "gradient_norm_by_rank": [
+                2.2095518112182617,
+                2.2095518112182617
+              ],
+              "gradient_tensors_by_rank": [
+                856,
+                856
+              ],
+              "passed": true
+            },
+            "loss": 1.1986334323883057,
+            "step": 4
+          },
+          {
+            "gradient_norm": 2.5264711380004883,
+            "gradient_sync": {
+              "at": "2026-09-16T01:46:35Z",
+              "coverage_pass_by_rank": [
+                true,
+                true
+              ],
+              "gradient_norm_by_rank": [
+                2.5264711380004883,
+                2.5264711380004883
+              ],
+              "gradient_tensors_by_rank": [
+                856,
+                856
+              ],
+              "passed": true
+            },
+            "loss": 1.5255638360977173,
+            "step": 5
+          },
+          {
+            "gradient_norm": 2.1562163829803467,
+            "gradient_sync": {
+              "at": "2026-09-16T01:46:36Z",
+              "coverage_pass_by_rank": [
+                true,
+                true
+              ],
+              "gradient_norm_by_rank": [
+                2.1562163829803467,
+                2.1562163829803467
+              ],
+              "gradient_tensors_by_rank": [
+                856,
+                856
+              ],
+              "passed": true
+            },
+            "loss": 0.6901055574417114,
+            "step": 6
+          },
+          {
+            "gradient_norm": 2.345371723175049,
+            "gradient_sync": {
+              "at": "2026-09-16T01:46:37Z",
+              "coverage_pass_by_rank": [
+                true,
+                true
+              ],
+              "gradient_norm_by_rank": [
+                2.345371723175049,
+                2.345371723175049
+              ],
+              "gradient_tensors_by_rank": [
+                856,
+                856
+              ],
+              "passed": true
+            },
+            "loss": 1.337454080581665,
+            "step": 7
+          },
+          {
+            "gradient_norm": 2.1117541790008545,
+            "gradient_sync": {
+              "at": "2026-09-16T01:46:39Z",
+              "coverage_pass_by_rank": [
+                true,
+                true
+              ],
+              "gradient_norm_by_rank": [
+                2.1117541790008545,
+                2.1117541790008545
+              ],
+              "gradient_tensors_by_rank": [
+                856,
+                856
+              ],
+              "passed": true
+            },
+            "loss": 1.1247743368148804,
+            "step": 8
+          }
+        ]
+      },
+      {
+        "adam_hashes": [
+          "c231afb1a4abe9eb66fd77d950efd001de7fba26a6a91fa61b424e69d5d8a0fc",
+          "c231afb1a4abe9eb66fd77d950efd001de7fba26a6a91fa61b424e69d5d8a0fc"
+        ],
+        "elapsed_seconds": 11.931666988879442,
+        "fp32_batch_independence": {
+          "budget": 1e-05,
+          "formal_precision_unchanged": true,
+          "max_probability_difference": 1.7583370208740234e-06,
+          "passed": true,
+          "training_ids": [
+            "CASIA2:Au_sec_30002",
+            "CASIA2:Au_ind_30051"
+          ]
+        },
+        "peak_allocated_bytes": 19807478784,
+        "updates": [
+          {
+            "gradient_norm": 3.7887446880340576,
+            "gradient_sync": {
+              "at": "2026-09-16T01:46:30Z",
+              "coverage_pass_by_rank": [
+                true,
+                true
+              ],
+              "gradient_norm_by_rank": [
+                3.7887446880340576,
+                3.7887446880340576
+              ],
+              "gradient_tensors_by_rank": [
+                856,
+                856
+              ],
+              "passed": true
+            },
+            "loss": 1.2366470098495483,
+            "step": 1
+          },
+          {
+            "gradient_norm": 2.3210628032684326,
+            "gradient_sync": {
+              "at": "2026-09-16T01:46:31Z",
+              "coverage_pass_by_rank": [
+                true,
+                true
+              ],
+              "gradient_norm_by_rank": [
+                2.3210628032684326,
+                2.3210628032684326
+              ],
+              "gradient_tensors_by_rank": [
+                856,
+                856
+              ],
+              "passed": true
+            },
+            "loss": 1.3962732553482056,
+            "step": 2
+          },
+          {
+            "gradient_norm": 2.9006638526916504,
+            "gradient_sync": {
+              "at": "2026-09-16T01:46:33Z",
+              "coverage_pass_by_rank": [
+                true,
+                true
+              ],
+              "gradient_norm_by_rank": [
+                2.9006638526916504,
+                2.9006638526916504
+              ],
+              "gradient_tensors_by_rank": [
+                856,
+                856
+              ],
+              "passed": true
+            },
+            "loss": 1.3932826519012451,
+            "step": 3
+          },
+          {
+            "gradient_norm": 2.2095518112182617,
+            "gradient_sync": {
+              "at": "2026-09-16T01:46:34Z",
+              "coverage_pass_by_rank": [
+                true,
+                true
+              ],
+              "gradient_norm_by_rank": [
+                2.2095518112182617,
+                2.2095518112182617
+              ],
+              "gradient_tensors_by_rank": [
+                856,
+                856
+              ],
+              "passed": true
+            },
+            "loss": 1.0780766010284424,
+            "step": 4
+          },
+          {
+            "gradient_norm": 2.5264711380004883,
+            "gradient_sync": {
+              "at": "2026-09-16T01:46:35Z",
+              "coverage_pass_by_rank": [
+                true,
+                true
+              ],
+              "gradient_norm_by_rank": [
+                2.5264711380004883,
+                2.5264711380004883
+              ],
+              "gradient_tensors_by_rank": [
+                856,
+                856
+              ],
+              "passed": true
+            },
+            "loss": 1.2462170124053955,
+            "step": 5
+          },
+          {
+            "gradient_norm": 2.1562163829803467,
+            "gradient_sync": {
+              "at": "2026-09-16T01:46:36Z",
+              "coverage_pass_by_rank": [
+                true,
+                true
+              ],
+              "gradient_norm_by_rank": [
+                2.1562163829803467,
+                2.1562163829803467
+              ],
+              "gradient_tensors_by_rank": [
+                856,
+                856
+              ],
+              "passed": true
+            },
+            "loss": 0.6982514262199402,
+            "step": 6
+          },
+          {
+            "gradient_norm": 2.345371723175049,
+            "gradient_sync": {
+              "at": "2026-09-16T01:46:37Z",
+              "coverage_pass_by_rank": [
+                true,
+                true
+              ],
+              "gradient_norm_by_rank": [
+                2.345371723175049,
+                2.345371723175049
+              ],
+              "gradient_tensors_by_rank": [
+                856,
+                856
+              ],
+              "passed": true
+            },
+            "loss": 0.9792172312736511,
+            "step": 7
+          },
+          {
+            "gradient_norm": 2.1117541790008545,
+            "gradient_sync": {
+              "at": "2026-09-16T01:46:39Z",
+              "coverage_pass_by_rank": [
+                true,
+                true
+              ],
+              "gradient_norm_by_rank": [
+                2.1117541790008545,
+                2.1117541790008545
+              ],
+              "gradient_tensors_by_rank": [
+                856,
+                856
+              ],
+              "passed": true
+            },
+            "loss": 1.275118350982666,
+            "step": 8
+          }
+        ]
+      }
+    ],
+    "status": "COMPLETED",
+    "updates": [
+      {
+        "gradient_norm": 3.7887446880340576,
+        "gradient_sync": {
+          "at": "2026-09-16T01:46:30Z",
+          "coverage_pass_by_rank": [
+            true,
+            true
+          ],
+          "gradient_norm_by_rank": [
+            3.7887446880340576,
+            3.7887446880340576
+          ],
+          "gradient_tensors_by_rank": [
+            856,
+            856
+          ],
+          "passed": true
+        },
+        "loss": 1.610361099243164,
+        "step": 1
+      },
+      {
+        "gradient_norm": 2.3210628032684326,
+        "gradient_sync": {
+          "at": "2026-09-16T01:46:31Z",
+          "coverage_pass_by_rank": [
+            true,
+            true
+          ],
+          "gradient_norm_by_rank": [
+            2.3210628032684326,
+            2.3210628032684326
+          ],
+          "gradient_tensors_by_rank": [
+            856,
+            856
+          ],
+          "passed": true
+        },
+        "loss": 1.2574137449264526,
+        "step": 2
+      },
+      {
+        "gradient_norm": 2.9006638526916504,
+        "gradient_sync": {
+          "at": "2026-09-16T01:46:33Z",
+          "coverage_pass_by_rank": [
+            true,
+            true
+          ],
+          "gradient_norm_by_rank": [
+            2.9006638526916504,
+            2.9006638526916504
+          ],
+          "gradient_tensors_by_rank": [
+            856,
+            856
+          ],
+          "passed": true
+        },
+        "loss": 1.0635008811950684,
+        "step": 3
+      },
+      {
+        "gradient_norm": 2.2095518112182617,
+        "gradient_sync": {
+          "at": "2026-09-16T01:46:34Z",
+          "coverage_pass_by_rank": [
+            true,
+            true
+          ],
+          "gradient_norm_by_rank": [
+            2.2095518112182617,
+            2.2095518112182617
+          ],
+          "gradient_tensors_by_rank": [
+            856,
+            856
+          ],
+          "passed": true
+        },
+        "loss": 1.1986334323883057,
+        "step": 4
+      },
+      {
+        "gradient_norm": 2.5264711380004883,
+        "gradient_sync": {
+          "at": "2026-09-16T01:46:35Z",
+          "coverage_pass_by_rank": [
+            true,
+            true
+          ],
+          "gradient_norm_by_rank": [
+            2.5264711380004883,
+            2.5264711380004883
+          ],
+          "gradient_tensors_by_rank": [
+            856,
+            856
+          ],
+          "passed": true
+        },
+        "loss": 1.5255638360977173,
+        "step": 5
+      },
+      {
+        "gradient_norm": 2.1562163829803467,
+        "gradient_sync": {
+          "at": "2026-09-16T01:46:36Z",
+          "coverage_pass_by_rank": [
+            true,
+            true
+          ],
+          "gradient_norm_by_rank": [
+            2.1562163829803467,
+            2.1562163829803467
+          ],
+          "gradient_tensors_by_rank": [
+            856,
+            856
+          ],
+          "passed": true
+        },
+        "loss": 0.6901055574417114,
+        "step": 6
+      },
+      {
+        "gradient_norm": 2.345371723175049,
+        "gradient_sync": {
+          "at": "2026-09-16T01:46:37Z",
+          "coverage_pass_by_rank": [
+            true,
+            true
+          ],
+          "gradient_norm_by_rank": [
+            2.345371723175049,
+            2.345371723175049
+          ],
+          "gradient_tensors_by_rank": [
+            856,
+            856
+          ],
+          "passed": true
+        },
+        "loss": 1.337454080581665,
+        "step": 7
+      },
+      {
+        "gradient_norm": 2.1117541790008545,
+        "gradient_sync": {
+          "at": "2026-09-16T01:46:39Z",
+          "coverage_pass_by_rank": [
+            true,
+            true
+          ],
+          "gradient_norm_by_rank": [
+            2.1117541790008545,
+            2.1117541790008545
+          ],
+          "gradient_tensors_by_rank": [
+            856,
+            856
+          ],
+          "passed": true
+        },
+        "loss": 1.1247743368148804,
+        "step": 8
+      }
+    ]
+  },
+  "gpu_processes": [
+    {
+      "gpu": 0,
+      "memory_mib": "21242",
+      "name": "/data0/hl/conda_envs/dcdsdiff/bin/python",
+      "pid": 1039477
+    },
+    {
+      "gpu": 1,
+      "memory_mib": "21374",
+      "name": "/data0/hl/conda_envs/dcdsdiff/bin/python",
+      "pid": 1039478
+    }
+  ],
+  "locks": {
+    "gpu-0.lock": "HELD",
+    "gpu-1.lock": "HELD",
+    "run-TECT-PILOT-CASIA2-GN8-EMPTYBCE-R512-S42-20260916-D.lock": "HELD",
+    "tect-controller-TECT-PILOT-CASIA2-GN8-EMPTYBCE-R512-S42-20260916-D.lock": "HELD"
+  },
+  "loss_revision": {
+    "all_parent_rows_identical": true,
+    "at": "2026-09-16T01:46:05Z",
+    "config_hash": "eb1bc795902cf6145162741e67886801d2a8b97a4956cb0c50bcbbfd95845fbd",
+    "diffusion_extension": {
+      "allowed_changes": [
+        "loss_import",
+        "forward_mask_loss_call"
+      ],
+      "original_sha256": "7f4a29b9468ddc6e3454b29ffaf9290d79f314717bd08b4912792bd29d5a794b",
+      "revised_sha256": "d5f173a239a31c55a17d74ec8bf7a0c4ffebe1ec69de9309b3d47cf07883e41f",
+      "status": "PASSED"
+    },
+    "main_initialization": "fresh_seed42_imagenet",
+    "main_initialization_seed": 42,
+    "main_start_epoch": 0,
+    "main_start_optimizer_step": 0,
+    "manifest_id": "7b66b009323325ebbe1f",
+    "mask_loss": "empty_target_bce_v1",
+    "parent_config_hash": "c42769f4f4fedc18f5ae21ae4c6525bb551a416e2e5ffd98ed067bc6877bd702",
+    "parent_data_bundle_path": "/data1/hl/DcDsDiff-and-GIT10K/runs/TECT-PILOT-CASIA2-GN8-N8192-R512-S42-20260916-C/data_bundle.json",
+    "parent_data_bundle_sha256": "ab8bec8091f387b1fc0edbd12fd918ceb6ef9f5a0681e2aa22158c3cb7bbc03e",
+    "parent_manifest_id": "7b66b009323325ebbe1f",
+    "parent_outcome": "NO_GO",
+    "parent_run": "TECT-PILOT-CASIA2-GN8-N8192-R512-S42-20260916-C",
+    "parent_source_commit": "02691917da17016f64f26ef820d5ccfa175e18ab",
+    "parent_terminal_sha256": "7184fcfb257601f7fdaaef9e229b75a5c9e6e3ab38dc15b2fe9813f3db74a27b",
+    "parent_weights_loaded": false,
+    "protocol_id": "TECT-PILOT-CASIA2-GN8-R512-S42-DATA2-N8192-EMPTYBCE-V1",
+    "quarantined_pair_count": 2,
+    "run_id": "TECT-PILOT-CASIA2-GN8-EMPTYBCE-R512-S42-20260916-D",
+    "source_commit": "23fe792a87c1c1f63061d59523b83a81848e5d10",
+    "status": "PASSED",
+    "test_probe_source_and_rgb_disjoint": true,
+    "train_authentic_count": 4096,
+    "train_count": 8192,
+    "train_tampered_count": 4096,
+    "unchanged_manifest_hashes": {
+      "authentic_probe": "f8f80cda5371d011bb2d6951238f76f7129985a845c9c0ae382d41c910c5b919",
+      "calibration": "a22183506365f042e141c16b09a8c9e369c3f7886864c2a1d5326a4ada5e38c5",
+      "preflight_train": "9dc3270f5d2656e44bfe21654041eb6023c64c0af3294aaf93104d6a86444407",
+      "reference": "0a501e3f0570b245ac594941fcbf2328d1bed195835825de8b7a758f62a13f79",
+      "test_Casiav1": "ba9a00d8868dff5d44fb60d535ea54504b071d8c9802aa55b5a787a09d645f6c",
+      "test_Columbia": "8c41cbe4733f3feef3c5bd1169d46dea7f247b0ffdad4446779eb19077cfc56e",
+      "test_full_Casiav1": "a51508ac9da6618b685c807415674a78cd99b0681af7d4dae59b9947d187bc73",
+      "test_full_Columbia": "dfcd1d818b0ec1250023b94e1b92c7292fb3ed107a47cbcf19d2050742594307",
+      "train": "01c693b53947ea26118561e1296c9b023d26d36e5f16772bbccf2c2dd759e404"
+    }
+  },
+  "main_probe_summary": {
+    "completed_at": "2026-09-16T01:46:25Z",
+    "config_hash": "eb1bc795902cf6145162741e67886801d2a8b97a4956cb0c50bcbbfd95845fbd",
+    "elapsed_seconds": 7.969635255634785,
+    "formal_optimizer_steps": 0,
+    "initial_state_and_rng_restored": true,
+    "no_diagnostic_weights_saved": true,
+    "protocol_id": "TECT-PILOT-CASIA2-GN8-R512-S42-DATA2-N8192-EMPTYBCE-V1",
+    "status": "COMPLETED"
+  },
+  "progress": {
+    "A_mean": 0.12265042960643768,
+    "A_negative_fraction": 0.15712103247642517,
+    "amp_skipped": false,
+    "control_logit_change": 0.0008181635057553649,
+    "elapsed_seconds": 98.31077878177166,
+    "ell_mean": -0.011241219937801361,
+    "epoch": 0,
+    "gamma": 0.08929524570703506,
+    "gradient_norm": 1.1795490980148315,
+    "gradient_sync": {
+      "at": "2026-09-16T01:47:55Z",
+      "coverage_pass_by_rank": [
+        true,
+        true
+      ],
+      "gradient_norm_by_rank": [
+        1.1795490980148315,
+        1.1795490980148315
+      ],
+      "gradient_tensors_by_rank": [
+        856,
+        856
+      ],
+      "passed": true
+    },
+    "image_loss": 0.08215779811143875,
+    "joint_ref_mse": 0.0032620050478726625,
+    "loss": 0.9395622611045837,
+    "mask_loss": 0.8574044704437256,
+    "micro_batch": 60,
+    "micro_batches_per_epoch": 683,
+    "optimizer_step": 60,
+    "peak_memory_bytes": 19805605888,
+    "pid": 1039477,
+    "prefix": 4,
+    "q_mean": 0.2943747937679291,
+    "q_zero_fraction": 0.0233001708984375,
+    "rank": 0,
+    "sampling_step": 8,
+    "stage": "PILOT_TRAINING",
+    "updated_at": "2026-09-16T01:47:55Z"
+  },
+  "receipt_hashes": {
+    "data_bundle.json": "ab8bec8091f387b1fc0edbd12fd918ceb6ef9f5a0681e2aa22158c3cb7bbc03e",
+    "engineering_receipt.json": "38bf8a792b7aa30447174753b57156396e817b3151b4f913f56b238fbf2ac5ff",
+    "fitting_reuse.json": "7a5bc77e46c634200a84fc51d524b7174aeb1dbc0b304969d7503653c3eac0ab",
+    "loss_revision.json": "c375b43a5829eb7335b3dc41c8afd584702b85502737ef8b948b5ce21399a4a7",
+    "main_probe_receipt.json": "0e9589b46b0efd4590f4609beb52b2ee81d350a1058aac69587c626ac1fd0074"
+  },
+  "run_id": "TECT-PILOT-CASIA2-GN8-EMPTYBCE-R512-S42-20260916-D",
+  "scope": "Startup and engineering validation only; no complete epoch or effectiveness claim",
+  "source_commit": "23fe792a87c1c1f63061d59523b83a81848e5d10",
+  "source_files_verified": 220,
+  "status": "RUNNING_VERIFIED"
+}

@@ -1,10 +1,11 @@
 # Experiment ledger
 
-## TECT-PILOT-CASIA2-GN8-R512-S42-DATA2-N8192-EMPTYBCE-V1 — REGISTERED
+## TECT-PILOT-CASIA2-GN8-R512-S42-DATA2-N8192-EMPTYBCE-V1 — RUNNING
 
 - Run `TECT-PILOT-CASIA2-GN8-EMPTYBCE-R512-S42-20260916-D`，见[损失修订协议](configs/tect_diff/PILOT_EMPTY_TARGET_BCE.md)和[配置](configs/tect_diff/pilot_casia2_gn8_data2_n8192_emptybce_r512_s42.json)。D只改变protocol_id及空训练目标IoU项；其余数据/网络/拟合依赖/优化器/测试/十轮四小时预算/固定门槛均与C相同。fresh seed42/ImageNet MAIN，不加载C主模型。
 - [C固定最终检查点诊断](analysis_reports/tect_diff/c_nogo_diagnostic_20260916.md)已完成：16TRAIN原采样TpF1首步0.817681→末步0.807603，移除末步history为0.807636；8Au无阈值误报但空目标IoU仍给末层偏置较强的负向优化压力。原固定前向平均偏置导数+0.04302535，去除空目标IoU后解析值-0.00542876；这不是新训练有效性的证明。
-- 当前为登记，尚未填写D正式训练分数。D须通过九份清单与C相同、参考/采样受保护源码及八次可逆双卡工程更新检查后开始pilot。真实图误报增加是主要风险，原平均与池化误报≤1%门槛保持。`selection_protocol=test_selected`，开发结果不是独立泛化评估。
+- D于2026-09-16 01:46:43 UTC开始首个正式更新，冻结执行提交`23fe792a87c1c1f63061d59523b83a81848e5d10`、配置hash`eb1bc795902cf6145162741e67886801d2a8b97a4956cb0c50bcbbfd95845fbd`。服务器59项CPU检查、九份清单相同、参考/采样受保护源码以及每rank8次可逆工程更新均通过。01:48:11核验epoch0/step60，220冻结文件、856梯度同步、无跳步、参考隔离/fresh恢复和双卡/run/controller锁正常。见[启动收据](analysis_reports/tect_diff/emptybce_startup_20260916.json)。尚无完整epoch/Test2或修复有效结论；30分钟监督已绑定D。
+- 真实图误报增加是主要风险，原平均与池化误报≤1%门槛保持。`selection_protocol=test_selected`，开发结果不是独立泛化评估。
 
 ## TECT-PILOT-CASIA2-GN8-R512-S42-DATA2-N8192-V1 — COMPLETED / NO_GO
 

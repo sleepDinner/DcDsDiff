@@ -38,3 +38,11 @@ C最终epoch9的固定16张训练图诊断中，原采样8张Tp首步/末步F1�
 通过quick门槛后只对当时同一checkpoint做一次完整两库确认，复用当前256图，仅新增844图。确认通过才允许另行登记fresh Full；未通过/十轮结束则NO_GO，不追加epochs或数据，不另选更有利checkpoint。D是单个损失候选开发运行，并非保证成功的修复。
 
 沿用原C参考epoch19及训练拟合校准，二者在FinalTrainData拟合，不能称所有学习组件仅见CASIA2。每轮JSONL用average_test2，`selection_protocol=test_selected`：开发测试用于选模及修订，不是独立泛化评估。
+
+## 实际启动与工程检查
+
+2026-09-16 01:46:43 UTC开始第一个正式更新。冻结执行提交`23fe792a87c1c1f63061d59523b83a81848e5d10`，配置hash`eb1bc795902cf6145162741e67886801d2a8b97a4956cb0c50bcbbfd95845fbd`。服务器59项CPU检查通过，实际九份C清单及E受保护源码逆向检查通过；双rank各8次工程更新、856梯度覆盖与同步、Adam一致、参考隔离、fresh初始化和RNG恢复通过，FP32批次独立性最大概率差1.2517e-6（限额1e-5）。
+
+01:48:11 UTC核验正式epoch0/step60，loss有限、无AMP跳步，220个冻结文件完整，两rank856项梯度同步，controller/worker存活且双GPU/run/controller锁持有。进程显存当时21242/21374MiB；瞬时状态不作为整轮吞吐结论。[启动收据](../../analysis_reports/tect_diff/emptybce_startup_20260916.json)保留来源、同数据证明及双卡工程记录。
+
+此时还没有完整epoch或Test2结果，不能宣称修复/收敛成功。`tect-v2`继续每30分钟监督D，保持原固定门槛及异常停止权限。
