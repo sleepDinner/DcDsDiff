@@ -4,5 +4,6 @@ selection_protocol=test_selected：Casiav1/Columbia 用于开发、checkpoint �
 
 | Run | Status | Outcome | Complete epochs |
 | --- | --- | --- | ---: |
+| [TECT-PILOT-CASIA2-GN8-N8192-R512-S42-20260916-C](runs/TECT-PILOT-CASIA2-GN8-N8192-R512-S42-20260916-C/report.md) | COMPLETED | NO_GO | 10 |
 | [TECT-PILOT-CASIA2-GN8-R512-S42-20260916-A](runs/TECT-PILOT-CASIA2-GN8-R512-S42-20260916-A/report.md) | FAILED | HOLD | 0 |
 | [TECT-PILOT-CASIA2-GN8-R512-S42-20260916-B](runs/TECT-PILOT-CASIA2-GN8-R512-S42-20260916-B/report.md) | COMPLETED | NO_GO | 10 |
