@@ -1,6 +1,9 @@
 # Experiment ledger
 
-## TECT-PILOT-CASIA2-GN8-R512-S42-DATA2-N8192-V1 — RUNNING
+## TECT-PILOT-CASIA2-GN8-R512-S42-DATA2-N8192-V1 — COMPLETED / NO_GO
+
+- C于2026-09-16 00:20:55 UTC正常结束十轮（epoch9/step6830），资源释放；自动结果发布提交`9ab9e02241a3dac630806ded3cdf162feaed10dd`。最佳epoch4平均Test2为0.507495但真实图误报未过门槛，末轮0.235143，未获得连续三轮通过；完整两库确认及Full/All8未执行。[终态报告](analysis_reports/runs/TECT-PILOT-CASIA2-GN8-N8192-R512-S42-20260916-C/report.md)。保留所有历史结果，以下启动描述是历史时点。
+- 下一项仅为[固定C最终检查点的有界训练图诊断](analysis_reports/tect_diff/c_nogo_diagnostic_plan_20260916.md)，旧B诊断不重放，不自动增加数据/epochs或改变门槛。
 
 - Next run `TECT-PILOT-CASIA2-GN8-N8192-R512-S42-20260916-C`; [registered scope](configs/tect_diff/PILOT_N8192.md), [config](configs/tect_diff/pilot_casia2_gn8_data2_n8192_r512_s42.json). Registered before C results; actual startup/source/manifest receipts must be recorded after execution.
 - Fresh MAIN, same GN8/mechanisms/optimizer/batch/Test2/gates; fixed nested8192 train (4096Au+4096Tp), maximum10epochs/4h. Data coverage and total update budget change jointly. The [fixed B-final training diagnosis](analysis_reports/tect_diff/gn8_pilot_nogo_diagnostic_20260916.md) supports working conditioning and sampling, not proof of insufficient data or guaranteed improvement. C remains development; no premature Full/All8.

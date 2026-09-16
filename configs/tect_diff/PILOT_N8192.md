@@ -35,3 +35,9 @@ B最佳Test2为0.433405，末轮0.340817，未通过原晋级门槛；训练mask
 ## 实际启动
 
 2026-09-15 21:50:36 UTC controller开始准备；冻结执行提交`02691917da17016f64f26ef820d5ccfa175e18ab`，配置hash`c42769f4f4fedc18f5ae21ae4c6525bb551a416e2e5ffd98ed067bc6877bd702`。21:52:56已核验epoch0/step60、207个来源文件和完整嵌套数据关系；两rank工程更新、fresh初始化恢复及正式梯度同步通过。[启动收据](../../analysis_reports/tect_diff/gn8_n8192_startup_20260916.json)保留细节。此处仅是正常启动，不是完整一轮、晋级或收敛结论。
+
+## 实际终态
+
+2026-09-16 00:20:55 UTC正常完成固定十轮，最终epoch9/6830次更新，结果`COMPLETED / NO_GO`；控制器退出并释放双卡。最佳epoch4 Test2为0.507495，但64真实图平均误报2.223%、池化误报3.589%，未通过1%要求。最终Test2为0.235143、Columbia召回7.654%；没有连续三轮满足全部门槛，未执行完整两库确认或Full训练。[逐轮结果](../../analysis_reports/runs/TECT-PILOT-CASIA2-GN8-N8192-R512-S42-20260916-C/report.md)已自动发布到提交`9ab9e02241a3dac630806ded3cdf162feaed10dd`。
+
+本次扩大训练覆盖和更新量未带来稳定达标。不能将正常退出/损失下降解释为成功收敛，也不据此自动追加数据或轮数。下一项是[固定最终检查点诊断](../../analysis_reports/tect_diff/c_nogo_diagnostic_plan_20260916.md)，原配置、来源、终点及成绩保持。
