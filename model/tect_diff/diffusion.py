@@ -15,7 +15,7 @@ import torch.nn.functional as F
 from denoising_diffusion_pytorch.simple_diffusion import (
     logsnr_schedule_cosine, logsnr_schedule_shifted,
 )
-from model.loss import structure_loss
+from model.tect_diff.mask_loss import tect_mask_loss
 from .evidence import FixedTrajectoryEvidence
 from .amp_context import self_condition_no_grad
 
@@ -130,7 +130,7 @@ class TECTDiffusion(nn.Module):
         output = self.task(image, trace, noisy_mask, logsnr, features[-1], estimates[-1], m, previous)
         controlled, gamma = self.control(output['logits_base'], measured, j, m)
         with torch.autocast(device_type='cuda', enabled=False):
-            mask_loss = structure_loss(controlled.float(), gt.float())
+            mask_loss = tect_mask_loss(controlled.float(), gt.float(), self.config['training'].get('mask_loss', 'structure_v1'))
             image_loss = F.mse_loss(output['epsilon_joint'].float(), noise_image.permute(1, 0, 2, 3, 4).float())
             loss = mask_loss + self.config['training']['lambda_image'] * image_loss
         self.last_diagnostics = {

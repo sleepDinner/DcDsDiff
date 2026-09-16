@@ -1,5 +1,11 @@
 # Experiment ledger
 
+## TECT-PILOT-CASIA2-GN8-R512-S42-DATA2-N8192-EMPTYBCE-V1 — REGISTERED
+
+- Run `TECT-PILOT-CASIA2-GN8-EMPTYBCE-R512-S42-20260916-D`，见[损失修订协议](configs/tect_diff/PILOT_EMPTY_TARGET_BCE.md)和[配置](configs/tect_diff/pilot_casia2_gn8_data2_n8192_emptybce_r512_s42.json)。D只改变protocol_id及空训练目标IoU项；其余数据/网络/拟合依赖/优化器/测试/十轮四小时预算/固定门槛均与C相同。fresh seed42/ImageNet MAIN，不加载C主模型。
+- [C固定最终检查点诊断](analysis_reports/tect_diff/c_nogo_diagnostic_20260916.md)已完成：16TRAIN原采样TpF1首步0.817681→末步0.807603，移除末步history为0.807636；8Au无阈值误报但空目标IoU仍给末层偏置较强的负向优化压力。原固定前向平均偏置导数+0.04302535，去除空目标IoU后解析值-0.00542876；这不是新训练有效性的证明。
+- 当前为登记，尚未填写D正式训练分数。D须通过九份清单与C相同、参考/采样受保护源码及八次可逆双卡工程更新检查后开始pilot。真实图误报增加是主要风险，原平均与池化误报≤1%门槛保持。`selection_protocol=test_selected`，开发结果不是独立泛化评估。
+
 ## TECT-PILOT-CASIA2-GN8-R512-S42-DATA2-N8192-V1 — COMPLETED / NO_GO
 
 - C于2026-09-16 00:20:55 UTC正常结束十轮（epoch9/step6830），资源释放；自动结果发布提交`9ab9e02241a3dac630806ded3cdf162feaed10dd`。最佳epoch4平均Test2为0.507495但真实图误报未过门槛，末轮0.235143，未获得连续三轮通过；完整两库确认及Full/All8未执行。[终态报告](analysis_reports/runs/TECT-PILOT-CASIA2-GN8-N8192-R512-S42-20260916-C/report.md)。保留所有历史结果，以下启动描述是历史时点。

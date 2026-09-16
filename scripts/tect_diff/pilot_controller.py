@@ -23,6 +23,10 @@ from scripts.tect_diff.controller import (
     verify_source, status as base_status, owned_group_members, stop_owned_members, validate_receipt,
 )
 from tools.resource_locks import ResourceBusy, acquire_file
+from scripts.tect_diff.pilot_loss_revision import (
+    RUN_ID as RUN_ID_EMPTYBCE, PROTOCOL as EMPTYBCE_PROTOCOL,
+    validate_loss_config, validate_diffusion_extension, validate_loss_parent,
+)
 
 RUN_ID = "TECT-PILOT-CASIA2-GN8-R512-S42-20260916-A"
 RUN_ID_DATA2 = "TECT-PILOT-CASIA2-GN8-R512-S42-20260916-B"
@@ -31,6 +35,7 @@ RUN_PROTOCOLS = {
     RUN_ID: "TECT-PILOT-CASIA2-GN8-R512-S42-V1",
     RUN_ID_DATA2: "TECT-PILOT-CASIA2-GN8-R512-S42-DATA2-V1",
     RUN_ID_N8192: "TECT-PILOT-CASIA2-GN8-R512-S42-DATA2-N8192-V1",
+    RUN_ID_EMPTYBCE: EMPTYBCE_PROTOCOL,
 }
 DATA2_CONFIG = SOURCE / "configs/tect_diff/pilot_casia2_gn8_data2_r512_s42.json"
 DATA2_CONFIG_HASH = "174434a273212505913ed20b5469e9309776e656bf07f2da30e94eee8b9c36b8"
@@ -72,7 +77,7 @@ def validate_config(config, run_id):
     deadline = pilot.get("total_deadline_seconds", 14400)
     if type(deadline) not in (int, float) or not 0 < deadline <= 14400:
         raise ValueError("Pilot deadline must be positive and no more than four hours")
-    train_per_class = 4096 if run_id == RUN_ID_N8192 else 1024
+    train_per_class = 4096 if run_id in {RUN_ID_N8192, RUN_ID_EMPTYBCE} else 1024
     for key, expected in {"train_authentic": train_per_class, "train_tampered": train_per_class,
                           "quick_test_per_dataset": 128, "authentic_probe": 64,
                           "preflight_train": 64, "engineering_updates": 8}.items():
@@ -85,7 +90,11 @@ def validate_config(config, run_id):
     settings = config["runtime"]
     if settings.get("publish_branch") != "feature/tect-diff" or settings.get("publish_url") != "git@github.com:sleepDinner/DcDsDiff.git":
         raise ValueError("Pilot publication destination is not registered")
-    if run_id == RUN_ID_N8192:
+    if run_id != RUN_ID_EMPTYBCE and train.get("mask_loss", "structure_v1") != "structure_v1":
+        raise ValueError("Historical pilots retain their original mask loss")
+    if run_id == RUN_ID_EMPTYBCE:
+        validate_loss_config(config, SOURCE)
+    elif run_id == RUN_ID_N8192:
         # Bind to the unchanged B config in this executing source snapshot.
         baseline = read_json(DATA2_CONFIG)
         if json_hash(baseline) != DATA2_CONFIG_HASH:
@@ -139,7 +148,10 @@ def import_fitting(run):
                 raise ValueError(f"Frozen fitting mechanism changed: {section}")
         for relative in ("model/tect_diff/reference.py", "model/tect_diff/evidence.py", "model/tect_diff/diffusion.py"):
             if old_provenance["source_hashes"].get(relative) != provenance["source_hashes"].get(relative):
-                raise ValueError("Fitting reuse cannot change the protected source: " + relative)
+                if run.name == RUN_ID_EMPTYBCE and relative == "model/tect_diff/diffusion.py":
+                    validate_diffusion_extension(parent / "source" / relative, run / "source" / relative)
+                else:
+                    raise ValueError("Fitting reuse cannot change the protected source: " + relative)
         source_bundle = read_json(parent / "data_bundle.json")
         expected = {"reference": REFERENCE_HASH, "calibration": CALIBRATION_HASH}
         originals = {}
@@ -458,6 +470,9 @@ def supervise(run_dir):
             if run.name == RUN_ID_N8192:
                 preparation_progress("VERIFYING_DATA_EXPANSION", "Verifying nested B training data and unchanged Test2/fitting manifests")
                 validate_data_expansion(run, root, bundle)
+            elif run.name == RUN_ID_EMPTYBCE:
+                preparation_progress("VERIFYING_LOSS_REVISION", "Verifying loss-only revision over terminal C and identical manifests")
+                validate_loss_parent(run, root, bundle)
             preparation_progress("PREPARATION_COMPLETE", {
                 "train_images": len(bundle["train"]),
                 "test_images": {name: len(rows) for name, rows in bundle["tests"].items()}})
